@@ -1,0 +1,12 @@
+{
+    bots :
+    [
+        bot : {
+        name: commit
+        host: 127.0.0.1
+        port: 8080
+        self_id: 3180808826
+        }
+    ]
+}
+
