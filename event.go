@@ -30,27 +30,27 @@ var (
 
 type (
 	messageHandle struct {
-		handle      func(event Event)
+		handle      func(event Event, bot *Bot)
 		messageType string
 		rules       []Rule
 		weight      int
 	}
 
 	requestHandle struct {
-		handle      func(event Event)
+		handle      func(event Event, bot *Bot)
 		requestType string
 		rules       []Rule
 		weight      int
 	}
 
 	noticeHandle struct {
-		handle     func(event Event)
+		handle     func(event Event, bot *Bot)
 		noticeType string
 		rules      []Rule
 		weight     int
 	}
 	commandHandle struct {
-		handle  func(event Event, args []string)
+		handle  func(event Event, bot *Bot, args []string)
 		command string
 		allies  []string
 		rules   []Rule
@@ -103,7 +103,7 @@ func (c CommandChain) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 
-func AddMessageHandle(handle func(event Event), messageType string, rules []Rule) {
+func AddMessageHandle(handle func(event Event, bot *Bot), messageType string, rules []Rule) {
 
 	MessageHandles = append(MessageHandles, &messageHandle{
 		handle:      handle,
@@ -112,7 +112,7 @@ func AddMessageHandle(handle func(event Event), messageType string, rules []Rule
 	})
 }
 
-func AddNoticeHandle(handle func(event Event), noticeType string, rules []Rule, weight int) {
+func AddNoticeHandle(handle func(event Event, bot *Bot), noticeType string, rules []Rule, weight int) {
 	NoticeHandles = append(NoticeHandles, &noticeHandle{
 		handle:     handle,
 		noticeType: noticeType,
@@ -121,7 +121,7 @@ func AddNoticeHandle(handle func(event Event), noticeType string, rules []Rule, 
 	})
 }
 
-func AddRequestHandle(handle func(event Event), requestType string, rules []Rule, weight int) {
+func AddRequestHandle(handle func(event Event, bot *Bot), requestType string, rules []Rule, weight int) {
 	RequestHandles = append(RequestHandles, &requestHandle{
 		handle:      handle,
 		requestType: requestType,
@@ -130,7 +130,7 @@ func AddRequestHandle(handle func(event Event), requestType string, rules []Rule
 	})
 }
 
-func AddCommandHandle(handle func(event Event, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
+func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
 	CommandHandles = append(CommandHandles, &commandHandle{
 		handle:  handle,
 		command: command,
@@ -238,7 +238,7 @@ func processNoticeHandle(event Event) {
 			v.noticeType = event.NoticeType
 		}
 		if v.noticeType == event.NoticeType {
-			go v.handle(event)
+			go v.handle(event, getBotById(event.SelfId))
 		}
 	}
 }
@@ -269,7 +269,7 @@ func processMessageHandle() {
 			continue
 		}
 		if commands[0] == handle.command {
-			go handle.handle(event, commands[1:])
+			go handle.handle(event, getBotById(event.SelfId), commands[1:])
 			log.Printf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command", event.MessageType, event.GroupId, event.UserId, event.Message)
 			if handle.block {
@@ -278,7 +278,7 @@ func processMessageHandle() {
 		}
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
-				go handle.handle(event, commands[1:])
+				go handle.handle(event, getBotById(event.SelfId), commands[1:])
 				log.Printf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command", event.MessageType, event.GroupId, event.UserId, event.Message)
 				if !handle.block {
@@ -294,7 +294,7 @@ func processMessageHandle() {
 		if !rule {
 			continue
 		}
-		go handle.handle(event)
+		go handle.handle(event, getBotById(event.SelfId))
 	}
 }
 
@@ -304,4 +304,13 @@ func processRequestEventHandle(event Event) {
 
 func processMetaEventHandle(event Event) {
 
+}
+
+func getBotById(id int) *Bot {
+	for _, bot := range config.Bots {
+		if bot.SelfId == id {
+			return bot
+		}
+	}
+	return nil
 }

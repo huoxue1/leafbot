@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	leafBot.UseEchoHandle("commit")
+	leafBot.UseEchoHandle()
 }
 
 func main() {
