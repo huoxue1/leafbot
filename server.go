@@ -33,6 +33,7 @@ func GetBot(name string) *Bot {
 	}
 	return nil
 }
+
 func (con *connection) readData() {
 	go func() {
 		for {
