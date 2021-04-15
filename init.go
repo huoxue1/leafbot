@@ -56,11 +56,12 @@ func LoadConfig(path string) {
 }
 
 func InitBots() {
+	UseEchoHandle()
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
 	for _, bot := range config.Bots {
 		run(bot)
-		UseEchoHandle(bot.Name)
+
 	}
 	if err := http.ListenAndServe(config.Host+":"+strconv.Itoa(config.Port), nil); err != nil {
 		log.Panicln("监听端口失败，端口可能被占用")
