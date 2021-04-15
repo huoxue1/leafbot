@@ -35,6 +35,8 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     go get github.com/3343780376/leafBot
 ```
 
+#### 内置插件
+**框架内置echo命令，当运行成功最小实例之后，可以在qq群或者私聊发送 ”/echo 123“,机器人就会对应回复”123“**
 
 #### 基础使用
     
