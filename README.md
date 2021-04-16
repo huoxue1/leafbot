@@ -206,7 +206,7 @@ database: # 数据库相关设置
 按照提示使用qq扫码登录
 
 
-### 3. 下载<https://github.com/3343780376/leafBot/releases/download/untagged-69af8c91c231888b850e/main.exe>
+### 3. 下载<a href="https://github.com/3343780376/leafBot/releases/download/untagged-69af8c91c231888b850e/main.exe">leftBot</a>可执行文件
   双击运行
 
 
