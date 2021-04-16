@@ -206,7 +206,7 @@ database: # 数据库相关设置
 按照提示使用qq扫码登录
 
 
-### 3. 下载<a href="https://github.com/3343780376/leafBot/releases/download/untagged-69af8c91c231888b850e/main.exe">leftBot</a>可执行文件
+### 3. 下载<a href="https://github.com/3343780376/leafBot/releases/download/untagged-69af8c91c231888b850e/main.exe">leaftBot</a>可执行文件
   双击运行
 
 
@@ -235,6 +235,11 @@ func init() {
 	// 为bot添加weather响应器，命令为 ”/天气“ ,allies为命令别名，
 	//参数格式为一个字符串数组，rule为一个结构体，响应前会先判断所以rules为true，weight为权重，block为是否阻断
 	leafBot.AddCommandHandle(Weather, "/天气", nil, nil, 10, false)
+    
+	// 分别加载leaftBot的三个内置插件
+    leafBot.UseDayImage()
+    leafBot.UseEchoHandle()
+	leafBot.UseMusicHandle()
 }
 
 func main() {
