@@ -11,6 +11,7 @@ func init() {
 	leafBot.UseDayImage()
 	leafBot.UseEchoHandle()
 	leafBot.UseMusicHandle()
+	leafBot.UseSetuHandle()
 	leafBot.AddCommandHandle(Weather, "/天气", nil, nil, 10, false)
 }
 

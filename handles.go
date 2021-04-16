@@ -170,6 +170,20 @@ func UseMusicHandle() {
 	}, "/orderMusic", []string{"点歌"}, nil, 10, false)
 }
 
+func UseSetuHandle() {
+	AddCommandHandle(func(event Event, bot *Bot, args []string) {
+		if len(args) < 1 {
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://acg.toubiec.cn/random.php", map[string]interface{}{"cache": 0, "c": 3}), false)
+		} else if args[0] == "r18" {
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/anime18r.php?return=img", map[string]interface{}{"cache": 0, "c": 3}), false)
+		} else if args[0] == "true" {
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/api.php?return=img/json", map[string]interface{}{"cache": 0, "c": 3}), false)
+		} else if args[0] == "r18+true" {
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/bw.php?return=img", map[string]interface{}{"cache": 0, "c": 3}), false)
+		}
+	}, "/setu", []string{"来点色图"}, nil, 10, false)
+}
+
 func searchMusic(name string, limit int, offset int) (Music, error) {
 	values := url.Values{}
 	values.Add("csrf_token", "")

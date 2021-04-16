@@ -59,6 +59,15 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
   一图
 ```
 
++ ### 随机涩图
+
+```
+  来点涩图  ： 默认普通图片
+  来点涩图 r18 : r18二次元图片
+  来点涩图 true : 随机真人写真
+  来点涩图 r18+true  :随机r18真人涩图
+```
+
 ## 基础使用
 
 ### 1. 安装go-cqhttp
@@ -270,15 +279,16 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
   "bots": [
     {
       "name": "commit",
-      "self_id": 123
+      "self_id": 3180808826
     },
     {
-     "name": "bot1",
-      "self_id": 123
+      "name": "bot1",
+      "self_id": 1743224847
     }
   ],
   "host": "127.0.0.1",
-  "port": 8080
+  "port": 8080,
+  "log_level": "info"
 }
 ```
 
@@ -286,3 +296,4 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
 + bot : 包含了name字段和self_id字段，self_id为机器人qq号
 + host: gocq的ws上报地址
 + port : gocq的ws上报端口
++ log_level : 日志等级，默认为info

@@ -18,9 +18,10 @@ type Bot struct {
 }
 
 type Config struct {
-	Bots []*Bot `json:"bots"`
-	Host string `json:"host"`
-	Port int    `json:"port"`
+	Bots     []*Bot `json:"bots"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	LogLevel string `json:"log_level"`
 }
 
 var (
@@ -28,7 +29,6 @@ var (
 )
 
 func init() {
-	log.SetLevel(log.DebugLevel)
 	log.SetFormatter(&easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
@@ -49,6 +49,7 @@ func LoadConfig(path string) {
 	}(file)
 	data, _ := io.ReadAll(file)
 	err = json.Unmarshal(data, config)
+	log.SetLevel(GetLogLevel(config.LogLevel))
 	if err != nil {
 		log.Panicln("加载配置文件失败" + err.Error())
 	}
@@ -56,7 +57,6 @@ func LoadConfig(path string) {
 }
 
 func InitBots() {
-
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
 	for _, bot := range config.Bots {
@@ -65,5 +65,22 @@ func InitBots() {
 	}
 	if err := http.ListenAndServe(config.Host+":"+strconv.Itoa(config.Port), nil); err != nil {
 		log.Panicln("监听端口失败，端口可能被占用")
+	}
+}
+
+func GetLogLevel(level string) log.Level {
+	switch level {
+	case "trace":
+		return log.TraceLevel
+	case "debug":
+		return log.DebugLevel
+	case "info":
+		return log.InfoLevel
+	case "warn":
+		return log.WarnLevel
+	case "error":
+		return log.ErrorLevel
+	default:
+		return log.InfoLevel
 	}
 }
