@@ -57,6 +57,7 @@ func LoadConfig(path string) {
 
 func InitBots() {
 	UseEchoHandle()
+	UseMusicHandle()
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
 	for _, bot := range config.Bots {
