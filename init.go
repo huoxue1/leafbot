@@ -17,6 +17,11 @@ type Bot struct {
 	Client *connection `json:"con"`
 }
 
+func init() {
+	UseEchoHandle()
+	UseMusicHandle()
+}
+
 type Config struct {
 	Bots []*Bot `json:"bots"`
 	Host string `json:"host"`
@@ -56,8 +61,7 @@ func LoadConfig(path string) {
 }
 
 func InitBots() {
-	UseEchoHandle()
-	UseMusicHandle()
+
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
 	for _, bot := range config.Bots {

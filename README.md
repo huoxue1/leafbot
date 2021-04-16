@@ -35,7 +35,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     go get github.com/3343780376/leafBot
 ```
 
-#### 内置插件
+## 内置插件
 
 + ### /echo插件
 ```
@@ -51,7 +51,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     点歌 5041604
     ```
 
-#### 基础使用
+## 基础使用
     
 ```go
     package main
