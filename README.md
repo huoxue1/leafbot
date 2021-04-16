@@ -5,7 +5,7 @@
 
 <div align="center">
 
-# FengyeBot
+# LeafBot
 
 _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](https://github.com/howmanybots/onebot)标准的插件 ✨_
 
