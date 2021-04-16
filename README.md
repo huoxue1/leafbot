@@ -206,7 +206,7 @@ database: # 数据库相关设置
 按照提示使用qq扫码登录
 
 
-### 3. 下载<https://github.com/3343780376/leafBot/tree/master/example>
+### 3. 下载<https://github.com/3343780376/leafBot/blob/master/example/main.exe>
   双击运行
 
 
