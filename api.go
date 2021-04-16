@@ -2,16 +2,11 @@ package leafBot
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"strconv"
 	"time"
 )
-
-type Message struct {
-	Message string `json:"message"`
-}
 
 var (
 	apiResChan = make(chan []byte, 1)
@@ -1743,16 +1738,18 @@ func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
 func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
-	type parm struct {
+	type param struct {
 		GroupId int    `json:"group_id"`
 		File    string `json:"file"`
+		Name    string `json:"name"`
 		Folder  string `json:"folder"`
 	}
 	var d = UseApi{
 		Action: "upload_group_file",
-		Params: parm{
+		Params: param{
 			GroupId: groupId,
 			File:    file,
+			Name:    name,
 			Folder:  folder,
 		},
 		Echo: echo,
@@ -1761,8 +1758,4 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
-}
-
-func (b *Bot) MessageAt(UserId int) Message {
-	return Message{fmt.Sprintf("[CQ:at,qq=%d]", UserId)}
 }

@@ -104,31 +104,39 @@ func (c CommandChain) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 
-func AddMessageHandle(handle func(event Event, bot *Bot), messageType string, rules []Rule) {
+func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Event, bot *Bot)) {
+	for _, handle := range handles {
+		MessageHandles = append(MessageHandles, &messageHandle{
+			handle:      handle,
+			messageType: messageType,
+			rules:       rules,
+		})
+	}
 
-	MessageHandles = append(MessageHandles, &messageHandle{
-		handle:      handle,
-		messageType: messageType,
-		rules:       rules,
-	})
 }
 
-func AddNoticeHandle(handle func(event Event, bot *Bot), noticeType string, rules []Rule, weight int) {
-	NoticeHandles = append(NoticeHandles, &noticeHandle{
-		handle:     handle,
-		noticeType: noticeType,
-		rules:      rules,
-		weight:     weight,
-	})
+func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+	for _, handle := range handles {
+		NoticeHandles = append(NoticeHandles, &noticeHandle{
+			handle:     handle,
+			noticeType: noticeType,
+			rules:      rules,
+			weight:     weight,
+		})
+	}
+
 }
 
-func AddRequestHandle(handle func(event Event, bot *Bot), requestType string, rules []Rule, weight int) {
-	RequestHandles = append(RequestHandles, &requestHandle{
-		handle:      handle,
-		requestType: requestType,
-		rules:       rules,
-		weight:      weight,
-	})
+func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+	for _, handle := range handles {
+		RequestHandles = append(RequestHandles, &requestHandle{
+			handle:      handle,
+			requestType: requestType,
+			rules:       rules,
+			weight:      weight,
+		})
+	}
+
 }
 
 func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
