@@ -16,9 +16,15 @@ func init() {
 }
 
 func main() {
-	dir, _ := os.Getwd()                             // 获取当前路径
-	leafBot.LoadConfig(dir + "/example/config.json") //拼接配置文件路径，并且加载配置文件
-	leafBot.InitBots()                               //初始化Bot
+	dir, _ := os.Getwd() // 获取当前路径
+	if len(os.Args) > 0 {
+		leafBot.LoadConfig(os.Args[0])
+	} else {
+		leafBot.LoadConfig(dir + "/example/config.json")
+	}
+
+	//拼接配置文件路径，并且加载配置文件
+	leafBot.InitBots() //初始化Bot
 }
 
 /*
