@@ -2,6 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"reflect"
 	"runtime"
@@ -142,6 +143,10 @@ func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command
 }
 
 func eventMain() {
+	sort.Sort(&MessageHandles)
+	sort.Sort(&RequestHandles)
+	sort.Sort(&NoticeHandles)
+	sort.Sort(&CommandHandles)
 	for _, handle := range CommandHandles {
 		log.Infoln("已加载command响应器：" + handle.command)
 	}
@@ -160,6 +165,7 @@ func eventMain() {
 			if !ok {
 				continue
 			}
+			log.Debugln(string(data))
 			var event Event
 			err := json.Unmarshal(data, &event)
 			if err != nil {
@@ -197,10 +203,7 @@ func viewsMessage(event Event) {
 			log.Error(err)
 		}
 	}()
-	sort.Sort(&MessageHandles)
-	sort.Sort(&RequestHandles)
-	sort.Sort(&NoticeHandles)
-	sort.Sort(&CommandHandles)
+
 	switch event.PostType {
 	case "message":
 		c <- event
@@ -210,13 +213,13 @@ func viewsMessage(event Event) {
 	case "notice":
 		go processNoticeHandle(event)
 	case "request":
-		log.Printf("request_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
-			event.RequestType, event.GroupId, event.UserId)
+		log.Infoln(fmt.Sprintf("request_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
+			event.RequestType, event.GroupId, event.UserId))
 		go processRequestEventHandle(event)
 
 	case "meta_event":
-		log.Printf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
-			event.PostType, event.MetaEventType, event.Interval)
+		log.Infoln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
+			event.PostType, event.MetaEventType, event.Interval))
 		go processMetaEventHandle(event)
 	}
 }
@@ -226,8 +229,8 @@ func processNoticeHandle(event Event) {
 		err := recover()
 		log.Println(err)
 	}()
-	log.Printf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
-		event.NoticeType, event.GroupId, event.UserId)
+	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
+		event.NoticeType, event.GroupId, event.UserId))
 
 	for _, v := range NoticeHandles {
 		rule := checkRule(event, v.rules)
@@ -270,8 +273,8 @@ func processMessageHandle() {
 		}
 		if commands[0] == handle.command {
 			go handle.handle(event, getBotById(event.SelfId), commands[1:])
-			log.Printf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-				"\n\t\t\t\t\tthis is a command", event.MessageType, event.GroupId, event.UserId, event.Message)
+			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
+				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 			if handle.block {
 				return
 			}
@@ -279,16 +282,16 @@ func processMessageHandle() {
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 				go handle.handle(event, getBotById(event.SelfId), commands[1:])
-				log.Printf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command", event.MessageType, event.GroupId, event.UserId, event.Message)
+				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 				if !handle.block {
 					return
 				}
 			}
 		}
 	}
-	log.Printf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
-		event.MessageType, event.GroupId, event.UserId, event.Message)
+	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
+		event.MessageType, event.GroupId, event.UserId, event.Message))
 	for _, handle := range MessageHandles {
 		rule := checkRule(event, handle.rules)
 		if !rule {
@@ -299,7 +302,16 @@ func processMessageHandle() {
 }
 
 func processRequestEventHandle(event Event) {
-
+	for _, handle := range RequestHandles {
+		rule := checkRule(event, handle.rules)
+		if handle.rules == nil {
+			rule = true
+		}
+		if !rule {
+			continue
+		}
+		go handle.handle(event, getBotById(event.SelfId))
+	}
 }
 
 func processMetaEventHandle(event Event) {

@@ -17,11 +17,6 @@ type Bot struct {
 	Client *connection `json:"con"`
 }
 
-func init() {
-	UseEchoHandle()
-	UseMusicHandle()
-}
-
 type Config struct {
 	Bots []*Bot `json:"bots"`
 	Host string `json:"host"`
@@ -33,7 +28,6 @@ var (
 )
 
 func init() {
-	log.SetLevel(log.DebugLevel)
 	log.SetFormatter(&easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
