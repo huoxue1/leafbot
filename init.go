@@ -39,7 +39,10 @@ func init() {
 func LoadConfig(path string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
 	if err != nil {
-		log.Panicln(err)
+		file, err = os.OpenFile("config.json", os.O_RDWR, 0777)
+		if err != nil {
+			log.Panicln(err)
+		}
 	}
 	defer func(file *os.File) {
 		err := file.Close()

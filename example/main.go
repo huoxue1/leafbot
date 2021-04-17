@@ -17,8 +17,8 @@ func init() {
 
 func main() {
 	dir, _ := os.Getwd() // 获取当前路径
-	if len(os.Args) > 0 {
-		leafBot.LoadConfig(os.Args[0])
+	if len(os.Args) > 1 {
+		leafBot.LoadConfig(os.Args[1])
 	} else {
 		leafBot.LoadConfig(dir + "/example/config.json")
 	}

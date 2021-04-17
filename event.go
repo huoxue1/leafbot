@@ -58,6 +58,10 @@ type (
 		weight  int
 		block   bool
 	}
+	metaHandle struct {
+		handle func(event Event, bot *Bot)
+		rules  []Rule
+	}
 
 	Rule struct {
 		RuleCheck func(Event, ...interface{}) bool
