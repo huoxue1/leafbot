@@ -15,6 +15,7 @@ type (
 	RequestChain []*requestHandle
 	NoticeChain  []*noticeHandle
 	CommandChain []*commandHandle
+	MetaChain    []*metaHandle
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 	RequestHandles RequestChain
 	NoticeHandles  NoticeChain
 	CommandHandles CommandChain
+	MetaHandles    MetaChain
 )
 
 type (
@@ -61,11 +63,12 @@ type (
 	metaHandle struct {
 		handle func(event Event, bot *Bot)
 		rules  []Rule
+		weight int
 	}
 
 	Rule struct {
 		RuleCheck func(Event, ...interface{}) bool
-		dates     []interface{}
+		Dates     []interface{}
 	}
 )
 
@@ -76,6 +79,16 @@ func (m MessageChain) Less(i, j int) bool {
 	return m[i].weight < m[j].weight
 }
 func (m MessageChain) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+func (m MetaChain) Len() int {
+	return len(m)
+}
+func (m MetaChain) Less(i, j int) bool {
+	return m[i].weight < m[j].weight
+}
+func (m MetaChain) Swap(i, j int) {
 	m[i], m[j] = m[j], m[i]
 }
 
@@ -143,6 +156,16 @@ func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...f
 
 }
 
+func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+	for _, handle := range handles {
+		MetaHandles = append(MetaHandles, &metaHandle{
+			handle: handle,
+			rules:  rules,
+			weight: weight,
+		})
+	}
+}
+
 func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
 	CommandHandles = append(CommandHandles, &commandHandle{
 		handle:  handle,
@@ -163,13 +186,13 @@ func eventMain() {
 		log.Infoln("已加载command响应器：" + handle.command)
 	}
 	for _, handle := range MessageHandles {
-		log.Infoln("已加载message响应器：" + runtime.FuncForPC(reflect.ValueOf(handle.handle).Pointer()).Name())
+		log.Infoln("已加载message响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range RequestHandles {
-		log.Infoln("已加载request响应器：" + runtime.FuncForPC(reflect.ValueOf(handle.handle).Pointer()).Name())
+		log.Infoln("已加载request响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range NoticeHandles {
-		log.Infoln("已加载notice响应器：" + runtime.FuncForPC(reflect.ValueOf(handle.handle).Pointer()).Name())
+		log.Infoln("已加载notice响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	go func() {
 		for true {
@@ -260,7 +283,7 @@ func processNoticeHandle(event Event) {
 
 func checkRule(event Event, rules []Rule) bool {
 	for _, rule := range rules {
-		check := rule.RuleCheck(event, rule.dates)
+		check := rule.RuleCheck(event, rule.Dates)
 		if !check {
 			return false
 		}
@@ -268,8 +291,31 @@ func checkRule(event Event, rules []Rule) bool {
 	return true
 }
 
+func getFunctionName(i interface{}, seps ...rune) string {
+	// 获取函数名称
+	fn := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+
+	// 用 seps 进行分割
+	fields := strings.FieldsFunc(fn, func(sep rune) bool {
+		for _, s := range seps {
+			if sep == s {
+				return true
+			}
+		}
+		return false
+	})
+
+	// fmt.Println(fields)
+
+	if size := len(fields); size > 0 {
+		return fields[size-1]
+	}
+	return ""
+}
+
 func processMessageHandle() {
 	event := <-c
+	a := 0
 	log.Debugln(len(CommandHandles))
 	for _, handle := range CommandHandles {
 		rule := checkRule(event, handle.rules)
@@ -284,6 +330,7 @@ func processMessageHandle() {
 			continue
 		}
 		if commands[0] == handle.command {
+			a = 1
 			go handle.handle(event, getBotById(event.SelfId), commands[1:])
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
@@ -293,6 +340,7 @@ func processMessageHandle() {
 		}
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
+				a = 1
 				go handle.handle(event, getBotById(event.SelfId), commands[1:])
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
@@ -302,9 +350,15 @@ func processMessageHandle() {
 			}
 		}
 	}
+	if a == 1 {
+		return
+	}
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		event.MessageType, event.GroupId, event.UserId, event.Message))
 	for _, handle := range MessageHandles {
+		if handle.messageType != "" && handle.messageType != event.MessageType {
+			continue
+		}
 		rule := checkRule(event, handle.rules)
 		if !rule {
 			continue

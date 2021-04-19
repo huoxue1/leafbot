@@ -1,7 +1,8 @@
-package leafBot
+package plugins
 
 import (
 	"encoding/json"
+	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io"
@@ -9,14 +10,6 @@ import (
 	"net/url"
 	"strconv"
 )
-
-type dayPicture struct {
-	Status int `json:"status"`
-	Bing   struct {
-		Url       string `json:"url"`
-		Copyright string `json:"copyright"`
-	} `json:"bing"`
-}
 
 type Music struct {
 	Result struct {
@@ -72,34 +65,8 @@ type Music struct {
 	Code int `json:"code"`
 }
 
-func UseEchoHandle() {
-
-	AddCommandHandle(func(event Event, bot *Bot, args []string) {
-		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, args[0], false)
-	}, "/echo", nil, nil, 1, false)
-}
-
-func UseDayImage() {
-	AddCommandHandle(func(event Event, bot *Bot, args []string) {
-		if len(args) == 0 {
-			image, err := getDayImage(0)
-			if err != nil {
-				return
-			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, image.Bing.Copyright+"\n[CQ:image,file="+image.Bing.Url+"]", false)
-		} else {
-			day, _ := strconv.Atoi(args[0])
-			image, err := getDayImage(day)
-			if err != nil {
-				return
-			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, image.Bing.Copyright+"\n[CQ:image,file="+image.Bing.Url+"]", false)
-		}
-	}, "/dayPic", []string{"一图"}, nil, 10, false)
-}
-
 func UseMusicHandle() {
-	AddCommandHandle(func(event Event, bot *Bot, args []string) {
+	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		switch len(args) {
 		case 0:
 			{
@@ -161,27 +128,13 @@ func UseMusicHandle() {
 		}
 	}, "/music", []string{"查询歌曲"}, nil, 10, false)
 
-	AddCommandHandle(func(event Event, bot *Bot, args []string) {
+	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
 			return
 		}
 		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music(163, id), false)
 	}, "/orderMusic", []string{"点歌"}, nil, 10, false)
-}
-
-func UseSetuHandle() {
-	AddCommandHandle(func(event Event, bot *Bot, args []string) {
-		if len(args) < 1 {
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://acg.toubiec.cn/random.php", map[string]interface{}{"cache": 0, "c": 3}), false)
-		} else if args[0] == "r18" {
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/anime18r.php?return=img", map[string]interface{}{"cache": 0, "c": 3}), false)
-		} else if args[0] == "true" {
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/api.php?return=img/json", map[string]interface{}{"cache": 0, "c": 3}), false)
-		} else if args[0] == "r18+true" {
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://api.pixivweb.com/bw.php?return=img", map[string]interface{}{"cache": 0, "c": 3}), false)
-		}
-	}, "/setu", []string{"来点色图"}, nil, 10, false)
 }
 
 func searchMusic(name string, limit int, offset int) (Music, error) {
@@ -214,21 +167,4 @@ func searchMusic(name string, limit int, offset int) (Music, error) {
 		return Music{}, err
 	}
 	return music, err
-}
-
-func getDayImage(day int) (dayPicture, error) {
-	resp, err := http.Get("https://api.no0a.cn/api/bing/" + strconv.Itoa(day))
-	if err != nil {
-		return dayPicture{}, err
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-
-		}
-	}(resp.Body)
-	data, err := io.ReadAll(resp.Body)
-	picture := dayPicture{}
-	err = json.Unmarshal(data, &picture)
-	return picture, err
 }

@@ -2,16 +2,19 @@ package main
 
 import (
 	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot/plugins"
 	"os"
 )
 
 func init() {
 	// 为bot添加weather响应器，命令为 ”/天气“ ,allies为命令别名，
 	//参数格式为一个字符串数组，rule为一个结构体，响应前会先判断所以rules为true，weight为权重，block为是否阻断
-	leafBot.UseDayImage()
-	leafBot.UseEchoHandle()
-	leafBot.UseMusicHandle()
-	leafBot.UseSetuHandle()
+	plugins.UseDayImage()
+	plugins.UseEchoHandle()
+	plugins.UseMusicHandle()
+	plugins.UseSetuHandle()
+	plugins.UseTranslateHandle()
+	plugins.UseFlashImage(3343780376)
 	leafBot.AddCommandHandle(Weather, "/天气", nil, nil, 10, false)
 }
 

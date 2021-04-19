@@ -2,6 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
+	message2 "github.com/3343780376/leafBot/message"
 	"log"
 	"math/rand"
 	"strconv"
@@ -508,6 +509,11 @@ type (
 	}
 )
 
+type QuickUseApi interface {
+	Send(event Event, message string) int
+	SendAt(event Event, message string) int
+}
+
 //go-cqhttp新增api
 type IncreaseApi interface {
 	DownloadFile(url string, threadCount int, headers []string) DownloadFilePath
@@ -578,6 +584,15 @@ type UseApi struct {
 	Action string      `json:"action"`
 	Params interface{} `json:"params"`
 	Echo   string      `json:"echo"`
+}
+
+func (b *Bot) Send(event Event, message string) int {
+	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message, false)
+	return int(msgId)
+}
+func (b *Bot) SendAt(event Event, message string) int {
+	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message+message2.At(event.UserId), false)
+	return int(msgId)
 }
 
 func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
