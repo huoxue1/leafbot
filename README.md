@@ -74,6 +74,11 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
   然后发到指定的群或者管理员用户
 ```
 
++ #### 生成二维码
+```
+ 生成二维码 https://github.com/3343780376/leafBot
+```
+
 ## 基础使用
 
 ### 1. 安装go-cqhttp

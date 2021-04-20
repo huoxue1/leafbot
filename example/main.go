@@ -9,14 +9,17 @@ import (
 func init() {
 	// 为bot添加weather响应器，命令为 ”/天气“ ,allies为命令别名，
 	//参数格式为一个字符串数组，rule为一个结构体，响应前会先判断所以rules为true，weight为权重，block为是否阻断
-	plugins.UseDayImage()
-	plugins.UseEchoHandle()
-	plugins.UseMusicHandle()
-	plugins.UseSetuHandle()
-	plugins.UseTranslateHandle()
-	plugins.UseFlashImage(0)
-	plugins.UseFlashImageToGroup(972264701)
 	leafBot.AddCommandHandle(Weather, "/天气", nil, nil, 10, false)
+
+	plugins.UseCreateQrCode()               //加载生成二维码插件
+	plugins.UseDayImage()                   // 加载每日一图插件
+	plugins.UseEchoHandle()                 // 加载echo插件
+	plugins.UseMusicHandle()                // 加载音乐插件
+	plugins.UseSetuHandle()                 // 加载涩图插件
+	plugins.UseTranslateHandle()            // 加载翻译插件
+	plugins.UseFlashImage(0)                // 加载闪照破解插件
+	plugins.UseFlashImageToGroup(972264701) //加载闪照破解后发到对应群的插件
+
 }
 
 func main() {
