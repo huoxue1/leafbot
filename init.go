@@ -21,13 +21,14 @@ type Bot struct {
 
 type Config struct {
 	Bots     []*Bot `json:"bots"`
+	Admin    int    `json:"admin"`
 	Host     string `json:"host"`
 	Port     int    `json:"port"`
 	LogLevel string `json:"log_level"`
 }
 
 var (
-	config = new(Config)
+	DefaultConfig = new(Config)
 )
 
 func init() {
@@ -47,7 +48,7 @@ const (
 func LoadConfig(path string, fileType string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
 	if err != nil {
-		file, err = os.OpenFile("config.json", os.O_RDWR, 0777)
+		file, err = os.OpenFile("DefaultConfig.json", os.O_RDWR, 0777)
 		if err != nil {
 			log.Panicln(err)
 		}
@@ -62,22 +63,22 @@ func LoadConfig(path string, fileType string) {
 	switch fileType {
 	case JSON:
 		{
-			err = json.Unmarshal(data, config)
+			err = json.Unmarshal(data, DefaultConfig)
 		}
 	case HJSON:
 		{
-			err = hjson.Unmarshal(data, config)
+			err = hjson.Unmarshal(data, DefaultConfig)
 		}
 	case YAML:
 		{
-			err = yaml.Unmarshal(data, config)
+			err = yaml.Unmarshal(data, DefaultConfig)
 		}
 	}
 	if err != nil {
 		log.Panicln("加载配置文件失败")
 	}
 
-	log.SetLevel(GetLogLevel(config.LogLevel))
+	log.SetLevel(GetLogLevel(DefaultConfig.LogLevel))
 	if err != nil {
 		log.Panicln("加载配置文件失败" + err.Error())
 	}
@@ -87,11 +88,11 @@ func LoadConfig(path string, fileType string) {
 func InitBots() {
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
-	for _, bot := range config.Bots {
+	for _, bot := range DefaultConfig.Bots {
 		run(bot)
 
 	}
-	if err := http.ListenAndServe(config.Host+":"+strconv.Itoa(config.Port), nil); err != nil {
+	if err := http.ListenAndServe(DefaultConfig.Host+":"+strconv.Itoa(DefaultConfig.Port), nil); err != nil {
 		log.Panicln("监听端口失败，端口可能被占用")
 	}
 }

@@ -385,7 +385,7 @@ func processMetaEventHandle(event Event) {
 }
 
 func GetBotById(id int) *Bot {
-	for _, bot := range config.Bots {
+	for _, bot := range DefaultConfig.Bots {
 		if bot.SelfId == id {
 			return bot
 		}

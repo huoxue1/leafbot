@@ -14,7 +14,8 @@ func init() {
 	plugins.UseMusicHandle()
 	plugins.UseSetuHandle()
 	plugins.UseTranslateHandle()
-	plugins.UseFlashImage(3343780376)
+	plugins.UseFlashImage(0)
+	plugins.UseFlashImageToGroup(972264701)
 	leafBot.AddCommandHandle(Weather, "/天气", nil, nil, 10, false)
 }
 

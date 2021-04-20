@@ -68,6 +68,12 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
   来点涩图 r18+true  :随机r18真人涩图
 ```
 
++ #### 闪照拦截
+```
+  可以将bot收到的所以闪照信息进行拦截
+  然后发到指定的群或者管理员用户
+```
+
 ## 基础使用
 
 ### 1. 安装go-cqhttp
@@ -279,13 +285,14 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
   "bots": [
     {
       "name": "commit",
-      "self_id": 3180808826
+      "self_id": 123
     },
     {
       "name": "bot1",
-      "self_id": 1743224847
+      "self_id": 123
     }
   ],
+  "admin": 123,
   "host": "127.0.0.1",
   "port": 8080,
   "log_level": "info"
@@ -294,6 +301,7 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
 
 + bots :一个bot数组
 + bot : 包含了name字段和self_id字段，self_id为机器人qq号
++ admin : 管理员账号
 + host: gocq的ws上报地址
 + port : gocq的ws上报端口
 + log_level : 日志等级，默认为info

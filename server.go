@@ -26,7 +26,7 @@ var upgrade = websocket.Upgrader{
 	}}
 
 func GetBot(name string) *Bot {
-	for _, bot := range config.Bots {
+	for _, bot := range DefaultConfig.Bots {
 		if bot.Name == name {
 			return bot
 		}
@@ -111,7 +111,7 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 		isClosed:  false,
 		closeChan: make(chan byte),
 	}
-	for _, bot := range config.Bots {
+	for _, bot := range DefaultConfig.Bots {
 		if bot.SelfId == selfId {
 			log.Infoln("bot：" + bot.Name + "已上线")
 			bot.Client = wscon
