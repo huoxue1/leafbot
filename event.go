@@ -276,7 +276,7 @@ func processNoticeHandle(event Event) {
 			v.noticeType = event.NoticeType
 		}
 		if v.noticeType == event.NoticeType {
-			go v.handle(event, getBotById(event.SelfId))
+			go v.handle(event, GetBotById(event.SelfId))
 		}
 	}
 }
@@ -331,7 +331,7 @@ func processMessageHandle() {
 		}
 		if commands[0] == handle.command {
 			a = 1
-			go handle.handle(event, getBotById(event.SelfId), commands[1:])
+			go handle.handle(event, GetBotById(event.SelfId), commands[1:])
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 			if handle.block {
@@ -341,7 +341,7 @@ func processMessageHandle() {
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 				a = 1
-				go handle.handle(event, getBotById(event.SelfId), commands[1:])
+				go handle.handle(event, GetBotById(event.SelfId), commands[1:])
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 				if !handle.block {
@@ -363,7 +363,7 @@ func processMessageHandle() {
 		if !rule {
 			continue
 		}
-		go handle.handle(event, getBotById(event.SelfId))
+		go handle.handle(event, GetBotById(event.SelfId))
 	}
 }
 
@@ -376,7 +376,7 @@ func processRequestEventHandle(event Event) {
 		if !rule {
 			continue
 		}
-		go handle.handle(event, getBotById(event.SelfId))
+		go handle.handle(event, GetBotById(event.SelfId))
 	}
 }
 
@@ -384,7 +384,7 @@ func processMetaEventHandle(event Event) {
 
 }
 
-func getBotById(id int) *Bot {
+func GetBotById(id int) *Bot {
 	for _, bot := range config.Bots {
 		if bot.SelfId == id {
 			return bot

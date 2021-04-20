@@ -2,8 +2,10 @@ package leafBot
 
 import (
 	"encoding/json"
+	"github.com/hjson/hjson-go"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
+	yaml "gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
@@ -36,7 +38,13 @@ func init() {
 	)
 }
 
-func LoadConfig(path string) {
+const (
+	JSON  = "json"
+	HJSON = "hjson"
+	YAML  = "yaml"
+)
+
+func LoadConfig(path string, fileType string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
 	if err != nil {
 		file, err = os.OpenFile("config.json", os.O_RDWR, 0777)
@@ -47,11 +55,28 @@ func LoadConfig(path string) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-
+			log.Debugln(err.Error())
 		}
 	}(file)
 	data, _ := io.ReadAll(file)
-	err = json.Unmarshal(data, config)
+	switch fileType {
+	case JSON:
+		{
+			err = json.Unmarshal(data, config)
+		}
+	case HJSON:
+		{
+			err = hjson.Unmarshal(data, config)
+		}
+	case YAML:
+		{
+			err = yaml.Unmarshal(data, config)
+		}
+	}
+	if err != nil {
+		log.Panicln("加载配置文件失败")
+	}
+
 	log.SetLevel(GetLogLevel(config.LogLevel))
 	if err != nil {
 		log.Panicln("加载配置文件失败" + err.Error())
