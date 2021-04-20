@@ -21,9 +21,9 @@ func init() {
 func main() {
 	dir, _ := os.Getwd() // 获取当前路径
 	if len(os.Args) > 1 {
-		leafBot.LoadConfig(os.Args[1])
+		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
 	} else {
-		leafBot.LoadConfig(dir + "/example/config.json")
+		leafBot.LoadConfig(dir+"/example/config.json", leafBot.JSON)
 	}
 
 	//拼接配置文件路径，并且加载配置文件
