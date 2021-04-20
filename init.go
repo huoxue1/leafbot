@@ -48,7 +48,7 @@ const (
 func LoadConfig(path string, fileType string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
 	if err != nil {
-		file, err = os.OpenFile("DefaultConfig.json", os.O_RDWR, 0777)
+		file, err = os.OpenFile("config.json", os.O_RDWR, 0777)
 		if err != nil {
 			log.Panicln(err)
 		}
