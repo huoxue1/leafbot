@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/plugins"
-	"os"
 )
 
 func init() {
@@ -22,17 +21,17 @@ func init() {
 
 }
 
-func main() {
-	dir, _ := os.Getwd() // 获取当前路径
-	if len(os.Args) > 1 {
-		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
-	} else {
-		leafBot.LoadConfig(dir+"/example/config.json", leafBot.JSON)
-	}
-
-	//拼接配置文件路径，并且加载配置文件
-	leafBot.InitBots() //初始化Bot
-}
+//func main() {
+//	dir, _ := os.Getwd() // 获取当前路径
+//	if len(os.Args) > 1 {
+//		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
+//	} else {
+//		leafBot.LoadConfig(dir+"/example/config.json", leafBot.JSON)
+//	}
+//
+//	//拼接配置文件路径，并且加载配置文件
+//	leafBot.InitBots() //初始化Bot
+//}
 
 /*
 	event: bot的event，里面包含了事件的所有字段

@@ -235,7 +235,7 @@ func viewsMessage(event Event) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Error(err)
+			log.Infoln(err)
 		}
 	}()
 
@@ -262,7 +262,7 @@ func viewsMessage(event Event) {
 func processNoticeHandle(event Event) {
 	defer func() {
 		err := recover()
-		log.Println(err)
+		log.Infoln(err)
 	}()
 	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 		event.NoticeType, event.GroupId, event.UserId))
@@ -314,6 +314,12 @@ func getFunctionName(i interface{}, seps ...rune) string {
 }
 
 func processMessageHandle() {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Infoln(err)
+		}
+	}()
 	event := <-c
 	a := 0
 	log.Debugln(len(CommandHandles))
