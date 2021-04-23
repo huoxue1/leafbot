@@ -5,9 +5,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func main() {
-	ph("你好", "❓")
-}
+//func main() {
+//	ph("你好", "❓")
+//}
 func ph(text1, text2 string) {
 
 	text1Length := spacing(text1, 90)

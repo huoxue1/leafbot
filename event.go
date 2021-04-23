@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"math/rand"
 	"reflect"
 	"runtime"
 	"sort"
 	"strings"
+	"sync"
+	"time"
 )
 
 type (
@@ -19,8 +22,7 @@ type (
 )
 
 var (
-	nextEvent = false
-	c         = make(chan Event, 10)
+	c = make(chan Event, 10)
 )
 
 var (
@@ -29,9 +31,31 @@ var (
 	NoticeHandles  NoticeChain
 	CommandHandles CommandChain
 	MetaHandles    MetaChain
+
+	sessions sync.Map
 )
 
+func sessionHandle(event Event) {
+	sessions.Range(func(key, value interface{}) bool {
+		s := value.(session)
+		rule := checkRule(event, s.rules)
+		if s.rules == nil {
+			rule = true
+		}
+		if rule {
+			s.queue <- event
+		}
+		return true
+	})
+}
+
 type (
+	session struct {
+		id    int
+		queue chan Event
+		rules []Rule
+	}
+
 	messageHandle struct {
 		handle      func(event Event, bot *Bot)
 		messageType string
@@ -206,29 +230,36 @@ func eventMain() {
 			if err != nil {
 				log.Debugln("反向解析json失败" + err.Error() + "\n" + string(data))
 			}
+			go sessionHandle(event)
 			go viewsMessage(event)
 		}
 	}()
-
 }
 
-func (b *Bot) GetNextEvent(n, UserId int) Event {
-	defer func() {
-		nextEvent = false
-	}()
-
-	nextEvent = true
-	for i := 0; i < n; i++ {
-		event := <-c
-		if event.UserId != UserId {
-			c <- event
-			go processMessageHandle()
-		} else {
-			return event
-		}
+func (b *Bot) GetOneEvent(rules ...Rule) Event {
+	s := session{
+		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		queue: make(chan Event),
+		rules: rules,
 	}
+	sessions.Store(s.id, s)
+	event := <-s.queue
+	sessions.Delete(s.id)
+	return event
+}
 
-	return Event{}
+func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
+	s := session{
+		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		queue: make(chan Event),
+		rules: rules,
+	}
+	sessions.Store(s.id, s)
+	return s.id, s.queue
+}
+
+func (b *Bot) CloseMessageChan(id int) {
+	sessions.Delete(id)
 }
 
 func viewsMessage(event Event) {
@@ -242,9 +273,8 @@ func viewsMessage(event Event) {
 	switch event.PostType {
 	case "message":
 		c <- event
-		if !nextEvent {
-			go processMessageHandle()
-		}
+		go processMessageHandle()
+
 	case "notice":
 		go processNoticeHandle(event)
 	case "request":
