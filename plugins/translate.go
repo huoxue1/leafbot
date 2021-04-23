@@ -29,7 +29,7 @@ func UseTranslateHandle() {
 		switch len(args) {
 		case 0:
 			{
-				nextEvent := bot.GetOneEvent(leafBot.Rule{
+				nextEvent, err := bot.GetOneEvent(leafBot.Rule{
 					RuleCheck: func(event1 leafBot.Event, i ...interface{}) bool {
 						if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
 							return true
@@ -38,6 +38,9 @@ func UseTranslateHandle() {
 					},
 					Dates: nil,
 				})
+				if err != nil {
+					return
+				}
 				tran, err := translate(nextEvent.Message, "AUTO")
 				if err != nil {
 					bot.Send(event, "翻译失败："+err.Error())

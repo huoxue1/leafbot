@@ -2,6 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"math/rand"
@@ -236,16 +237,21 @@ func eventMain() {
 	}()
 }
 
-func (b *Bot) GetOneEvent(rules ...Rule) Event {
+func (b *Bot) GetOneEvent(rules ...Rule) (Event, error) {
 	s := session{
 		id:    int(time.Now().Unix() + rand.Int63n(10000)),
 		queue: make(chan Event),
 		rules: rules,
 	}
 	sessions.Store(s.id, s)
-	event := <-s.queue
-	sessions.Delete(s.id)
-	return event
+	defer sessions.Delete(s.id)
+	select {
+	case event := <-s.queue:
+		return event, nil
+	case <-time.After(time.Minute):
+		return Event{}, errors.New("等待下一条信息超时")
+	}
+
 }
 
 func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
