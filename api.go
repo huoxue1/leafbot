@@ -586,15 +586,41 @@ type UseApi struct {
 	Echo   string      `json:"echo"`
 }
 
+// Send
+/*
+   @Description:
+   @receiver b
+   @param event Event
+   @param message string
+   @return int
+*/
 func (b *Bot) Send(event Event, message string) int {
 	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message, false)
 	return int(msgId)
 }
+
+// SendAt
+/*
+   @Description:
+   @receiver b
+   @param event Event
+   @param message string
+   @return int
+*/
 func (b *Bot) SendAt(event Event, message string) int {
 	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message+message2.At(event.UserId), false)
 	return int(msgId)
 }
 
+// SendGroupMsg
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param message string
+   @param autoEscape bool
+   @return int32
+*/
 func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -621,6 +647,15 @@ func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
 	return responseMsgJson.Data.MessageId
 }
 
+// SendPrivateMsg
+/*
+   @Description:
+   @receiver b
+   @param userId int
+   @param message string
+   @param autoEscape bool
+   @return int32
+*/
 func (b *Bot) SendPrivateMsg(userId int, message string, autoEscape bool) int32 {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -647,6 +682,12 @@ func (b *Bot) SendPrivateMsg(userId int, message string, autoEscape bool) int32 
 	return responseMsgJson.Data.MessageId
 }
 
+// DeleteMsg
+/*
+   @Description:
+   @receiver b
+   @param messageId int32
+*/
 func (b *Bot) DeleteMsg(messageId int32) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -666,6 +707,13 @@ func (b *Bot) DeleteMsg(messageId int32) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// GetMsg
+/*
+   @Description:
+   @receiver b
+   @param messageId int32
+   @return GetMessage
+*/
 func (b *Bot) GetMsg(messageId int32) GetMessage {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -688,6 +736,14 @@ func (b *Bot) GetMsg(messageId int32) GetMessage {
 	return defaultJson.Data
 }
 
+// SetGroupBan
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param duration int
+*/
 func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -711,6 +767,14 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupCard
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param card string
+*/
 func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -734,6 +798,17 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SendMsg
+/*
+   @Description:
+   @receiver b
+   @param messageType string
+   @param userId int
+   @param groupId int
+   @param message string
+   @param autoEscape bool
+   @return int32
+*/
 func (b *Bot) SendMsg(messageType string, userId int, groupId int, message string, autoEscape bool) int32 {
 	if messageType == "group" {
 		return b.SendGroupMsg(groupId, message, autoEscape)
@@ -742,6 +817,13 @@ func (b *Bot) SendMsg(messageType string, userId int, groupId int, message strin
 	}
 }
 
+// SendLike
+/*
+   @Description:
+   @receiver b
+   @param userId int
+   @param times int
+*/
 func (b *Bot) SendLike(userId int, times int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -763,6 +845,14 @@ func (b *Bot) SendLike(userId int, times int) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupKick
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param rejectAddRequest bool
+*/
 func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -786,6 +876,14 @@ func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupAnonymousBan
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param flag string
+   @param duration int
+*/
 func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -809,6 +907,13 @@ func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupWholeBan
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param enable bool
+*/
 func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -831,6 +936,14 @@ func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupAdmin
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param enable bool
+*/
 func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -853,6 +966,13 @@ func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupAnonymous
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param enable bool
+*/
 func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -873,6 +993,13 @@ func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupName
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param groupName string
+*/
 func (b *Bot) SetGroupName(groupId int, groupName string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -893,6 +1020,13 @@ func (b *Bot) SetGroupName(groupId int, groupName string) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupLeave
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param isDisMiss bool
+*/
 func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -913,6 +1047,15 @@ func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupSpecialTitle
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param specialTitle string
+   @param duration int
+*/
 func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -937,6 +1080,14 @@ func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string,
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetFriendAddRequest
+/*
+   @Description:
+   @receiver b
+   @param flag string
+   @param approve bool
+   @param remark string
+*/
 func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -959,6 +1110,15 @@ func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupAddRequest
+/*
+   @Description:
+   @receiver b
+   @param flag string
+   @param subType string
+   @param approve bool
+   @param reason string
+*/
 func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reason string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -983,6 +1143,12 @@ func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reas
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// GetLoginInfo
+/*
+   @Description:
+   @receiver b
+   @return LoginInfo
+*/
 func (b *Bot) GetLoginInfo() LoginInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -999,6 +1165,14 @@ func (b *Bot) GetLoginInfo() LoginInfo {
 	return response.Data
 }
 
+// GetStrangerInfo
+/*
+   @Description:
+   @receiver b
+   @param userId int
+   @param noCache bool
+   @return Senders
+*/
 func (b *Bot) GetStrangerInfo(userId int, noCache bool) Senders {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1023,6 +1197,12 @@ func (b *Bot) GetStrangerInfo(userId int, noCache bool) Senders {
 	return response.Data
 }
 
+// GetFriendList
+/*
+   @Description:
+   @receiver b
+   @return []FriendList
+*/
 func (b *Bot) GetFriendList() []FriendList {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1039,6 +1219,14 @@ func (b *Bot) GetFriendList() []FriendList {
 	return response.Data
 }
 
+// GetGroupInfo
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param noCache bool
+   @return GroupInfo
+*/
 func (b *Bot) GetGroupInfo(groupId int, noCache bool) GroupInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1063,6 +1251,12 @@ func (b *Bot) GetGroupInfo(groupId int, noCache bool) GroupInfo {
 	return response.Data
 }
 
+// GetGroupList
+/*
+   @Description:
+   @receiver b
+   @return []GroupInfo
+*/
 func (b *Bot) GetGroupList() []GroupInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1079,6 +1273,15 @@ func (b *Bot) GetGroupList() []GroupInfo {
 	return response.Data
 }
 
+// GetGroupMemberInfo
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param userId int
+   @param noCache bool
+   @return GroupMemberInfo
+*/
 func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) GroupMemberInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1105,6 +1308,13 @@ func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) GroupMem
 	return response.Data
 }
 
+// GetGroupMemberList
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @return []GroupMemberInfo
+*/
 func (b *Bot) GetGroupMemberList(groupId int) []GroupMemberInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1127,6 +1337,14 @@ func (b *Bot) GetGroupMemberList(groupId int) []GroupMemberInfo {
 	return response.Data
 }
 
+// GetGroupHonorInfo
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param honorType string
+   @return GroupHonorInfo
+*/
 func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) GroupHonorInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1151,6 +1369,13 @@ func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) GroupHonorInfo {
 	return response.Data
 }
 
+// GetCookies
+/*
+   @Description:
+   @receiver b
+   @param domain string
+   @return Cookie
+*/
 func (b *Bot) GetCookies(domain string) Cookie {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1173,6 +1398,12 @@ func (b *Bot) GetCookies(domain string) Cookie {
 	return response.Data
 }
 
+// GetCsrfToken
+/*
+   @Description:
+   @receiver b
+   @return CsrfToken
+*/
 func (b *Bot) GetCsrfToken() CsrfToken {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1189,6 +1420,13 @@ func (b *Bot) GetCsrfToken() CsrfToken {
 	return response.Data
 }
 
+// GetCredentials
+/*
+   @Description:
+   @receiver b
+   @param domain string
+   @return Credentials
+*/
 func (b *Bot) GetCredentials(domain string) Credentials {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1211,6 +1449,14 @@ func (b *Bot) GetCredentials(domain string) Credentials {
 	return response.Data
 }
 
+// GetRecord
+/*
+   @Description:
+   @receiver b
+   @param file file
+   @param outFormat string
+   @return Record
+*/
 func (b *Bot) GetRecord(file, outFormat string) Record {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1235,6 +1481,13 @@ func (b *Bot) GetRecord(file, outFormat string) Record {
 	return response.Data
 }
 
+// GetImage
+/*
+   @Description:
+   @receiver b
+   @param file string
+   @return Image
+*/
 func (b *Bot) GetImage(file string) Image {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1257,6 +1510,12 @@ func (b *Bot) GetImage(file string) Image {
 	return response.Data
 }
 
+// CanSendImage
+/*
+   @Description:
+   @receiver b
+   @return Bool
+*/
 func (b *Bot) CanSendImage() Bool {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1273,6 +1532,12 @@ func (b *Bot) CanSendImage() Bool {
 	return response.Data
 }
 
+// CanSendRecord
+/*
+   @Description:
+   @receiver b
+   @return Bool
+*/
 func (b *Bot) CanSendRecord() Bool {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1289,6 +1554,12 @@ func (b *Bot) CanSendRecord() Bool {
 	return response.Data
 }
 
+// GetStatus
+/*
+   @Description:
+   @receiver b
+   @return OnlineStatus
+*/
 func (b *Bot) GetStatus() OnlineStatus {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1305,6 +1576,12 @@ func (b *Bot) GetStatus() OnlineStatus {
 	return response.Data
 }
 
+// SetRestart
+/*
+   @Description:
+   @receiver b
+   @param delay int
+*/
 func (b *Bot) SetRestart(delay int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1323,6 +1600,11 @@ func (b *Bot) SetRestart(delay int) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// CleanCache
+/*
+   @Description:
+   @receiver b
+*/
 func (b *Bot) CleanCache() {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1337,6 +1619,15 @@ func (b *Bot) CleanCache() {
 
 //新增
 
+// DownloadFile
+/*
+   @Description:
+   @receiver b
+   @param url string
+   @param threadCount int
+   @param headers []string
+   @return DownloadFilePath
+*/
 func (b *Bot) DownloadFile(url string, threadCount int, headers []string) DownloadFilePath {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1363,6 +1654,14 @@ func (b *Bot) DownloadFile(url string, threadCount int, headers []string) Downlo
 	return response.Data
 }
 
+// GetGroupMsgHistory
+/*
+   @Description:
+   @receiver b
+   @param messageSeq int64
+   @param groupId int
+   @return MessageHistory
+*/
 func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1387,6 +1686,13 @@ func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory {
 	return response.Data
 }
 
+// GetOnlineClients
+/*
+   @Description:
+   @receiver b
+   @param noCache bool
+   @return Clients
+*/
 func (b *Bot) GetOnlineClients(noCache bool) Clients {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1409,6 +1715,13 @@ func (b *Bot) GetOnlineClients(noCache bool) Clients {
 	return response.Data
 }
 
+// GetVipInfoTest
+/*
+   @Description:
+   @receiver b
+   @param UserId int
+   @return VipInfo
+*/
 func (b *Bot) GetVipInfoTest(UserId int) VipInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1431,6 +1744,13 @@ func (b *Bot) GetVipInfoTest(UserId int) VipInfo {
 	return response.Data
 }
 
+// SendGroupNotice
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param content string
+*/
 func (b *Bot) SendGroupNotice(groupId int, content string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1452,6 +1772,11 @@ func (b *Bot) SendGroupNotice(groupId int, content string) {
 	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
+// ReloadEventFilter
+/*
+   @Description:
+   @receiver b
+*/
 func (b *Bot) ReloadEventFilter() {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1465,6 +1790,13 @@ func (b *Bot) ReloadEventFilter() {
 	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupNameSpecial
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param groupName string
+*/
 func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1486,6 +1818,14 @@ func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
 	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
+// SetGroupPortrait
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param file string
+   @param cache int
+*/
 func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1509,6 +1849,13 @@ func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
 	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
+// GetMsgSpecial
+/*
+   @Description:
+   @receiver b
+   @param messageId int
+   @return MsgData
+*/
 func (b *Bot) GetMsgSpecial(messageId int) MsgData {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1531,6 +1878,13 @@ func (b *Bot) GetMsgSpecial(messageId int) MsgData {
 	return response.Data
 }
 
+// GetForwardMsg
+/*
+   @Description:
+   @receiver b
+   @param messageId int
+   @return []ForwardMsg
+*/
 func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1553,6 +1907,13 @@ func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
 	return response.Data
 }
 
+// SendGroupForwardMsg
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param messages []Node
+*/
 func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1574,6 +1935,13 @@ func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
+// GetWordSlices
+/*
+   @Description:
+   @receiver b
+   @param content string
+   @return []string
+*/
 func (b *Bot) GetWordSlices(content string) []string {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1596,6 +1964,13 @@ func (b *Bot) GetWordSlices(content string) []string {
 	return response.Data
 }
 
+// OcrImage
+/*
+   @Description:
+   @receiver b
+   @param image string
+   @return OcrImage
+*/
 func (b *Bot) OcrImage(image string) OcrImage {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1618,6 +1993,12 @@ func (b *Bot) OcrImage(image string) OcrImage {
 	return response.Data
 }
 
+// GetGroupSystemMsg
+/*
+   @Description:
+   @receiver b
+   @return GroupSystemMsg
+*/
 func (b *Bot) GetGroupSystemMsg() GroupSystemMsg {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1634,6 +2015,13 @@ func (b *Bot) GetGroupSystemMsg() GroupSystemMsg {
 	return response.Data
 }
 
+// GetGroupFileSystemInfo
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @return GroupFileSystemInfo
+*/
 func (b *Bot) GetGroupFileSystemInfo(groupId int) GroupFileSystemInfo {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1656,6 +2044,13 @@ func (b *Bot) GetGroupFileSystemInfo(groupId int) GroupFileSystemInfo {
 	return response.Data
 }
 
+// GetGroupRootFiles
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @return GroupRootFiles
+*/
 func (b *Bot) GetGroupRootFiles(groupId int) GroupRootFiles {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1678,6 +2073,14 @@ func (b *Bot) GetGroupRootFiles(groupId int) GroupRootFiles {
 	return response.Data
 }
 
+// GetGroupFilesByFolder
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param folderId string
+   @return GroupFilesByFolder
+*/
 func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) GroupFilesByFolder {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1702,6 +2105,15 @@ func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) GroupFilesByFo
 	return response.Data
 }
 
+// GetGroupFileUrl
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param fileId string
+   @param busid int
+   @return FileUrl
+*/
 func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) FileUrl {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1728,6 +2140,13 @@ func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) FileUrl {
 	return response.Data
 }
 
+// GetGroupAtAllRemain
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @return GroupAtAllRemain
+*/
 func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
@@ -1750,6 +2169,15 @@ func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
 	return response.Data
 }
 
+// UploadGroupFile
+/*
+   @Description:
+   @receiver b
+   @param groupId int
+   @param file string
+   @param name string
+   @param folder string
+*/
 func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder string) {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)

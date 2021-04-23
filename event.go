@@ -36,6 +36,11 @@ var (
 	sessions sync.Map
 )
 
+// sessionHandle
+/*
+   @Description:
+   @param event Event
+*/
 func sessionHandle(event Event) {
 	sessions.Range(func(key, value interface{}) bool {
 		s := value.(session)
@@ -146,6 +151,13 @@ func (c CommandChain) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 
+// AddMessageHandle
+/*
+   @Description:
+   @param messageType string
+   @param rules []Rule
+   @param handles ...func(event Event, bot *Bot)
+*/
 func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Event, bot *Bot)) {
 	for _, handle := range handles {
 		MessageHandles = append(MessageHandles, &messageHandle{
@@ -157,6 +169,14 @@ func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Ev
 
 }
 
+// AddNoticeHandle
+/*
+   @Description:
+   @param noticeType string
+   @param rules []Rule
+   @param weight int
+   @param handles ...func(event Event, bot *Bot)
+*/
 func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
 	for _, handle := range handles {
 		NoticeHandles = append(NoticeHandles, &noticeHandle{
@@ -169,6 +189,14 @@ func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...fun
 
 }
 
+// AddRequestHandle
+/*
+   @Description:
+   @param requestType string
+   @param rules []Rule
+   @param weight int
+   @param handles ...func(event Event, bot *Bot)
+*/
 func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
 	for _, handle := range handles {
 		RequestHandles = append(RequestHandles, &requestHandle{
@@ -181,6 +209,13 @@ func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...f
 
 }
 
+// AddMetaHandles
+/*
+   @Description:
+   @param rules []Rule
+   @param weight int
+   @param handles ...func(event Event, bot *Bot)
+*/
 func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
 	for _, handle := range handles {
 		MetaHandles = append(MetaHandles, &metaHandle{
@@ -191,6 +226,16 @@ func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *
 	}
 }
 
+// AddCommandHandle
+/*
+   @Description:
+   @param handle func(event Event, bot *Bot, args []string)
+   @param command string
+   @param allies []string
+   @param rules []Rule
+   @param weight int
+   @param block bool
+*/
 func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
 	CommandHandles = append(CommandHandles, &commandHandle{
 		handle:  handle,
@@ -202,6 +247,10 @@ func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command
 	})
 }
 
+// eventMain
+/*
+   @Description:
+*/
 func eventMain() {
 	sort.Sort(&MessageHandles)
 	sort.Sort(&RequestHandles)
@@ -237,6 +286,14 @@ func eventMain() {
 	}()
 }
 
+// GetOneEvent
+/*
+   @Description:
+   @receiver b
+   @param rules ...Rule
+   @return Event  Event
+   @return error  error
+*/
 func (b *Bot) GetOneEvent(rules ...Rule) (Event, error) {
 	s := session{
 		id:    int(time.Now().Unix() + rand.Int63n(10000)),
@@ -254,6 +311,14 @@ func (b *Bot) GetOneEvent(rules ...Rule) (Event, error) {
 
 }
 
+// GetMoreEvent
+/*
+   @Description:
+   @receiver b
+   @param rules ...Rule
+   @return int  int
+   @return chan  Event
+*/
 func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
 	s := session{
 		id:    int(time.Now().Unix() + rand.Int63n(10000)),
@@ -264,10 +329,21 @@ func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
 	return s.id, s.queue
 }
 
+// CloseMessageChan
+/*
+   @Description:
+   @receiver b
+   @param id int
+*/
 func (b *Bot) CloseMessageChan(id int) {
 	sessions.Delete(id)
 }
 
+// viewsMessage
+/*
+   @Description:
+   @param event Event
+*/
 func viewsMessage(event Event) {
 	defer func() {
 		err := recover()
@@ -295,6 +371,11 @@ func viewsMessage(event Event) {
 	}
 }
 
+// processNoticeHandle
+/*
+   @Description:
+   @param event Event
+*/
 func processNoticeHandle(event Event) {
 	defer func() {
 		err := recover()
@@ -317,6 +398,13 @@ func processNoticeHandle(event Event) {
 	}
 }
 
+// checkRule
+/*
+   @Description:
+   @param event Event
+   @param rules []Rule
+   @return bool
+*/
 func checkRule(event Event, rules []Rule) bool {
 	for _, rule := range rules {
 		check := rule.RuleCheck(event, rule.Dates)
@@ -327,6 +415,13 @@ func checkRule(event Event, rules []Rule) bool {
 	return true
 }
 
+// getFunctionName
+/*
+   @Description:
+   @param i interface{}
+   @param seps ...rune
+   @return string
+*/
 func getFunctionName(i interface{}, seps ...rune) string {
 	// 获取函数名称
 	fn := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
@@ -349,6 +444,10 @@ func getFunctionName(i interface{}, seps ...rune) string {
 	return ""
 }
 
+// processMessageHandle
+/*
+   @Description:
+*/
 func processMessageHandle() {
 	defer func() {
 		err := recover()
@@ -409,6 +508,11 @@ func processMessageHandle() {
 	}
 }
 
+// processRequestEventHandle
+/*
+   @Description:
+   @param event Event
+*/
 func processRequestEventHandle(event Event) {
 	for _, handle := range RequestHandles {
 		rule := checkRule(event, handle.rules)
@@ -422,10 +526,21 @@ func processRequestEventHandle(event Event) {
 	}
 }
 
+// processMetaEventHandle
+/*
+   @Description:
+   @param event Event
+*/
 func processMetaEventHandle(event Event) {
 
 }
 
+// GetBotById
+/*
+   @Description:
+   @param id int
+   @return *Bot
+*/
 func GetBotById(id int) *Bot {
 	for _, bot := range DefaultConfig.Bots {
 		if bot.SelfId == id {

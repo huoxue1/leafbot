@@ -31,6 +31,10 @@ var (
 	DefaultConfig = new(Config)
 )
 
+// init
+/*
+   @Description:
+*/
 func init() {
 	log.SetFormatter(&easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
@@ -45,6 +49,12 @@ const (
 	YAML  = "yaml"
 )
 
+// LoadConfig
+/*
+   @Description:
+   @param path string
+   @param fileType string
+*/
 func LoadConfig(path string, fileType string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
 	if err != nil {
@@ -85,6 +95,10 @@ func LoadConfig(path string, fileType string) {
 	log.Infoln("已加载配置：" + string(data))
 }
 
+// InitBots
+/*
+   @Description:
+*/
 func InitBots() {
 	go eventMain()
 	http.HandleFunc("/cqhttp/ws", EventHandle)
@@ -97,6 +111,12 @@ func InitBots() {
 	}
 }
 
+// GetLogLevel
+/*
+   @Description:
+   @param level string
+   @return log.Level
+*/
 func GetLogLevel(level string) log.Level {
 	switch level {
 	case "trace":

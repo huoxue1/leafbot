@@ -25,6 +25,12 @@ var upgrade = websocket.Upgrader{
 		return true
 	}}
 
+// GetBot
+/*
+   @Description:
+   @param name string
+   @return *Bot
+*/
 func GetBot(name string) *Bot {
 	for _, bot := range DefaultConfig.Bots {
 		if bot.Name == name {
@@ -34,6 +40,11 @@ func GetBot(name string) *Bot {
 	return nil
 }
 
+// readData
+/*
+   @Description:
+   @receiver con
+*/
 func (con *connection) readData() {
 	go func() {
 		for {
@@ -53,6 +64,11 @@ func (con *connection) readData() {
 
 }
 
+// FilterEventOrResponse
+/*
+   @Description:
+   @receiver con
+*/
 func (con *connection) FilterEventOrResponse() {
 	for true {
 		time.Sleep(10)
@@ -67,6 +83,11 @@ func (con *connection) FilterEventOrResponse() {
 
 }
 
+// writeData
+/*
+   @Description:
+   @receiver con
+*/
 func (con *connection) writeData() {
 	go func() {
 		for {
@@ -85,6 +106,11 @@ func (con *connection) writeData() {
 
 }
 
+// wsClose
+/*
+   @Description:
+   @receiver con
+*/
 func (con *connection) wsClose() {
 	log.Debugln("链接已关闭")
 	_ = con.wsSocket.Close()
@@ -97,6 +123,12 @@ func (con *connection) wsClose() {
 	}
 }
 
+// EventHandle
+/*
+   @Description:
+   @param w http.ResponseWriter
+   @param r *http.Request
+*/
 func EventHandle(w http.ResponseWriter, r *http.Request) {
 	selfId, err := strconv.Atoi(r.Header.Get("X-Self-ID"))
 
@@ -122,6 +154,13 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 	go wscon.FilterEventOrResponse()
 }
 
+// getResponse
+/*
+   @Description:
+   @param r *response
+   @param echo string
+   @return []byte
+*/
 func getResponse(r *response, echo string) []byte {
 	for true {
 		data := <-apiResChan
