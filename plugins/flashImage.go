@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"github.com/3343780376/leafBot"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -25,6 +26,7 @@ func UseFlashImage(userId int) {
 				mess = time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 					strconv.Itoa(event.UserId) + "所发闪照"
 			}
+			time.Sleep(time.Duration(rand.Intn(5000)))
 			bot.SendPrivateMsg(userId, mess+strings.Replace(event.Message, "type=flash,", "", -1), false)
 		})
 }
