@@ -510,7 +510,7 @@ func processMessageHandle() {
 
 // processRequestEventHandle
 /*
-   @Description:
+   @Description: Request类型event处理
    @param event Event
 */
 func processRequestEventHandle(event Event) {
