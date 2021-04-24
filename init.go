@@ -101,6 +101,7 @@ func LoadConfig(path string, fileType string) {
 */
 func InitBots() {
 	go eventMain()
+
 	http.HandleFunc("/cqhttp/ws", EventHandle)
 	for _, bot := range DefaultConfig.Bots {
 		run(bot)

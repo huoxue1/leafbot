@@ -26,6 +26,14 @@ var (
 	c = make(chan Event, 10)
 )
 
+var ISGUI = true
+
+var (
+	MessageChan = make(chan Event, 10)
+	NoticeChan  = make(chan Event, 10)
+	Request     = make(chan Event, 10)
+)
+
 var (
 	MessageHandles MessageChain
 	RequestHandles RequestChain
@@ -186,7 +194,6 @@ func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...fun
 			weight:     weight,
 		})
 	}
-
 }
 
 // AddRequestHandle
@@ -355,6 +362,9 @@ func viewsMessage(event Event) {
 	switch event.PostType {
 	case "message":
 		c <- event
+		if ISGUI {
+			MessageChan <- event
+		}
 		go processMessageHandle()
 
 	case "notice":
