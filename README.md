@@ -28,6 +28,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 
 ---
+## 已添加windows的gui界面，前提是基于chorme引擎
 
 ## 安装
 
