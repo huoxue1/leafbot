@@ -2,6 +2,17 @@
 <!-- saved from url=(0042)https://www.layui.com/demo/layuiAdmin.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+
+    <style>
+        #send_type{
+            width: 20%;
+        }
+        #send_id{
+            width: 20%;
+        }
+
+
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>LeftBot</title>
     <meta name="renderer" content="webkit">
@@ -137,10 +148,27 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        底部固定区域
+        <form class="layui-form">
+            <div class="layui-form-select layui-input-inline" id="send_type">
+                <select name="type" id="">
+                    <option>群组</option>
+                    <option>私聊</option>
+                </select>
+            </div>
+            <div class="layui-form-select layui-input-inline" id="send_id">
+                <select name="group_id" id="">
+                    <option>123</option>
+                    <option>456</option>
+                </select>
+            </div>
+
+            <div class="layui-input-inline" id="send_message">
+                <input type="text" class="layui-input">
+            </div>
+        </form>
     </div>
 </div>
-<script src="./layout 管理界面大布局示例 - Layui_files/layui.js.下载" charset="utf-8"></script>
+<!--<script src="./layout 管理界面大布局示例 - Layui_files/layui.js.下载" charset="utf-8"></script>-->
 <script>
     var arrs = []
     var ws = new WebSocket("ws://localhost:3000/data")

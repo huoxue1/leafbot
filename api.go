@@ -2202,3 +2202,17 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	content, _ := json.Marshal(d)
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
+
+func (b *Bot) CallApi(Action string, param interface{}) {
+	rand.Seed(time.Now().Unix())
+	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	var d = UseApi{
+		Action: Action,
+		Params: param,
+		Echo:   echo,
+	}
+	b.Client.OutChan <- d
+	data := getResponse(&response{}, echo)
+	content, _ := json.Marshal(d)
+	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+}
