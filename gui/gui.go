@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 )
 
 var upGrader = websocket.Upgrader{
@@ -51,8 +52,15 @@ func InitWindow() {
 	engine.GET("/", func(context *gin.Context) {
 		context.HTML(200, "index.html", nil)
 	})
+
+	engine.POST("/get_config", GetConfig)
+	engine.POST("/get_group_list", GetGroupList)
+	engine.POST("/get_friend_list", GetFriendList)
+
 	engine.GET("/data", data)
-	engine.Run(":3000")
+	if err := engine.Run(":3000"); err != nil {
+		log.Debugln(err.Error())
+	}
 
 }
 
@@ -90,4 +98,40 @@ func data(ctx *gin.Context) {
 
 	}()
 
+}
+
+func GetConfig(ctx *gin.Context) {
+	var bots []int
+	for _, bot := range leafBot.DefaultConfig.Bots {
+		bots = append(bots, bot.SelfId)
+	}
+	ctx.JSON(200, bots)
+}
+
+func GetGroupList(ctx *gin.Context) {
+	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	if err != nil {
+		return
+	}
+	bot := leafBot.GetBotById(selfId)
+	list := bot.GetGroupList()
+	ctx.JSON(200, list)
+}
+
+func GetFriendList(ctx *gin.Context) {
+	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	if err != nil {
+		return
+	}
+	bot := leafBot.GetBotById(selfId)
+	list := bot.GetFriendList()
+	ctx.JSON(200, list)
+}
+
+func CallApi(ctx *gin.Context) {
+	//selfId ,err := strconv.Atoi(ctx.PostForm("self_id"))
+	//if err != nil {
+	//	ctx.JSON(404,nil)
+	//}
+	//bot := leafBot.GetBotById(selfId)
 }

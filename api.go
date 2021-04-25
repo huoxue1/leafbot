@@ -510,11 +510,15 @@ type (
 )
 
 type QuickUseApi interface {
+	CallApi(Action string, param interface{}) interface{}
 	Send(event Event, message string) int
 	SendAt(event Event, message string) int
 }
 
-//go-cqhttp新增api
+// IncreaseApi /*
+/*
+   @Description:
+*/
 type IncreaseApi interface {
 	DownloadFile(url string, threadCount int, headers []string) DownloadFilePath
 	GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory
@@ -2203,7 +2207,7 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
-func (b *Bot) CallApi(Action string, param interface{}) {
+func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	rand.Seed(time.Now().Unix())
 	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
 	var d = UseApi{
@@ -2215,4 +2219,5 @@ func (b *Bot) CallApi(Action string, param interface{}) {
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	return content
 }

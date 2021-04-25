@@ -4,11 +4,17 @@
 
 
     <style>
+        #self_bot{
+            width: 20%;
+        }
         #send_type{
             width: 20%;
         }
         #send_id{
             width: 20%;
+        }
+        #send_message{
+            width: 30%;
         }
 
 
@@ -23,8 +29,9 @@
     <meta name="format-detection" content="telephone=no">
 
     <link rel="stylesheet" href="../static/css/layui.css" media="all">
+    <script src="../static/js/jquery.js"></script>
    <script src="../static/js/layui.js"></script></head>
-<body>
+<body onload="f()">
 
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
@@ -149,28 +156,95 @@
     <div class="layui-footer">
         <!-- 底部固定区域 -->
         <form class="layui-form">
-            <div class="layui-form-select layui-input-inline" id="send_type">
-                <select name="type" id="">
-                    <option>群组</option>
-                    <option>私聊</option>
+
+            <div class="layui-form-select layui-input-inline"  id="self_bot">
+                <select name="self_id" lay-filter="self_id">
                 </select>
             </div>
-            <div class="layui-form-select layui-input-inline" id="send_id">
-                <select name="group_id" id="">
-                    <option>123</option>
-                    <option>456</option>
+
+            <div class="layui-form-select layui-input-inline"  id="send_type">
+                <select name="type" lay-filter="type">
+                    <option value="group">群组</option>
+                    <option value="private">私聊</option>
+                </select>
+            </div>
+            <div class="layui-form-select layui-input-inline" lay-filter="id" id="send_id">
+                <select name="group_id" lay-filter="self_id" lay-search>
+
                 </select>
             </div>
 
             <div class="layui-input-inline" id="send_message">
                 <input type="text" class="layui-input">
             </div>
+            <button class="layui-btn-normal layui-inline">发送</button>
         </form>
     </div>
 </div>
 <!--<script src="./layout 管理界面大布局示例 - Layui_files/layui.js.下载" charset="utf-8"></script>-->
 <script>
+    function f() {
+        var form
+        layui.use('form',function (){
+            form = layui.form
+            form.on('select(type)',function (data) {
+                var value = data.value
+                if (value === "group"){
+                    $.ajax({
+                        type : "post",
+                        url : "/get_group_list",
+                        async : true,
+                        data : {"self_id":$("select[name='self_id']").val()},
+
+                        success : function (data){
+                            $("select[name='group_id'] option").remove()
+                            for (var i = 0; i < data.length; i++) {
+
+                                $("select[name='group_id']").append("<option value="+data[i].group_id+">"+data[i].group_name+"</option>");
+
+                            }
+                            form.render('select')
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        type : "post",
+                        url : "/get_friend_list",
+                        async : true,
+                        data : {"self_id":$("select[name='self_id']").val()},
+                        success : function (data){
+                            $("select[name='group_id'] option").remove()
+                            for (var i = 0; i < data.length; i++) {
+
+                                $("select[name='group_id']").append("<option value="+data[i].user_id+">"+data[i].remark+"</option>");
+
+                            }
+                            form.render('select')
+                        }
+                    })
+                }
+            })
+        })
+
+
+        $.ajax({
+            type : "post",
+            url : "/get_config",
+            async : true,
+            success : function (data){
+                for (var i = 0; i < data.length; i++) {
+                    $("select[name='self_id']").append("<option value="+data[i]+">"+data[i]+"</option>");
+
+                }
+                form.render('select')
+            }
+        })
+    }
+
+
+
     var arrs = []
+
     var ws = new WebSocket("ws://localhost:3000/data")
     ws.onmessage = function(data){
         var content = eval('(' + data.data + ')');
@@ -182,7 +256,6 @@
             "<td>"+content.message+"</td>"+
             "</tr>"
         document.getElementById("tbody").innerHTML += message
-        arrs.push({"id":content.message_id,"type":content.message_type,"group_id":content.group_id,"user_id":content.user_id,"message":content.message})
         // table.reload('table',{
         //     where :{
         //         "id":content.message_id,
