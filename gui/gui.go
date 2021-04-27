@@ -46,7 +46,8 @@ func InitWindow() {
 		<-ui.Done()
 		os.Exit(3)
 	}()
-	engine := gin.Default()
+	engine := gin.New()
+	gin.SetMode(gin.ReleaseMode)
 	engine.StaticFS("/static/", http.Dir("./gui/view/static/"))
 	engine.LoadHTMLGlob("./gui/view/html/*.html")
 	engine.GET("/", func(context *gin.Context) {
@@ -57,6 +58,7 @@ func InitWindow() {
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
 
+	engine.POST("/send_msg", CallApi)
 	engine.GET("/data", data)
 	if err := engine.Run(":3000"); err != nil {
 		log.Debugln(err.Error())
@@ -129,9 +131,14 @@ func GetFriendList(ctx *gin.Context) {
 }
 
 func CallApi(ctx *gin.Context) {
-	//selfId ,err := strconv.Atoi(ctx.PostForm("self_id"))
-	//if err != nil {
-	//	ctx.JSON(404,nil)
-	//}
-	//bot := leafBot.GetBotById(selfId)
+	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	id, err := strconv.Atoi(ctx.PostForm("id"))
+	message := ctx.PostForm("message")
+	messageType := ctx.PostForm("message_type")
+	if err != nil {
+		ctx.JSON(404, nil)
+	}
+	bot := leafBot.GetBotById(selfId)
+	msgId := bot.SendMsg(messageType, id, id, message, false)
+	ctx.JSON(200, msgId)
 }
