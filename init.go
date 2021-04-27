@@ -73,6 +73,7 @@ func LoadConfig(path string, fileType string) {
 		}
 		DefaultConfig.Bots = append(DefaultConfig.Bots, b)
 	}
+	writeGoConfig(DefaultConfig.Bots[0].SelfId)
 	DefaultConfig.Admin = 0
 	DefaultConfig.Host = "127.0.0.1"
 	DefaultConfig.Port = 8080
