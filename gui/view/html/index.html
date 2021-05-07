@@ -71,24 +71,24 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">Group<span class="layui-nav-more"></span></a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">menu 1</a></dd>
-                        <dd><a href="javascript:;">menu 2</a></dd>
-                        <dd><a href="javascript:;">menu 3</a></dd>
-                        <dd><a href="#">the links</a></dd>
-                    </dl>
+                    <a class="" href="javascript:;">Message<span class="layui-nav-more"></span></a>
+<!--                    <dl class="layui-nav-child">-->
+<!--                        <dd><a href="javascript:;">menu 1</a></dd>-->
+<!--                        <dd><a href="javascript:;">menu 2</a></dd>-->
+<!--                        <dd><a href="javascript:;">menu 3</a></dd>-->
+<!--                        <dd><a href="#">the links</a></dd>-->
+<!--                    </dl>-->
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">Private<span class="layui-nav-more"></span></a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">list 1</a></dd>
-                        <dd><a href="javascript:;">list 2</a></dd>
-                        <dd><a href="#">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>
-                <li class="layui-nav-item"><a href="#">the links</a></li>
+<!--                <li class="layui-nav-item">-->
+<!--                    <a href="javascript:;">Private<span class="layui-nav-more"></span></a>-->
+<!--                    <dl class="layui-nav-child">-->
+<!--                        <dd><a href="javascript:;">list 1</a></dd>-->
+<!--                        <dd><a href="javascript:;">list 2</a></dd>-->
+<!--                        <dd><a href="#">超链接</a></dd>-->
+<!--                    </dl>-->
+<!--                </li>-->
+<!--                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>-->
+<!--                <li class="layui-nav-item"><a href="#">the links</a></li>-->
                 <span class="layui-nav-bar"></span></ul>
         </div>
     </div>
@@ -136,10 +136,6 @@
 
 <!--            <br><br><br>-->
 
-
-
-
-
 <!--            <div class="layui-card layui-panel">-->
 <!--                <div class="layui-card-header">-->
 <!--                    下面是充数内容，为的是出现滚动条-->
@@ -169,20 +165,48 @@
                 </select>
             </div>
             <div class="layui-form-select layui-input-inline" lay-filter="id" id="send_id">
-                <select name="group_id" lay-filter="self_id" lay-search>
+                <select name="group_id" lay-filter="id" lay-search>
 
                 </select>
             </div>
 
             <div class="layui-input-inline" id="send_message">
-                <input type="text" class="layui-input">
+                <input type="text" name="message" class="layui-input">
             </div>
-            <button class="layui-btn-normal layui-inline">发送</button>
+            <button onclick="send_msg()" class="layui-btn-normal layui-inline">发送</button>
         </form>
     </div>
 </div>
 <!--<script src="./layout 管理界面大布局示例 - Layui_files/layui.js.下载" charset="utf-8"></script>-->
 <script>
+
+    function send_msg() {
+        var self_id = $("select[name='self_id']").val()
+        var message_type = $("select[name='type']").val()
+        var id = $("#send_id select").val()
+        var message = $("input[name='message']").val()
+        alert(self_id+message_type+id+message)
+
+
+        $.ajax({
+            url : "/send_msg",
+            type : "post",
+            async : true,
+            data : {
+                "self_id":self_id,
+                "message_type":message_type,
+                "id":id,
+                "message":message
+            },
+            success : function (res) {
+                alert("发送成功")
+            }
+        })
+
+
+    }
+
+
     function f() {
         var form
         layui.use('form',function (){

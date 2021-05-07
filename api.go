@@ -3,10 +3,8 @@ package leafBot
 import (
 	"encoding/json"
 	message2 "github.com/3343780376/leafBot/message"
+	uuid "github.com/satori/go.uuid"
 	"log"
-	"math/rand"
-	"strconv"
-	"time"
 )
 
 var (
@@ -626,8 +624,8 @@ func (b *Bot) SendAt(event Event, message string) int {
    @return int32
 */
 func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
+
 	type param struct {
 		GroupId    int    `json:"group_id"`
 		Message    string `json:"message"`
@@ -661,8 +659,7 @@ func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
    @return int32
 */
 func (b *Bot) SendPrivateMsg(userId int, message string, autoEscape bool) int32 {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		UserId     int    `json:"user_id"`
 		Message    string `json:"message"`
@@ -693,8 +690,7 @@ func (b *Bot) SendPrivateMsg(userId int, message string, autoEscape bool) int32 
    @param messageId int32
 */
 func (b *Bot) DeleteMsg(messageId int32) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		MessageId int32 `json:"message_id"`
 	}
@@ -719,8 +715,7 @@ func (b *Bot) DeleteMsg(messageId int32) {
    @return GetMessage
 */
 func (b *Bot) GetMsg(messageId int32) GetMessage {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		MessageId int32 `json:"message_id"`
 	}
@@ -749,8 +744,7 @@ func (b *Bot) GetMsg(messageId int32) GetMessage {
    @param duration int
 */
 func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId  int `json:"group_id"`
 		UserId   int `json:"user_id"`
@@ -780,8 +774,7 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
    @param card string
 */
 func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int    `json:"group_id"`
 		UserId  int    `json:"user_id"`
@@ -829,8 +822,7 @@ func (b *Bot) SendMsg(messageType string, userId int, groupId int, message strin
    @param times int
 */
 func (b *Bot) SendLike(userId int, times int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		UserId int `json:"user_id"`
 		Times  int `json:"times"`
@@ -858,8 +850,7 @@ func (b *Bot) SendLike(userId int, times int) {
    @param rejectAddRequest bool
 */
 func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId          int  `json:"group_id"`
 		UserId           int  `json:"user_id"`
@@ -889,8 +880,7 @@ func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
    @param duration int
 */
 func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId  int    `json:"group_id"`
 		Flag     string `json:"flag"`
@@ -919,8 +909,7 @@ func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
    @param enable bool
 */
 func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int  `json:"group_id"`
 		Enable  bool `json:"enable"`
@@ -949,8 +938,7 @@ func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
    @param enable bool
 */
 func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int  `json:"group_id"`
 		UserId  int  `json:"user_id"`
@@ -978,8 +966,7 @@ func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
    @param enable bool
 */
 func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int  `json:"group_id"`
 		Enable  bool `json:"enable"`
@@ -1005,8 +992,7 @@ func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
    @param groupName string
 */
 func (b *Bot) SetGroupName(groupId int, groupName string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId   int    `json:"group_id"`
 		GroupName string `json:"group_name"`
@@ -1032,8 +1018,7 @@ func (b *Bot) SetGroupName(groupId int, groupName string) {
    @param isDisMiss bool
 */
 func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId   int  `json:"group_id"`
 		IsDisMiss bool `json:"is_dismiss"`
@@ -1061,8 +1046,7 @@ func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
    @param duration int
 */
 func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId      int    `json:"group_id"`
 		UserId       int    `json:"user_id"`
@@ -1093,8 +1077,7 @@ func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string,
    @param remark string
 */
 func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Flag    string `json:"flag"`
 		Approve bool   `json:"approve"`
@@ -1124,8 +1107,7 @@ func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
    @param reason string
 */
 func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reason string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Flag    string `json:"flag"`
 		SubType string `json:"sub_type"`
@@ -1154,8 +1136,7 @@ func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reas
    @return LoginInfo
 */
 func (b *Bot) GetLoginInfo() LoginInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_login_info",
 		Echo:   echo,
@@ -1178,8 +1159,7 @@ func (b *Bot) GetLoginInfo() LoginInfo {
    @return Senders
 */
 func (b *Bot) GetStrangerInfo(userId int, noCache bool) Senders {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		UserId  int  `json:"user_id"`
 		NoCache bool `json:"no_cache"`
@@ -1208,8 +1188,7 @@ func (b *Bot) GetStrangerInfo(userId int, noCache bool) Senders {
    @return []FriendList
 */
 func (b *Bot) GetFriendList() []FriendList {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_friend_list",
 		Echo:   echo,
@@ -1232,8 +1211,7 @@ func (b *Bot) GetFriendList() []FriendList {
    @return GroupInfo
 */
 func (b *Bot) GetGroupInfo(groupId int, noCache bool) GroupInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int  `json:"group_id"`
 		NoCache bool `json:"no_cache"`
@@ -1262,8 +1240,7 @@ func (b *Bot) GetGroupInfo(groupId int, noCache bool) GroupInfo {
    @return []GroupInfo
 */
 func (b *Bot) GetGroupList() []GroupInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_group_list",
 		Echo:   echo,
@@ -1287,8 +1264,7 @@ func (b *Bot) GetGroupList() []GroupInfo {
    @return GroupMemberInfo
 */
 func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) GroupMemberInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int  `json:"group_id"`
 		UserId  int  `json:"user_id"`
@@ -1320,8 +1296,7 @@ func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) GroupMem
    @return []GroupMemberInfo
 */
 func (b *Bot) GetGroupMemberList(groupId int) []GroupMemberInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int `json:"group_id"`
 	}
@@ -1350,8 +1325,7 @@ func (b *Bot) GetGroupMemberList(groupId int) []GroupMemberInfo {
    @return GroupHonorInfo
 */
 func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) GroupHonorInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId   int    `json:"group_id"`
 		HonorType string `json:"honor_type"`
@@ -1381,8 +1355,7 @@ func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) GroupHonorInfo {
    @return Cookie
 */
 func (b *Bot) GetCookies(domain string) Cookie {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Domain string `json:"domain"`
 	}
@@ -1409,8 +1382,7 @@ func (b *Bot) GetCookies(domain string) Cookie {
    @return CsrfToken
 */
 func (b *Bot) GetCsrfToken() CsrfToken {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_csrf_token",
 		Echo:   echo,
@@ -1432,8 +1404,7 @@ func (b *Bot) GetCsrfToken() CsrfToken {
    @return Credentials
 */
 func (b *Bot) GetCredentials(domain string) Credentials {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Domain string `json:"domain"`
 	}
@@ -1462,8 +1433,7 @@ func (b *Bot) GetCredentials(domain string) Credentials {
    @return Record
 */
 func (b *Bot) GetRecord(file, outFormat string) Record {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		File      string `json:"file"`
 		OutFormat string `json:"out_format"`
@@ -1493,8 +1463,7 @@ func (b *Bot) GetRecord(file, outFormat string) Record {
    @return Image
 */
 func (b *Bot) GetImage(file string) Image {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		File string `json:"file"`
 	}
@@ -1521,8 +1490,7 @@ func (b *Bot) GetImage(file string) Image {
    @return Bool
 */
 func (b *Bot) CanSendImage() Bool {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "can_send_image",
 		Echo:   echo,
@@ -1543,8 +1511,7 @@ func (b *Bot) CanSendImage() Bool {
    @return Bool
 */
 func (b *Bot) CanSendRecord() Bool {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "can_send_record",
 		Echo:   echo,
@@ -1565,8 +1532,7 @@ func (b *Bot) CanSendRecord() Bool {
    @return OnlineStatus
 */
 func (b *Bot) GetStatus() OnlineStatus {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_status",
 		Echo:   echo,
@@ -1587,8 +1553,7 @@ func (b *Bot) GetStatus() OnlineStatus {
    @param delay int
 */
 func (b *Bot) SetRestart(delay int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Delay int `json:"delay"`
 	}
@@ -1610,8 +1575,7 @@ func (b *Bot) SetRestart(delay int) {
    @receiver b
 */
 func (b *Bot) CleanCache() {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "clean_cache",
 		Echo:   echo}
@@ -1633,8 +1597,7 @@ func (b *Bot) CleanCache() {
    @return DownloadFilePath
 */
 func (b *Bot) DownloadFile(url string, threadCount int, headers []string) DownloadFilePath {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Url         string   `json:"url"`
 		ThreadCount int      `json:"thread_count"`
@@ -1667,8 +1630,7 @@ func (b *Bot) DownloadFile(url string, threadCount int, headers []string) Downlo
    @return MessageHistory
 */
 func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		MessageSeq int64 `json:"message_seq"`
 		GroupId    int   `json:"group_id"`
@@ -1698,8 +1660,7 @@ func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory {
    @return Clients
 */
 func (b *Bot) GetOnlineClients(noCache bool) Clients {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		NoCache bool `json:"no_cache"`
 	}
@@ -1727,8 +1688,7 @@ func (b *Bot) GetOnlineClients(noCache bool) Clients {
    @return VipInfo
 */
 func (b *Bot) GetVipInfoTest(UserId int) VipInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		UserId int `json:"user_id"`
 	}
@@ -1756,8 +1716,7 @@ func (b *Bot) GetVipInfoTest(UserId int) VipInfo {
    @param content string
 */
 func (b *Bot) SendGroupNotice(groupId int, content string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int    `json:"group_id"`
 		Content string `json:"content"`
@@ -1782,8 +1741,7 @@ func (b *Bot) SendGroupNotice(groupId int, content string) {
    @receiver b
 */
 func (b *Bot) ReloadEventFilter() {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "reload_event_filter",
 		Echo:   echo,
@@ -1802,8 +1760,7 @@ func (b *Bot) ReloadEventFilter() {
    @param groupName string
 */
 func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId   int    `json:"group_id"`
 		GroupName string `json:"group_name"`
@@ -1831,8 +1788,7 @@ func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
    @param cache int
 */
 func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int    `json:"group_id"`
 		File    string `json:"file"`
@@ -1861,8 +1817,7 @@ func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
    @return MsgData
 */
 func (b *Bot) GetMsgSpecial(messageId int) MsgData {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		MessageId int `json:"message_id"`
 	}
@@ -1890,8 +1845,7 @@ func (b *Bot) GetMsgSpecial(messageId int) MsgData {
    @return []ForwardMsg
 */
 func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		MessageId int `json:"message_id"`
 	}
@@ -1919,8 +1873,7 @@ func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
    @param messages []Node
 */
 func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId  int    `json:"group_id"`
 		Messages []Node `json:"messages"`
@@ -1947,8 +1900,7 @@ func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
    @return []string
 */
 func (b *Bot) GetWordSlices(content string) []string {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Content string `json:"content"`
 	}
@@ -1976,8 +1928,7 @@ func (b *Bot) GetWordSlices(content string) []string {
    @return OcrImage
 */
 func (b *Bot) OcrImage(image string) OcrImage {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		Image string `json:"image"`
 	}
@@ -2004,8 +1955,7 @@ func (b *Bot) OcrImage(image string) OcrImage {
    @return GroupSystemMsg
 */
 func (b *Bot) GetGroupSystemMsg() GroupSystemMsg {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: "get_group_system_msg",
 		Echo:   echo,
@@ -2027,8 +1977,7 @@ func (b *Bot) GetGroupSystemMsg() GroupSystemMsg {
    @return GroupFileSystemInfo
 */
 func (b *Bot) GetGroupFileSystemInfo(groupId int) GroupFileSystemInfo {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int `json:"group_id"`
 	}
@@ -2056,8 +2005,7 @@ func (b *Bot) GetGroupFileSystemInfo(groupId int) GroupFileSystemInfo {
    @return GroupRootFiles
 */
 func (b *Bot) GetGroupRootFiles(groupId int) GroupRootFiles {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int `json:"group_id"`
 	}
@@ -2086,8 +2034,7 @@ func (b *Bot) GetGroupRootFiles(groupId int) GroupRootFiles {
    @return GroupFilesByFolder
 */
 func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) GroupFilesByFolder {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId  int `json:"group_id"`
 		FolderId string
@@ -2119,8 +2066,7 @@ func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) GroupFilesByFo
    @return FileUrl
 */
 func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) FileUrl {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int    `json:"group_id"`
 		FileId  string `json:"file_id"`
@@ -2152,8 +2098,7 @@ func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) FileUrl {
    @return GroupAtAllRemain
 */
 func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int `json:"group_id"`
 	}
@@ -2183,8 +2128,7 @@ func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
    @param folder string
 */
 func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder string) {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	type param struct {
 		GroupId int    `json:"group_id"`
 		File    string `json:"file"`
@@ -2208,8 +2152,7 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 }
 
 func (b *Bot) CallApi(Action string, param interface{}) interface{} {
-	rand.Seed(time.Now().Unix())
-	echo := strconv.FormatInt(time.Now().Unix(), 10) + strconv.FormatInt(rand.Int63n(1000), 10)
+	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: Action,
 		Params: param,

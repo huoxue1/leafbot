@@ -56,6 +56,8 @@ func LoadConfig(path string, fileType string) {
 	if err != nil {
 		log.Infoln("配置文件加载失败或者不存在")
 		log.Infoln("将启用默认配置文件")
+	} else {
+		return
 	}
 	input := ""
 	log.Infoln("请输入机器人账号,多个账号用逗号进行分割：")
