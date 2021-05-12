@@ -3,7 +3,7 @@ package plugins
 import (
 	"encoding/json"
 	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
+	"github.com/3343780376/leafBot/cqCode"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -133,7 +133,7 @@ func UseMusicHandle() {
 		if err != nil {
 			return
 		}
-		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music(163, id), false)
+		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, cqCode.Music(163, id), false)
 	}, "/orderMusic", []string{"点歌"}, nil, 10, false)
 }
 
