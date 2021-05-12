@@ -15,11 +15,12 @@ import (
 )
 
 type (
-	MessageChain []*messageHandle
-	RequestChain []*requestHandle
-	NoticeChain  []*noticeHandle
-	CommandChain []*commandHandle
-	MetaChain    []*metaHandle
+	MessageChain      []*messageHandle
+	RequestChain      []*requestHandle
+	NoticeChain       []*noticeHandle
+	CommandChain      []*commandHandle
+	MetaChain         []*metaHandle
+	PretreatmentChain []*PretreatmentHandle
 )
 
 var (
@@ -35,11 +36,12 @@ var (
 )
 
 var (
-	MessageHandles MessageChain
-	RequestHandles RequestChain
-	NoticeHandles  NoticeChain
-	CommandHandles CommandChain
-	MetaHandles    MetaChain
+	MessageHandles      MessageChain
+	RequestHandles      RequestChain
+	NoticeHandles       NoticeChain
+	CommandHandles      CommandChain
+	MetaHandles         MetaChain
+	PretreatmentHandles PretreatmentChain
 
 	sessions sync.Map
 )
@@ -68,6 +70,12 @@ type (
 		id    int
 		queue chan Event
 		rules []Rule
+	}
+
+	PretreatmentHandle struct {
+		handle func(event Event, bot *Bot) bool
+		rules  []Rule
+		weight int
 	}
 
 	messageHandle struct {
@@ -118,6 +126,16 @@ func (m MessageChain) Less(i, j int) bool {
 }
 func (m MessageChain) Swap(i, j int) {
 	m[i], m[j] = m[j], m[i]
+}
+
+func (p PretreatmentChain) Len() int {
+	return len(p)
+}
+func (p PretreatmentChain) Less(i, j int) bool {
+	return p[i].weight < p[j].weight
+}
+func (p PretreatmentChain) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
 }
 
 func (m MetaChain) Len() int {
@@ -175,6 +193,16 @@ func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Ev
 		})
 	}
 
+}
+
+func AddPretreatmentHandle(rules []Rule, weight int, handles ...func(event Event, bot *Bot) bool) {
+	for _, handle := range handles {
+		PretreatmentHandles = append(PretreatmentHandles, &PretreatmentHandle{
+			handle: handle,
+			rules:  rules,
+			weight: weight,
+		})
+	}
 }
 
 // AddNoticeHandle
@@ -348,7 +376,7 @@ func (b *Bot) CloseMessageChan(id int) {
 
 // viewsMessage
 /*
-   @Description:
+   @Description: 对所有event进行分类，按照不同的type进行不同的处理
    @param event Event
 */
 func viewsMessage(event Event) {
@@ -358,6 +386,19 @@ func viewsMessage(event Event) {
 			log.Infoln(err)
 		}
 	}()
+
+	// 执行所有预处理handle
+	for _, handle := range PretreatmentHandles {
+		bot := GetBotById(event.SelfId)
+		rule := checkRule(event, handle.rules)
+		if !rule {
+			continue
+		}
+		b := handle.handle(event, bot)
+		if !b {
+			return
+		}
+	}
 
 	switch event.PostType {
 	case "message":
@@ -383,7 +424,7 @@ func viewsMessage(event Event) {
 
 // processNoticeHandle
 /*
-   @Description:
+   @Description: Notice事件的handle处理
    @param event Event
 */
 func processNoticeHandle(event Event) {

@@ -29,6 +29,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ---
 ## 已添加windows的gui界面，前提是基于chorme引擎
+### 特别感谢大佬的<a href="https://github.com/wdvxdr1123/ZeroBot/tree/main/message">CQ码</a>解析和消息部分
 
 ## 安装
 
@@ -193,3 +194,7 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
 + host: gocq的ws上报地址
 + port : gocq的ws上报端口
 + log_level : 日志等级，默认为info
+
+### 特别感谢
+
+[wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot)

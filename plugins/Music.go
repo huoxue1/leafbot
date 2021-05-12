@@ -70,17 +70,17 @@ func UseMusicHandle() {
 		switch len(args) {
 		case 0:
 			{
-				bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, "请正确输入参数", false)
+				bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("请正确输入参数"))
 			}
 		case 1:
 			{
 				if args[0] == "help" {
-					bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, "歌曲查询命令未：\n/music或者查询歌曲\n\n"+
-						"第一个参数为搜索信息，第二个参数为返回条数", false)
+					bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
+						"第一个参数为搜索信息，第二个参数为返回条数"))
 				} else {
 					music, err := searchMusic(args[0], 10, 0)
 					if err != nil {
-						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, "点歌出现错误，\n"+err.Error(), false)
+						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 						return
 					}
 					m := "搜索结果为：\n\n "
@@ -89,7 +89,7 @@ func UseMusicHandle() {
 						m += "歌名：" + song.Name + "\n"
 						m += "作者：" + song.Artists[0].Name + "\n\n"
 					}
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m, false)
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
 				}
 			}
 		case 2:
@@ -97,7 +97,7 @@ func UseMusicHandle() {
 				limit, _ := strconv.Atoi(args[1])
 				music, err := searchMusic(args[0], limit, 0)
 				if err != nil {
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, "点歌出现错误，\n"+err.Error(), false)
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 					return
 				}
 				m := "搜索结果为：\n\n "
@@ -106,7 +106,7 @@ func UseMusicHandle() {
 					m += "歌名：" + song.Name + "\n"
 					m += "作者：" + song.Artists[0].Name + "\n\n"
 				}
-				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m, false)
+				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
 			}
 		case 3:
 			{
@@ -114,7 +114,7 @@ func UseMusicHandle() {
 				offset, _ := strconv.Atoi(args[2])
 				music, err := searchMusic(args[0], limit, offset)
 				if err != nil {
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, "点歌出现错误，\n"+err.Error(), false)
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 					return
 				}
 				m := "搜索结果为：\n\n "
@@ -123,7 +123,7 @@ func UseMusicHandle() {
 					m += "歌名：" + song.Name + "\n"
 					m += "作者：" + song.Artists[0].Name + "\n\n"
 				}
-				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m, false)
+				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m)
 			}
 		}
 	}, "/music", []string{"查询歌曲"}, nil, 10, false)
@@ -133,7 +133,7 @@ func UseMusicHandle() {
 		if err != nil {
 			return
 		}
-		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music(163, id), false)
+		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
 	}, "/orderMusic", []string{"点歌"}, nil, 10, false)
 }
 

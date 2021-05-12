@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -20,7 +21,6 @@ type Tran struct {
 }
 
 func UseTranslateHandle() {
-
 	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		//if len(args)<1 {
 		//	bot.Send(event,"请输入正确的参数")
@@ -43,16 +43,16 @@ func UseTranslateHandle() {
 				}
 				tran, err := translate(nextEvent.Message, "AUTO")
 				if err != nil {
-					bot.Send(event, "翻译失败："+err.Error())
+					bot.Send(event, message.Text("翻译失败："+err.Error()))
 					return
 				}
-				message := ""
+				message1 := ""
 				for _, result := range tran.TranslateResult {
 					for _, s := range result {
-						message += s.Tgt + "\n"
+						message1 += s.Tgt + "\n"
 					}
 				}
-				bot.Send(event, "翻译结果为：\n"+message)
+				bot.Send(event, message.Text("翻译结果为：\n"+message1))
 				return
 			}
 		}

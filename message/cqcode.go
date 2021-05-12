@@ -1,44 +1,87 @@
 package message
 
-import "fmt"
+import (
+	"github.com/tidwall/gjson"
+	"reflect"
+	"unsafe"
+)
 
-func At(userId int) string {
-	return fmt.Sprintf("[CQ:at,qq=%d]", userId)
-}
+// Modified from https://github.com/catsworld/qq-bot-api
 
-func AtAll() string {
-	return "[CQ:at,qq=all]"
-}
-func Image(file string, data map[string]interface{}) string {
-	date := "[CQ:image,file=" + file
-	for k, datum := range data {
-		date += fmt.Sprintf(","+k+"=%v", datum)
+// ParseMessage parses msg, which might have 2 types, string or array,
+// depending on the configuration of cqhttp, to a Message.
+// msg is the value of key "message" of the data unmarshalled from the
+// API response JSON.
+func ParseMessage(msg []byte) Message {
+	x := gjson.Parse(BytesToString(msg))
+	if x.IsArray() {
+		return ParseMessageFromArray(x)
+	} else {
+		return ParseMessageFromString(x.String())
 	}
-
-	return date + "]"
-
 }
 
-func Face(id int) string {
-	return fmt.Sprintf("[CQ:face,id=%d]", id)
+// ParseMessageFromArray parses msg as type array to a Message.
+// msg is the value of key "message" of the data unmarshalled from the
+// API response JSON.
+// ParseMessageFromArray cq字符串转化为json对象
+func ParseMessageFromArray(msgs gjson.Result) Message {
+	message := Message{}
+	parse2map := func(val gjson.Result) map[string]string {
+		m := map[string]string{}
+		val.ForEach(func(key, value gjson.Result) bool {
+			m[key.String()] = value.String()
+			return true
+		})
+		return m
+	}
+	msgs.ForEach(func(_, item gjson.Result) bool {
+		message = append(message, MessageSegment{
+			Type: item.Get("type").String(),
+			Data: parse2map(item.Get("data")),
+		})
+		return true
+	})
+	return message
 }
 
-func Share(url, title, content, image string) string {
-	return fmt.Sprintf("[CQ:share,url=%v,title=%v,image=%v,content=%v]", url, title, image, content)
+// CQString returns the CQEncoded string. All media in the message will be converted
+// to its CQCode.
+// CQString 解码cq字符串
+func (m Message) CQString() string {
+	str := ""
+	for _, media := range m {
+		if media.Type != "text" {
+			str += media.CQCode()
+		} else {
+			str += EscapeCQText(media.Data["text"])
+		}
+	}
+	return str
 }
 
-func Music(Type, id int) string {
-	return fmt.Sprintf("[CQ:music,type=%v,id=%v]", Type, id)
+// ExtractPlainText 提取消息中的纯文本
+func (m Message) ExtractPlainText() string {
+	msg := ""
+	for _, val := range m {
+		if val.Type == "text" {
+			msg += val.Data["text"]
+		}
+	}
+	return msg
 }
 
-func Poke(userid int) string {
-	return fmt.Sprintf("[CQ:poke,qq=%v]", userid)
+// BytesToString 没有内存开销的转换
+func BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }
 
-func Gift(userId, id int) string {
-	return fmt.Sprintf("[CQ:gift,qq=%v,id=%v]", userId, id)
-}
-
-func Tts(text interface{}) string {
-	return fmt.Sprintf("[CQ:tts,text=%v]", text)
+// StringToBytes 没有内存开销的转换
+func StringToBytes(s string) (b []byte) {
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s)) // nolint
+	bh.Data = sh.Data
+	bh.Len = sh.Len
+	bh.Cap = sh.Len
+	return b
 }

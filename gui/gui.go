@@ -7,6 +7,7 @@ package gui
 
 import (
 	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
@@ -133,12 +134,12 @@ func GetFriendList(ctx *gin.Context) {
 func CallApi(ctx *gin.Context) {
 	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
 	id, err := strconv.Atoi(ctx.PostForm("id"))
-	message := ctx.PostForm("message")
+	message1 := ctx.PostForm("message")
 	messageType := ctx.PostForm("message_type")
 	if err != nil {
 		ctx.JSON(404, nil)
 	}
 	bot := leafBot.GetBotById(selfId)
-	msgId := bot.SendMsg(messageType, id, id, message, false)
+	msgId := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgId)
 }

@@ -3,6 +3,7 @@ package plugins
 import (
 	"encoding/json"
 	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot/message"
 	"io"
 	"net/http"
 	"strconv"
@@ -23,14 +24,14 @@ func UseDayImage() {
 			if err != nil {
 				return
 			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, image.Bing.Copyright+"\n[CQ:image,file="+image.Bing.Url+"]", false)
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
 		} else {
 			day, _ := strconv.Atoi(args[0])
 			image, err := getDayImage(day)
 			if err != nil {
 				return
 			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, image.Bing.Copyright+"\n[CQ:image,file="+image.Bing.Url+"]", false)
+			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
 		}
 	}, "/dayPic", []string{"一图"}, nil, 10, false)
 }
