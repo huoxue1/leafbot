@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
+	"github.com/3343780376/leafBot/message"
 	"github.com/3343780376/leafBot/plugins"
 	"os"
 	"runtime"
@@ -70,6 +71,5 @@ func Weather(event leafBot.Event, bot *leafBot.Bot, args []string) {
 	m := map[string]string{"北京": "晴", "山东": "下雨"}
 	// 调用发送消息的api，会根据messageType自动回复
 	bot.SendMsg(event.MessageType, event.UserId, event.GroupId,
-		args[0]+"的天气为"+m[args[0]],
-		false)
+		message.Text(args[0]+"的天气为"+m[args[0]]))
 }

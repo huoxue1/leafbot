@@ -2,7 +2,7 @@ package plugins
 
 import (
 	"github.com/3343780376/leafBot"
-	"math/rand"
+	"github.com/3343780376/leafBot/message"
 	"strconv"
 	"strings"
 	"time"
@@ -18,31 +18,30 @@ func UseFlashImage(userId int) {
 			if userId == 0 {
 				userId = leafBot.DefaultConfig.Admin
 			}
-			mess := ""
+			mess := message.MessageSegment{}
 			if event.MessageType == "group" {
-				mess = time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
-					strconv.Itoa(event.UserId) + "所发闪照"
+				mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
+					strconv.Itoa(event.UserId) + "所发闪照")
 			} else {
-				mess = time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
-					strconv.Itoa(event.UserId) + "所发闪照"
+				mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
+					strconv.Itoa(event.UserId) + "所发闪照")
 			}
-			time.Sleep(time.Duration(rand.Intn(5000)))
-			bot.SendPrivateMsg(userId, mess+strings.Replace(event.Message, "type=flash,", "", -1), false)
+			bot.SendPrivateMsg(userId, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
 		})
 }
 
 func UseFlashImageToGroup(groupId int) {
 	leafBot.AddMessageHandle("", []leafBot.Rule{{RuleCheck: FlashMessageRule, Dates: nil}},
 		func(event leafBot.Event, bot *leafBot.Bot) {
-			mess := ""
+			mess := message.MessageSegment{}
 			if event.MessageType == "group" {
-				mess = time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
-					strconv.Itoa(event.UserId) + "所发闪照"
+				mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
+					strconv.Itoa(event.UserId) + "所发闪照")
 			} else {
-				mess = time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
-					strconv.Itoa(event.UserId) + "所发闪照"
+				mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
+					strconv.Itoa(event.UserId) + "所发闪照")
 			}
-			bot.SendGroupMsg(groupId, mess+strings.Replace(event.Message, "type=flash,", "", -1), false)
+			bot.SendGroupMsg(groupId, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
 		})
 }
 

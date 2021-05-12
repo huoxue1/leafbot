@@ -2,7 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
-	"github.com/3343780376/leafBot/cqCode"
+	message2 "github.com/3343780376/leafBot/message"
 	uuid "github.com/satori/go.uuid"
 	"log"
 )
@@ -509,8 +509,8 @@ type (
 
 type QuickUseApi interface {
 	CallApi(Action string, param interface{}) interface{}
-	Send(event Event, message string) int
-	SendAt(event Event, message string) int
+	Send(event Event, message interface{}) int
+	SendAt(event Event, message interface{}) int
 }
 
 // IncreaseApi /*
@@ -544,13 +544,13 @@ type SpecialApi interface {
 }
 
 type Api interface {
-	SendGroupMsg(groupId int, message string, autoEscape bool) int32
-	SendPrivateMsg(userId int, message string, autoEscape bool) int32
+	SendGroupMsg(groupId int, message interface{}) int32
+	SendPrivateMsg(userId int, message interface{}) int32
 	DeleteMsg(messageId int32)
 	GetMsg(messageId int32) GetMessage
 	SetGroupBan(groupId int, userId int, duration int)
 	SetGroupCard(groupId int, userId int, card string)
-	SendMsg(messageType string, userId int, groupId int, message string, autoEscape bool) int32
+	SendMsg(messageType string, userId int, groupId int, message interface{}) int32
 	SendLike(userId int, times int)
 	SetGroupKick(groupId int, userId int, rejectAddRequest bool)
 	SetGroupAnonymousBan(groupId int, flag string, duration int)
@@ -596,8 +596,8 @@ type UseApi struct {
    @param message string
    @return int
 */
-func (b *Bot) Send(event Event, message string) int {
-	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message, false)
+func (b *Bot) Send(event Event, message interface{}) int {
+	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message)
 	return int(msgId)
 }
 
@@ -609,8 +609,8 @@ func (b *Bot) Send(event Event, message string) int {
    @param message string
    @return int
 */
-func (b *Bot) SendAt(event Event, message string) int {
-	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message+cqCode.At(event.UserId), false)
+func (b *Bot) SendAt(event Event, message interface{}) int {
+	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message)
 	return int(msgId)
 }
 
@@ -623,20 +623,18 @@ func (b *Bot) SendAt(event Event, message string) int {
    @param autoEscape bool
    @return int32
 */
-func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
+func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
 
 	type param struct {
-		GroupId    int    `json:"group_id"`
-		Message    string `json:"message"`
-		AutoEscape bool   `json:"auto_escape"`
+		GroupId int         `json:"group_id"`
+		Message interface{} `json:"message"`
 	}
 	var d = UseApi{
 		Action: "send_group_msg",
 		Params: param{
-			GroupId:    groupId,
-			Message:    message,
-			AutoEscape: autoEscape,
+			GroupId: groupId,
+			Message: message,
 		},
 		Echo: echo}
 
@@ -658,19 +656,23 @@ func (b *Bot) SendGroupMsg(groupId int, message string, autoEscape bool) int32 {
    @param autoEscape bool
    @return int32
 */
-func (b *Bot) SendPrivateMsg(userId int, message string, autoEscape bool) int32 {
+func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
+	switch message.(type) {
+	case string:
+		{
+			message = message2.Text(message)
+		}
+	}
 	type param struct {
-		UserId     int    `json:"user_id"`
-		Message    string `json:"message"`
-		AutoEscape bool   `json:"auto_escape"`
+		UserId  int         `json:"user_id"`
+		Message interface{} `json:"message"`
 	}
 	var d = UseApi{
 		Action: "send_private_msg",
 		Params: param{
-			UserId:     userId,
-			Message:    message,
-			AutoEscape: autoEscape,
+			UserId:  userId,
+			Message: message,
 		},
 		Echo: echo}
 
@@ -806,11 +808,11 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
    @param autoEscape bool
    @return int32
 */
-func (b *Bot) SendMsg(messageType string, userId int, groupId int, message string, autoEscape bool) int32 {
+func (b *Bot) SendMsg(messageType string, userId int, groupId int, message interface{}) int32 {
 	if messageType == "group" {
-		return b.SendGroupMsg(groupId, message, autoEscape)
+		return b.SendGroupMsg(groupId, message)
 	} else {
-		return b.SendPrivateMsg(userId, message, autoEscape)
+		return b.SendPrivateMsg(userId, message)
 	}
 }
 
