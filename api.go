@@ -2,7 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
-	message2 "github.com/3343780376/leafBot/message"
+	"github.com/3343780376/leafBot/cqCode"
 	uuid "github.com/satori/go.uuid"
 	"log"
 )
@@ -610,7 +610,7 @@ func (b *Bot) Send(event Event, message string) int {
    @return int
 */
 func (b *Bot) SendAt(event Event, message string) int {
-	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message+message2.At(event.UserId), false)
+	msgId := b.SendMsg(event.MessageType, event.UserId, event.GroupId, message+cqCode.At(event.UserId), false)
 	return int(msgId)
 }
 
