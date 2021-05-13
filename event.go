@@ -72,46 +72,6 @@ type (
 		queue chan Event
 		rules []Rule
 	}
-
-	PretreatmentHandle struct {
-		handle func(event Event, bot *Bot) bool
-		rules  []Rule
-		weight int
-	}
-
-	messageHandle struct {
-		handle      func(event Event, bot *Bot)
-		messageType string
-		rules       []Rule
-		weight      int
-	}
-
-	requestHandle struct {
-		handle      func(event Event, bot *Bot)
-		requestType string
-		rules       []Rule
-		weight      int
-	}
-
-	noticeHandle struct {
-		handle     func(event Event, bot *Bot)
-		noticeType string
-		rules      []Rule
-		weight     int
-	}
-	commandHandle struct {
-		handle  func(event Event, bot *Bot, args []string)
-		command string
-		allies  []string
-		rules   []Rule
-		weight  int
-		block   bool
-	}
-	metaHandle struct {
-		handle func(event Event, bot *Bot)
-		rules  []Rule
-		weight int
-	}
 )
 
 func (m MessageChain) Len() int {
