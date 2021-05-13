@@ -111,11 +111,6 @@ type (
 		rules  []Rule
 		weight int
 	}
-
-	Rule struct {
-		RuleCheck func(Event, ...interface{}) bool
-		Dates     []interface{}
-	}
 )
 
 func (m MessageChain) Len() int {
@@ -458,7 +453,7 @@ func processNoticeHandle(event Event) {
 */
 func checkRule(event Event, rules []Rule) bool {
 	for _, rule := range rules {
-		check := rule.RuleCheck(event, rule.Dates)
+		check := rule(event, GetBotById(event.SelfId))
 		if !check {
 			return false
 		}

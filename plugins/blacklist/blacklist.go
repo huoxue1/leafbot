@@ -25,4 +25,16 @@ func InitBlackList() {
 		}
 		return true
 	})
+
+	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+
+	},
+		"/add_blackList_user",
+		[]string{"添加黑名单用户"},
+		[]leafBot.Rule{
+			func(event leafBot.Event, bot *leafBot.Bot) bool {
+				return true
+			}},
+		10,
+		false)
 }

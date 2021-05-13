@@ -13,7 +13,7 @@ import (
 	会向提供的qq号进行转发该闪照
 */
 func UseFlashImage(userId int) {
-	leafBot.AddMessageHandle("", []leafBot.Rule{{RuleCheck: FlashMessageRule, Dates: nil}},
+	leafBot.AddMessageHandle("", []leafBot.Rule{FlashMessageRule},
 		func(event leafBot.Event, bot *leafBot.Bot) {
 			if userId == 0 {
 				userId = leafBot.DefaultConfig.Admin
@@ -31,7 +31,7 @@ func UseFlashImage(userId int) {
 }
 
 func UseFlashImageToGroup(groupId int) {
-	leafBot.AddMessageHandle("", []leafBot.Rule{{RuleCheck: FlashMessageRule, Dates: nil}},
+	leafBot.AddMessageHandle("", []leafBot.Rule{FlashMessageRule},
 		func(event leafBot.Event, bot *leafBot.Bot) {
 			mess := message.MessageSegment{}
 			if event.MessageType == "group" {
@@ -45,7 +45,7 @@ func UseFlashImageToGroup(groupId int) {
 		})
 }
 
-func FlashMessageRule(event leafBot.Event, i ...interface{}) bool {
+func FlashMessageRule(event leafBot.Event, bot *leafBot.Bot) bool {
 	if strings.HasPrefix(event.Message, "[CQ:image,type=flash") && strings.HasSuffix(event.Message, "]") {
 		return true
 	} else {

@@ -33,14 +33,11 @@ func init() {
 	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		if event.UserId == 3343780376 {
 			for i := 0; i < 10; i++ {
-				oneEvent, err := bot.GetOneEvent(leafBot.Rule{
-					RuleCheck: func(event leafBot.Event, i ...interface{}) bool {
-						if event.UserId == 3343780376 {
-							return true
-						}
-						return false
-					},
-					Dates: nil,
+				oneEvent, err := bot.GetOneEvent(func(event leafBot.Event, bot2 *leafBot.Bot) bool {
+					if event.UserId == 3343780376 {
+						return true
+					}
+					return false
 				})
 				if err != nil {
 					bot.Send(event, fmt.Sprintf("这是第%v条信息:  "+err.Error(), i))
