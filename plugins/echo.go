@@ -7,7 +7,13 @@ import (
 
 func UseEchoHandle() {
 
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.ParseMessageFromString(args[0]))
-	}, "/echo", nil, nil, 1, false)
+	leafBot.
+		OnCommand("/echo").
+		SetWeight(1).
+		SetBlock(false).
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.ParseMessageFromString(args[0]))
+			})
+
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"
@@ -70,51 +71,6 @@ type (
 		id    int
 		queue chan Event
 		rules []Rule
-	}
-
-	PretreatmentHandle struct {
-		handle func(event Event, bot *Bot) bool
-		rules  []Rule
-		weight int
-	}
-
-	messageHandle struct {
-		handle      func(event Event, bot *Bot)
-		messageType string
-		rules       []Rule
-		weight      int
-	}
-
-	requestHandle struct {
-		handle      func(event Event, bot *Bot)
-		requestType string
-		rules       []Rule
-		weight      int
-	}
-
-	noticeHandle struct {
-		handle     func(event Event, bot *Bot)
-		noticeType string
-		rules      []Rule
-		weight     int
-	}
-	commandHandle struct {
-		handle  func(event Event, bot *Bot, args []string)
-		command string
-		allies  []string
-		rules   []Rule
-		weight  int
-		block   bool
-	}
-	metaHandle struct {
-		handle func(event Event, bot *Bot)
-		rules  []Rule
-		weight int
-	}
-
-	Rule struct {
-		RuleCheck func(Event, ...interface{}) bool
-		Dates     []interface{}
 	}
 )
 
@@ -458,7 +414,7 @@ func processNoticeHandle(event Event) {
 */
 func checkRule(event Event, rules []Rule) bool {
 	for _, rule := range rules {
-		check := rule.RuleCheck(event, rule.Dates)
+		check := rule(event, GetBotById(event.SelfId))
 		if !check {
 			return false
 		}
@@ -599,4 +555,14 @@ func GetBotById(id int) *Bot {
 		}
 	}
 	return nil
+}
+
+// getMsg
+/**
+ * @Description:
+ * @receiver e
+ * @return message.Message
+ */
+func (e Event) getMsg() message.Message {
+	return message.ParseMessageFromString(e.Message)
 }

@@ -2,7 +2,6 @@ package leafBot
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -74,7 +73,7 @@ func (con *connection) FilterEventOrResponse() {
 	for true {
 		time.Sleep(10)
 		data := <-con.InChan
-		fmt.Println(string(data))
+		//fmt.Println(string(data))
 		err := json.Unmarshal(data, new(Event))
 		if err != nil {
 			apiResChan <- data

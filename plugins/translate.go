@@ -29,14 +29,11 @@ func UseTranslateHandle() {
 		switch len(args) {
 		case 0:
 			{
-				nextEvent, err := bot.GetOneEvent(leafBot.Rule{
-					RuleCheck: func(event1 leafBot.Event, i ...interface{}) bool {
-						if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
-							return true
-						}
-						return false
-					},
-					Dates: nil,
+				nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot) bool {
+					if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
+						return true
+					}
+					return false
 				})
 				if err != nil {
 					return

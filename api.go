@@ -625,7 +625,12 @@ func (b *Bot) SendAt(event Event, message interface{}) int {
 */
 func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
-
+	switch message.(type) {
+	case string:
+		{
+			message = message2.ParseMessageFromString(message.(string))
+		}
+	}
 	type param struct {
 		GroupId int         `json:"group_id"`
 		Message interface{} `json:"message"`
@@ -661,7 +666,7 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	switch message.(type) {
 	case string:
 		{
-			message = message2.Text(message)
+			message = message2.ParseMessageFromString(message.(string))
 		}
 	}
 	type param struct {

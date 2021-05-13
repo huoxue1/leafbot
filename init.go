@@ -22,11 +22,12 @@ type Bot struct {
 }
 
 type Config struct {
-	Bots     []*Bot `json:"bots"`
-	Admin    int    `json:"admin"`
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	LogLevel string `json:"log_level"`
+	Bots      []*Bot `json:"bots"`
+	Admin     int    `json:"admin"`
+	Host      string `json:"host"`
+	Port      int    `json:"port"`
+	LogLevel  string `json:"log_level"`
+	SuperUser []int  `json:"super_user"`
 }
 
 var (

@@ -18,22 +18,27 @@ type dayPicture struct {
 }
 
 func UseDayImage() {
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		if len(args) == 0 {
-			image, err := getDayImage(0)
-			if err != nil {
-				return
-			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
-		} else {
-			day, _ := strconv.Atoi(args[0])
-			image, err := getDayImage(day)
-			if err != nil {
-				return
-			}
-			bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
-		}
-	}, "/dayPic", []string{"一图"}, nil, 10, false)
+	leafBot.OnCommand("/dayPic").
+		SetWeight(10).
+		SetBlock(false).
+		AddAllies("一图").
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+				if len(args) == 0 {
+					image, err := getDayImage(0)
+					if err != nil {
+						return
+					}
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
+				} else {
+					day, _ := strconv.Atoi(args[0])
+					image, err := getDayImage(day)
+					if err != nil {
+						return
+					}
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
+				}
+			})
 }
 
 func getDayImage(day int) (dayPicture, error) {
