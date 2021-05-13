@@ -52,34 +52,61 @@ type CommandInt interface {
 type NoticeInt interface {
 	AddRule(rule Rule) noticeHandle
 	SetWeight(weight int) noticeHandle
-	SetBlock(IsBlock bool) noticeHandle
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot *Bot))
 }
 
 type RequestInt interface {
 	AddRule(rule Rule) requestHandle
 	SetWeight(weight int) requestHandle
-	SetBlock(IsBlock bool) requestHandle
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot *Bot))
 }
 
 type MessageInt interface {
 	AddRule(rule Rule) messageHandle
 	SetWeight(weight int) messageHandle
-	SetBlock(IsBlock bool) messageHandle
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot *Bot))
 }
 
 type PretreatmentInt interface {
 	AddRule(rule Rule) PretreatmentHandle
 	SetWeight(weight int) PretreatmentHandle
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot *Bot) bool)
 }
 
 type MetaInt interface {
 	AddRule(rule Rule) MetaInt
 	SetWeight(weight int) MetaInt
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot *Bot))
+}
+
+// OnCommand
+/**
+ * @Description: command触发handle
+ * @param command
+ * @return commandHandle
+ */
+func OnCommand(command string) *commandHandle {
+	return &commandHandle{command: command}
+}
+
+func OnNotice(noticeType string) *noticeHandle {
+	return &noticeHandle{noticeType: noticeType}
+}
+
+func OnMessage(messageType string) *messageHandle {
+	return &messageHandle{messageType: messageType}
+}
+
+func OnRequest(requestType string) *requestHandle {
+	return &requestHandle{requestType: requestType}
+}
+
+func OnMeta() *metaHandle {
+	return &metaHandle{}
+}
+
+func OnPretreatment() *PretreatmentHandle {
+	return &PretreatmentHandle{}
 }
 
 // AddRule
@@ -87,10 +114,11 @@ type MetaInt interface {
  * @Description:
  * @receiver m
  * @param rule
- * @return MetaInt
+ * @return metaHandle
  */
-func (m metaHandle) AddRule(rule Rule) MetaInt {
-	panic("implement me")
+func (m *metaHandle) AddRule(rule Rule) *metaHandle {
+	m.rules = append(m.rules, rule)
+	return m
 }
 
 // SetWeight
@@ -98,10 +126,11 @@ func (m metaHandle) AddRule(rule Rule) MetaInt {
  * @Description:
  * @receiver m
  * @param weight
- * @return MetaInt
+ * @return metaHandle
  */
-func (m metaHandle) SetWeight(weight int) MetaInt {
-	panic("implement me")
+func (m *metaHandle) SetWeight(weight int) *metaHandle {
+	m.weight = weight
+	return m
 }
 
 // AddHandle
@@ -110,8 +139,9 @@ func (m metaHandle) SetWeight(weight int) MetaInt {
  * @receiver m
  * @param f
  */
-func (m metaHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
+	m.handle = f
+	MetaHandles = append(MetaHandles, m)
 }
 
 // AddAllies
@@ -121,8 +151,9 @@ func (m metaHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
  * @param allies
  * @return commandHandle
  */
-func (c commandHandle) AddAllies(allies string) commandHandle {
-	panic("implement me")
+func (c *commandHandle) AddAllies(allies string) *commandHandle {
+	c.allies = append(c.allies, allies)
+	return c
 }
 
 // AddRule
@@ -132,8 +163,9 @@ func (c commandHandle) AddAllies(allies string) commandHandle {
  * @param rule
  * @return commandHandle
  */
-func (c commandHandle) AddRule(rule Rule) commandHandle {
-	panic("implement me")
+func (c *commandHandle) AddRule(rule Rule) *commandHandle {
+	c.rules = append(c.rules, rule)
+	return c
 }
 
 // SetWeight
@@ -143,8 +175,9 @@ func (c commandHandle) AddRule(rule Rule) commandHandle {
  * @param weight
  * @return commandHandle
  */
-func (c commandHandle) SetWeight(weight int) commandHandle {
-	panic("implement me")
+func (c *commandHandle) SetWeight(weight int) *commandHandle {
+	c.weight = weight
+	return c
 }
 
 // SetBlock
@@ -154,8 +187,9 @@ func (c commandHandle) SetWeight(weight int) commandHandle {
  * @param IsBlock
  * @return commandHandle
  */
-func (c commandHandle) SetBlock(IsBlock bool) commandHandle {
-	panic("implement me")
+func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
+	c.block = IsBlock
+	return c
 }
 
 // AddHandle
@@ -164,8 +198,9 @@ func (c commandHandle) SetBlock(IsBlock bool) commandHandle {
  * @receiver c
  * @param f
  */
-func (c commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
+	c.handle = f
+	CommandHandles = append(CommandHandles, c)
 }
 
 // AddRule
@@ -175,8 +210,9 @@ func (c commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
  * @param rule
  * @return noticeHandle
  */
-func (n noticeHandle) AddRule(rule Rule) noticeHandle {
-	panic("implement me")
+func (n *noticeHandle) AddRule(rule Rule) *noticeHandle {
+	n.rules = append(n.rules, rule)
+	return n
 }
 
 // SetWeight
@@ -186,19 +222,9 @@ func (n noticeHandle) AddRule(rule Rule) noticeHandle {
  * @param weight
  * @return noticeHandle
  */
-func (n noticeHandle) SetWeight(weight int) noticeHandle {
-	panic("implement me")
-}
-
-// SetBlock
-/**
- * @Description:
- * @receiver n
- * @param IsBlock
- * @return noticeHandle
- */
-func (n noticeHandle) SetBlock(IsBlock bool) noticeHandle {
-	panic("implement me")
+func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
+	n.weight = weight
+	return n
 }
 
 // AddHandle
@@ -207,8 +233,9 @@ func (n noticeHandle) SetBlock(IsBlock bool) noticeHandle {
  * @receiver n
  * @param f
  */
-func (n noticeHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
+	n.handle = f
+	NoticeHandles = append(NoticeHandles, n)
 }
 
 // AddRule
@@ -218,8 +245,9 @@ func (n noticeHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
  * @param rule
  * @return requestHandle
  */
-func (r requestHandle) AddRule(rule Rule) requestHandle {
-	panic("implement me")
+func (r *requestHandle) AddRule(rule Rule) *requestHandle {
+	r.rules = append(r.rules, rule)
+	return r
 }
 
 // SetWeight
@@ -229,19 +257,9 @@ func (r requestHandle) AddRule(rule Rule) requestHandle {
  * @param weight
  * @return requestHandle
  */
-func (r requestHandle) SetWeight(weight int) requestHandle {
-	panic("implement me")
-}
-
-// SetBlock
-/**
- * @Description:
- * @receiver r
- * @param IsBlock
- * @return requestHandle
- */
-func (r requestHandle) SetBlock(IsBlock bool) requestHandle {
-	panic("implement me")
+func (r *requestHandle) SetWeight(weight int) *requestHandle {
+	r.weight = weight
+	return r
 }
 
 // AddHandle
@@ -250,8 +268,9 @@ func (r requestHandle) SetBlock(IsBlock bool) requestHandle {
  * @receiver r
  * @param f
  */
-func (r requestHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
+	r.handle = f
+	RequestHandles = append(RequestHandles, r)
 }
 
 // AddRule
@@ -261,8 +280,9 @@ func (r requestHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
  * @param rule
  * @return messageHandle
  */
-func (m messageHandle) AddRule(rule Rule) messageHandle {
-	panic("implement me")
+func (m *messageHandle) AddRule(rule Rule) *messageHandle {
+	m.rules = append(m.rules, rule)
+	return m
 }
 
 // SetWeight
@@ -272,19 +292,9 @@ func (m messageHandle) AddRule(rule Rule) messageHandle {
  * @param weight
  * @return messageHandle
  */
-func (m messageHandle) SetWeight(weight int) messageHandle {
-	panic("implement me")
-}
-
-// SetBlock
-/**
- * @Description:
- * @receiver m
- * @param IsBlock
- * @return messageHandle
- */
-func (m messageHandle) SetBlock(IsBlock bool) messageHandle {
-	panic("implement me")
+func (m *messageHandle) SetWeight(weight int) *messageHandle {
+	m.weight = weight
+	return m
 }
 
 // AddHandle
@@ -293,8 +303,9 @@ func (m messageHandle) SetBlock(IsBlock bool) messageHandle {
  * @receiver m
  * @param f
  */
-func (m messageHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
+	m.handle = f
+	MessageHandles = append(MessageHandles, m)
 }
 
 // AddRule
@@ -304,8 +315,9 @@ func (m messageHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
  * @param rule
  * @return PretreatmentHandle
  */
-func (p PretreatmentHandle) AddRule(rule Rule) PretreatmentHandle {
-	panic("implement me")
+func (p *PretreatmentHandle) AddRule(rule Rule) *PretreatmentHandle {
+	p.rules = append(p.rules, rule)
+	return p
 }
 
 // SetWeight
@@ -315,8 +327,9 @@ func (p PretreatmentHandle) AddRule(rule Rule) PretreatmentHandle {
  * @param weight
  * @return PretreatmentHandle
  */
-func (p PretreatmentHandle) SetWeight(weight int) PretreatmentHandle {
-	panic("implement me")
+func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
+	p.weight = weight
+	return p
 }
 
 // AddHandle
@@ -325,6 +338,7 @@ func (p PretreatmentHandle) SetWeight(weight int) PretreatmentHandle {
  * @receiver p
  * @param f
  */
-func (p PretreatmentHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
-	panic("implement me")
+func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
+	p.handle = f
+	PretreatmentHandles = append(PretreatmentHandles, p)
 }
