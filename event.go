@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"
@@ -594,4 +595,14 @@ func GetBotById(id int) *Bot {
 		}
 	}
 	return nil
+}
+
+// getMsg
+/**
+ * @Description:
+ * @receiver e
+ * @return message.Message
+ */
+func (e Event) getMsg() message.Message {
+	return message.ParseMessageFromString(e.Message)
 }
