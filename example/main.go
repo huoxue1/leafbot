@@ -6,6 +6,7 @@ import (
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
 	"github.com/3343780376/leafBot/plugins"
+	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"os"
 	"runtime"
@@ -28,7 +29,9 @@ func init() {
 	plugins.UseFlashImage(0)                // 加载闪照破解插件
 	plugins.UseFlashImageToGroup(972264701) //加载闪照破解后发到对应群的插件
 
-	blacklist.InitBlackList()
+	blacklist.InitBlackList() //加载黑名单插件
+
+	autoReply.Load("./example/data.json") //加载自动回复插件
 
 	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		if event.UserId == 3343780376 {

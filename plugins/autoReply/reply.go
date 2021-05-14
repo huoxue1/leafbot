@@ -1,0 +1,53 @@
+package autoReply
+
+import (
+	_ "embed"
+	"fmt"
+	"github.com/3343780376/leafBot"
+	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
+	"io"
+	"math/rand"
+	"os"
+	"strings"
+)
+
+//go:embed data.json
+var data []byte
+
+func Load(filePath string) error {
+	file, err := os.OpenFile(filePath, os.O_RDWR, 0666)
+	if err != nil {
+		log.Infoln("自动回复json文件解析失败，将使用默认配置")
+	} else {
+		data, err = io.ReadAll(file)
+		if err != nil {
+			log.Error(err.Error())
+			return err
+		}
+	}
+
+	content := gjson.ParseBytes(data)
+	log.Infoln("已成功加載詞庫:" + filePath)
+	leafBot.OnMessage("").AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+		all := strings.ReplaceAll(event.Message, fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
+		result := content.Get(strings.TrimSpace(all))
+		if result.String() == "" {
+			return
+		} else {
+			switch result.Type {
+			case 10:
+				{
+					bot.Send(event, result.String())
+				}
+			default:
+				{
+					r := result.Array()[rand.Intn(len(result.Array()))]
+					bot.Send(event, r.String())
+				}
+			}
+
+		}
+	})
+	return nil
+}

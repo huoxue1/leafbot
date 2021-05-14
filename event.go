@@ -30,6 +30,11 @@ var (
 
 var ISGUI = true
 
+// var
+/**
+ * @Description: 通向前端的通道
+ * @return unc
+ */
 var (
 	MessageChan = make(chan Event, 10)
 	NoticeChan  = make(chan Event, 10)
@@ -557,12 +562,12 @@ func GetBotById(id int) *Bot {
 	return nil
 }
 
-// getMsg
+// GetMsg
 /**
  * @Description:
  * @receiver e
  * @return message.Message
  */
-func (e Event) getMsg() message.Message {
+func (e Event) GetMsg() message.Message {
 	return message.ParseMessageFromString(e.Message)
 }
