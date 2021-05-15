@@ -1,0 +1,19 @@
+{
+  "bots": [
+    {
+      "name": "commit",
+      "self_id": 3180808826
+    },
+    {
+     "name": "bot1",
+      "self_id": 1743224847
+    }
+  ],
+  "admin": 3343780376,
+  "super_user": [
+    3343780376
+  ],
+  "host": "127.0.0.1",
+  "port": 8080,
+  "log_level": "debug"
+}

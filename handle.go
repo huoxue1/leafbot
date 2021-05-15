@@ -2,11 +2,15 @@ package leafBot
 
 type (
 	PretreatmentHandle struct {
+		Name   string
+		Enable bool
 		handle func(event Event, bot *Bot) bool
 		rules  []Rule
 		weight int
 	}
 	messageHandle struct {
+		Name        string
+		Enable      bool
 		handle      func(event Event, bot *Bot)
 		messageType string
 		rules       []Rule
@@ -14,6 +18,8 @@ type (
 	}
 
 	requestHandle struct {
+		Name        string
+		Enable      bool
 		handle      func(event Event, bot *Bot)
 		requestType string
 		rules       []Rule
@@ -21,61 +27,104 @@ type (
 	}
 
 	noticeHandle struct {
+		Name       string
+		Enable     bool
 		handle     func(event Event, bot *Bot)
 		noticeType string
 		rules      []Rule
 		weight     int
 	}
 	commandHandle struct {
-		handle  func(event Event, bot *Bot, args []string)
-		command string
-		allies  []string
-		rules   []Rule
-		weight  int
-		block   bool
+		Name         string
+		Enable       bool
+		disableGroup []int
+		handle       func(event Event, bot *Bot, args []string)
+		command      string
+		allies       []string
+		rules        []Rule
+		weight       int
+		block        bool
 	}
 	metaHandle struct {
+		Name   string
+		Enable bool
 		handle func(event Event, bot *Bot)
 		rules  []Rule
 		weight int
 	}
 )
 
+func (m *metaHandle) SetPluginName(name string) *metaHandle {
+	m.Name = name
+	return m
+}
+
+func (c *commandHandle) SetPluginName(name string) *commandHandle {
+	c.Name = name
+	return c
+}
+
+func (n *noticeHandle) SetPluginName(name string) *noticeHandle {
+	n.Name = name
+	return n
+}
+
+func (r *requestHandle) SetPluginName(name string) *requestHandle {
+	r.Name = name
+	return r
+}
+
+func (m *messageHandle) SetPluginName(name string) *messageHandle {
+	m.Name = name
+	return m
+}
+
+func (p *PretreatmentHandle) SetPluginName(name string) *PretreatmentHandle {
+	p.Name = name
+	return p
+}
+
 type CommandInt interface {
-	AddAllies(allies string) commandHandle
-	AddRule(rule Rule) commandHandle
-	SetWeight(weight int) commandHandle
-	SetBlock(IsBlock bool) commandHandle
+	SetPluginName(name string) *commandHandle
+	AddAllies(allies string) *commandHandle
+	AddRule(rule Rule) *commandHandle
+	SetWeight(weight int) *commandHandle
+	SetBlock(IsBlock bool) *commandHandle
 	AddHandle(func(event Event, bot *Bot, args []string))
 }
 
 type NoticeInt interface {
-	AddRule(rule Rule) noticeHandle
-	SetWeight(weight int) noticeHandle
+	SetPluginName(name string) *noticeHandle
+	AddRule(rule Rule) *noticeHandle
+	SetWeight(weight int) *noticeHandle
 	AddHandle(func(event Event, bot *Bot))
 }
 
 type RequestInt interface {
-	AddRule(rule Rule) requestHandle
-	SetWeight(weight int) requestHandle
+	SetPluginName(name string) *requestHandle
+	AddRule(rule Rule) *requestHandle
+	SetWeight(weight int) *requestHandle
 	AddHandle(func(event Event, bot *Bot))
 }
 
 type MessageInt interface {
-	AddRule(rule Rule) messageHandle
-	SetWeight(weight int) messageHandle
+	SetPluginName(name string) *messageHandle
+	AddRule(rule Rule) *messageHandle
+	SetWeight(weight int) *messageHandle
 	AddHandle(func(event Event, bot *Bot))
 }
 
 type PretreatmentInt interface {
-	AddRule(rule Rule) PretreatmentHandle
-	SetWeight(weight int) PretreatmentHandle
+	SetPluginName(name string) *PretreatmentHandle
+	AddRule(rule Rule) *PretreatmentHandle
+	SetWeight(weight int) *PretreatmentHandle
 	AddHandle(func(event Event, bot *Bot) bool)
 }
 
 type MetaInt interface {
-	AddRule(rule Rule) MetaInt
-	SetWeight(weight int) MetaInt
+	SetPluginName(name string) *metaHandle
+	AddRule(rule Rule) *metaHandle
+	SetWeight(weight int) *metaHandle
 	AddHandle(func(event Event, bot *Bot))
 }
 
@@ -141,6 +190,7 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
  */
 func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
+	m.Enable = true
 	MetaHandles = append(MetaHandles, m)
 }
 
@@ -200,6 +250,8 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  */
 func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
 	c.handle = f
+	c.Enable = true
+	c.disableGroup = []int{}
 	CommandHandles = append(CommandHandles, c)
 }
 
@@ -235,6 +287,7 @@ func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
  */
 func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
 	n.handle = f
+	n.Enable = true
 	NoticeHandles = append(NoticeHandles, n)
 }
 
@@ -270,6 +323,7 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
  */
 func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
 	r.handle = f
+	r.Enable = true
 	RequestHandles = append(RequestHandles, r)
 }
 
@@ -305,6 +359,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
  */
 func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
+	m.Enable = true
 	MessageHandles = append(MessageHandles, m)
 }
 
@@ -340,5 +395,6 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
  */
 func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
 	p.handle = f
+	p.Enable = true
 	PretreatmentHandles = append(PretreatmentHandles, p)
 }

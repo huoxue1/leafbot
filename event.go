@@ -30,6 +30,11 @@ var (
 
 var ISGUI = true
 
+// var
+/**
+ * @Description: 通向前端的通道
+ * @return unc
+ */
 var (
 	MessageChan = make(chan Event, 10)
 	NoticeChan  = make(chan Event, 10)
@@ -197,7 +202,6 @@ func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...f
 			weight:      weight,
 		})
 	}
-
 }
 
 // AddMetaHandles
@@ -247,6 +251,10 @@ func eventMain() {
 	sort.Sort(&RequestHandles)
 	sort.Sort(&NoticeHandles)
 	sort.Sort(&CommandHandles)
+
+	for _, handle := range PretreatmentHandles {
+		log.Infoln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
+	}
 	for _, handle := range CommandHandles {
 		log.Infoln("已加载command响应器：" + handle.command)
 	}
@@ -259,6 +267,10 @@ func eventMain() {
 	for _, handle := range NoticeHandles {
 		log.Infoln("已加载notice响应器：" + getFunctionName(handle.handle, '/'))
 	}
+	for _, handle := range MetaHandles {
+		log.Infoln("已加载meta响应器：" + getFunctionName(handle.handle, '/'))
+	}
+
 	go func() {
 		for true {
 			data, ok := <-eventChan
@@ -347,7 +359,7 @@ func viewsMessage(event Event) {
 	for _, handle := range PretreatmentHandles {
 		bot := GetBotById(event.SelfId)
 		rule := checkRule(event, handle.rules)
-		if !rule {
+		if !rule || !handle.Enable {
 			continue
 		}
 		b := handle.handle(event, bot)
@@ -393,7 +405,7 @@ func processNoticeHandle(event Event) {
 
 	for _, v := range NoticeHandles {
 		rule := checkRule(event, v.rules)
-		if !rule {
+		if !rule || !v.Enable {
 			continue
 		}
 		if v.noticeType == "" {
@@ -466,11 +478,22 @@ func processMessageHandle() {
 	a := 0
 	log.Debugln(len(CommandHandles))
 	for _, handle := range CommandHandles {
+
+		disable := true
+		for _, group := range handle.disableGroup {
+			if event.GroupId == group {
+				disable = false
+			}
+		}
+		if !disable {
+			continue
+		}
+
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
 			rule = true
 		}
-		if !rule {
+		if !rule || !handle.Enable {
 			continue
 		}
 		commands := strings.Split(event.Message, " ")
@@ -508,7 +531,7 @@ func processMessageHandle() {
 			continue
 		}
 		rule := checkRule(event, handle.rules)
-		if !rule {
+		if !rule || !handle.Enable {
 			continue
 		}
 		go handle.handle(event, GetBotById(event.SelfId))
@@ -526,7 +549,7 @@ func processRequestEventHandle(event Event) {
 		if handle.rules == nil {
 			rule = true
 		}
-		if !rule {
+		if !rule || !handle.Enable {
 			continue
 		}
 		go handle.handle(event, GetBotById(event.SelfId))
@@ -557,12 +580,12 @@ func GetBotById(id int) *Bot {
 	return nil
 }
 
-// getMsg
+// GetMsg
 /**
  * @Description:
  * @receiver e
  * @return message.Message
  */
-func (e Event) getMsg() message.Message {
+func (e Event) GetMsg() message.Message {
 	return message.ParseMessageFromString(e.Message)
 }

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
 	"github.com/3343780376/leafBot/plugins"
+	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"os"
 	"runtime"
@@ -28,26 +28,12 @@ func init() {
 	plugins.UseFlashImage(0)                // 加载闪照破解插件
 	plugins.UseFlashImageToGroup(972264701) //加载闪照破解后发到对应群的插件
 
-	blacklist.InitBlackList()
+	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
+	err := autoReply.Load("./config/data.json")
+	if err != nil {
 
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		if event.UserId == 3343780376 {
-			for i := 0; i < 10; i++ {
-				oneEvent, err := bot.GetOneEvent(func(event leafBot.Event, bot2 *leafBot.Bot) bool {
-					if event.UserId == 3343780376 {
-						return true
-					}
-					return false
-				})
-				if err != nil {
-					bot.Send(event, fmt.Sprintf("这是第%v条信息:  "+err.Error(), i))
-				} else {
-					bot.Send(event, fmt.Sprintf("这是第%v条信息:  "+oneEvent.Message, i))
-				}
+	} //加载自动回复插件
 
-			}
-		}
-	}, "/he", nil, nil, 10, false)
 }
 
 func main() {
@@ -55,7 +41,7 @@ func main() {
 	if len(os.Args) > 1 {
 		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
 	} else {
-		leafBot.LoadConfig(dir+"/example/config.json", leafBot.JSON)
+		leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 	}
 
 	//拼接配置文件路径，并且加载配置文件
