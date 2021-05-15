@@ -25,10 +25,11 @@ func Load(filePath string) error {
 			log.Error(err.Error())
 			return err
 		}
+		log.Infoln("已成功加载词库:" + filePath)
 	}
 
 	content := gjson.ParseBytes(data)
-	log.Infoln("已成功加載詞庫:" + filePath)
+
 	leafBot.OnMessage("").AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
 		all := strings.ReplaceAll(event.Message, fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
 		result := content.Get(strings.TrimSpace(all))

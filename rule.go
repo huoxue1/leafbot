@@ -19,3 +19,15 @@ func OnlyToMe(event Event, bot *Bot) bool {
 
 	return false
 }
+
+func OnlySuperUser(event Event, bot *Bot) bool {
+	if event.UserId == DefaultConfig.Admin {
+		return true
+	}
+	for _, user := range DefaultConfig.SuperUser {
+		if event.UserId == user {
+			return true
+		}
+	}
+	return false
+}
