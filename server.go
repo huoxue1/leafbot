@@ -61,7 +61,6 @@ func (con *connection) readData() {
 
 		}
 	}()
-
 }
 
 // FilterEventOrResponse

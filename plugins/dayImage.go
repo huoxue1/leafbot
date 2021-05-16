@@ -19,6 +19,7 @@ type dayPicture struct {
 
 func UseDayImage() {
 	leafBot.OnCommand("/dayPic").
+		SetPluginName("每日一图").
 		SetWeight(10).
 		SetBlock(false).
 		AddAllies("一图").

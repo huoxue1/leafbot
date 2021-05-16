@@ -66,75 +66,87 @@ type Music struct {
 }
 
 func UseMusicHandle() {
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		switch len(args) {
-		case 0:
-			{
-				bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("请正确输入参数"))
-			}
-		case 1:
-			{
-				if args[0] == "help" {
-					bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
-						"第一个参数为搜索信息，第二个参数为返回条数"))
-				} else {
-					music, err := searchMusic(args[0], 10, 0)
-					if err != nil {
-						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
-						return
+	leafBot.OnCommand("/music").
+		SetPluginName("查询歌曲").
+		SetWeight(10).
+		AddAllies("查询歌曲").
+		SetBlock(false).
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+				switch len(args) {
+				case 0:
+					{
+						bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("请正确输入参数"))
 					}
-					m := "搜索结果为：\n\n "
-					for _, song := range music.Result.Songs {
-						m += "id：" + strconv.Itoa(song.Id) + "\n"
-						m += "歌名：" + song.Name + "\n"
-						m += "作者：" + song.Artists[0].Name + "\n\n"
+				case 1:
+					{
+						if args[0] == "help" {
+							bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
+								"第一个参数为搜索信息，第二个参数为返回条数"))
+						} else {
+							music, err := searchMusic(args[0], 10, 0)
+							if err != nil {
+								bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
+								return
+							}
+							m := "搜索结果为：\n\n "
+							for _, song := range music.Result.Songs {
+								m += "id：" + strconv.Itoa(song.Id) + "\n"
+								m += "歌名：" + song.Name + "\n"
+								m += "作者：" + song.Artists[0].Name + "\n\n"
+							}
+							bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
+						}
 					}
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
+				case 2:
+					{
+						limit, _ := strconv.Atoi(args[1])
+						music, err := searchMusic(args[0], limit, 0)
+						if err != nil {
+							bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
+							return
+						}
+						m := "搜索结果为：\n\n "
+						for _, song := range music.Result.Songs {
+							m += "id：" + strconv.Itoa(song.Id) + "\n"
+							m += "歌名：" + song.Name + "\n"
+							m += "作者：" + song.Artists[0].Name + "\n\n"
+						}
+						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
+					}
+				case 3:
+					{
+						limit, _ := strconv.Atoi(args[1])
+						offset, _ := strconv.Atoi(args[2])
+						music, err := searchMusic(args[0], limit, offset)
+						if err != nil {
+							bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
+							return
+						}
+						m := "搜索结果为：\n\n "
+						for _, song := range music.Result.Songs {
+							m += "id：" + strconv.Itoa(song.Id) + "\n"
+							m += "歌名：" + song.Name + "\n"
+							m += "作者：" + song.Artists[0].Name + "\n\n"
+						}
+						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m)
+					}
 				}
-			}
-		case 2:
-			{
-				limit, _ := strconv.Atoi(args[1])
-				music, err := searchMusic(args[0], limit, 0)
-				if err != nil {
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
-					return
-				}
-				m := "搜索结果为：\n\n "
-				for _, song := range music.Result.Songs {
-					m += "id：" + strconv.Itoa(song.Id) + "\n"
-					m += "歌名：" + song.Name + "\n"
-					m += "作者：" + song.Artists[0].Name + "\n\n"
-				}
-				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text(m))
-			}
-		case 3:
-			{
-				limit, _ := strconv.Atoi(args[1])
-				offset, _ := strconv.Atoi(args[2])
-				music, err := searchMusic(args[0], limit, offset)
-				if err != nil {
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
-					return
-				}
-				m := "搜索结果为：\n\n "
-				for _, song := range music.Result.Songs {
-					m += "id：" + strconv.Itoa(song.Id) + "\n"
-					m += "歌名：" + song.Name + "\n"
-					m += "作者：" + song.Artists[0].Name + "\n\n"
-				}
-				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, m)
-			}
-		}
-	}, "/music", []string{"查询歌曲"}, nil, 10, false)
+			})
 
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		id, err := strconv.Atoi(args[0])
-		if err != nil {
-			return
-		}
-		bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
-	}, "/orderMusic", []string{"点歌"}, nil, 10, false)
+	leafBot.OnCommand("/orderMusic").
+		SetWeight(10).
+		SetPluginName("点歌").
+		AddAllies("点歌").
+		SetBlock(false).
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+				id, err := strconv.Atoi(args[0])
+				if err != nil {
+					return
+				}
+				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
+			})
 }
 
 func searchMusic(name string, limit int, offset int) (Music, error) {
