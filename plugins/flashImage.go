@@ -13,7 +13,7 @@ import (
 	会向提供的qq号进行转发该闪照
 */
 func UseFlashImage(userId int) {
-	leafBot.OnMessage("").AddRule(FlashMessageRule).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+	leafBot.OnMessage("").SetPluginName("闪照拦截").AddRule(FlashMessageRule).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
 		if userId == 0 {
 			userId = leafBot.DefaultConfig.Admin
 		}
@@ -34,6 +34,7 @@ func UseFlashImageToGroup(groupId int) {
 	leafBot.
 		OnMessage("").
 		AddRule(FlashMessageRule).
+		SetPluginName("闪照拦截").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot) {
 				mess := message.MessageSegment{}

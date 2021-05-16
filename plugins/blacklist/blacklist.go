@@ -61,6 +61,7 @@ func InitBlackList(filePath string) {
 	leafBot.OnCommand("/add_blackList_user").
 		AddRule(leafBot.OnlySuperUser). // 设置仅可管理员用户触发
 		SetWeight(10).
+		SetPluginName("添加黑名单用户").
 		SetBlock(false).
 		AddAllies("/添加黑名单用户").
 		AddHandle(
@@ -83,6 +84,7 @@ func InitBlackList(filePath string) {
 	leafBot.OnCommand("/add_blackList_group").
 		AddRule(leafBot.OnlySuperUser).SetWeight(10).
 		SetBlock(false).
+		SetPluginName("添加黑名单群").
 		AddAllies("/添加黑名单群").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
@@ -101,7 +103,7 @@ func InitBlackList(filePath string) {
 
 			})
 
-	leafBot.OnCommand("/get_blackList").AddRule(leafBot.OnlySuperUser).AddAllies("获取黑名单").SetBlock(false).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+	leafBot.OnCommand("/get_blackList").SetPluginName("获取黑名单列表").AddRule(leafBot.OnlySuperUser).AddAllies("获取黑名单").SetBlock(false).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		msg := "黑名单：\n用户\n"
 		for _, user := range BlackList.Users {
 			msg += fmt.Sprintf("\t%d\n", user)

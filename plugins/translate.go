@@ -21,40 +21,47 @@ type Tran struct {
 }
 
 func UseTranslateHandle() {
-	leafBot.AddCommandHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-		//if len(args)<1 {
-		//	bot.Send(event,"请输入正确的参数")
-		//	return
-		//}
-		switch len(args) {
-		case 0:
-			{
-				nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot) bool {
-					if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
-						return true
-					}
-					return false
-				})
-				if err != nil {
-					return
-				}
-				tran, err := translate(nextEvent.Message, "AUTO")
-				if err != nil {
-					bot.Send(event, message.Text("翻译失败："+err.Error()))
-					return
-				}
-				message1 := ""
-				for _, result := range tran.TranslateResult {
-					for _, s := range result {
-						message1 += s.Tgt + "\n"
-					}
-				}
-				bot.Send(event, message.Text("翻译结果为：\n"+message1))
-				return
-			}
-		}
 
-	}, "/ts", []string{"翻译"}, nil, 1, false)
+	leafBot.OnCommand("/ts").
+		AddAllies("翻译").
+		SetWeight(10).
+		SetBlock(false).
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+				//if len(args)<1 {
+				//	bot.Send(event,"请输入正确的参数")
+				//	return
+				//}
+				switch len(args) {
+				case 0:
+					{
+						nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot) bool {
+							if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
+								return true
+							}
+							return false
+						})
+						if err != nil {
+							return
+						}
+						tran, err := translate(nextEvent.Message, "AUTO")
+						if err != nil {
+							bot.Send(event, message.Text("翻译失败："+err.Error()))
+							return
+						}
+						message1 := ""
+						for _, result := range tran.TranslateResult {
+							for _, s := range result {
+								message1 += s.Tgt + "\n"
+							}
+						}
+						bot.Send(event, message.Text("翻译结果为：\n"+message1))
+						return
+					}
+				}
+
+			})
+
 }
 
 func translate(text string, types string) (Tran, error) {

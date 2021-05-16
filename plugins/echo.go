@@ -9,6 +9,7 @@ func UseEchoHandle() {
 
 	leafBot.
 		OnCommand("/echo").
+		SetPluginName("echo").
 		SetWeight(1).
 		SetBlock(false).
 		AddHandle(
