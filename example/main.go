@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
@@ -47,7 +48,13 @@ func main() {
 	} else {
 		leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 	}
-
+	list := leafBot.GetHandleList()
+	for s, strings := range list {
+		fmt.Println(s + "\n")
+		for _, s2 := range strings {
+			fmt.Println(s2)
+		}
+	}
 	//拼接配置文件路径，并且加载配置文件
 	leafBot.InitBots() //初始化Bot
 }
