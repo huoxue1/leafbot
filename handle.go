@@ -52,6 +52,15 @@ type (
 		rules  []Rule
 		weight int
 	}
+	reqHandle struct {
+		selfId     int
+		host       string
+		clientRole string
+	}
+)
+
+type (
+	connectHandle func()
 )
 
 func (m *metaHandle) SetPluginName(name string) *metaHandle {

@@ -289,7 +289,6 @@ func eventMain() {
 			if err != nil {
 				log.Debugln("反向解析json失败" + err.Error() + "\n" + string(data))
 			}
-			go sessionHandle(event)
 			go viewsMessage(event)
 		}
 	}()
@@ -530,6 +529,9 @@ func processMessageHandle() {
 	if a == 1 {
 		return
 	}
+
+	go sessionHandle(event)
+
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		event.MessageType, event.GroupId, event.UserId, event.Message))
 	for _, handle := range MessageHandles {

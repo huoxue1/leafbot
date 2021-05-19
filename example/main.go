@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
@@ -48,12 +48,11 @@ func main() {
 	} else {
 		leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 	}
-	list := leafBot.GetHandleList()
-	for s, strings := range list {
-		fmt.Println(s + "\n")
-		for _, s2 := range strings {
-			fmt.Println(s2)
-		}
+	var port int
+	flag.IntVar(&port, "port", 8080, "端口")
+	flag.Parse()
+	if port != 0 {
+		leafBot.DefaultConfig.Port = port
 	}
 	//拼接配置文件路径，并且加载配置文件
 	leafBot.InitBots() //初始化Bot

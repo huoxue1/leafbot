@@ -155,6 +155,7 @@ func InitBots() {
 		run(bot)
 
 	}
+	log.Infoln("listening in" + DefaultConfig.Host + "  " + strconv.Itoa(DefaultConfig.Port))
 	if err := http.ListenAndServe(DefaultConfig.Host+":"+strconv.Itoa(DefaultConfig.Port), nil); err != nil {
 		log.Panicln("监听端口失败，端口可能被占用")
 	}
