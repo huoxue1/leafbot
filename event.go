@@ -30,6 +30,12 @@ var (
 
 var ISGUI = true
 
+func init() {
+	if runtime.GOOS != "windows" {
+		ISGUI = false
+	}
+}
+
 // var
 /**
  * @Description: 通向前端的通道
@@ -367,7 +373,7 @@ func viewsMessage(event Event) {
 			return
 		}
 	}
-
+	log.Debugln("预处理执行完毕" + event.Message)
 	switch event.PostType {
 	case "message":
 		c <- event

@@ -51,9 +51,10 @@ func UseFlashImageToGroup(groupId int) {
 }
 
 func FlashMessageRule(event leafBot.Event, bot *leafBot.Bot) bool {
-	if strings.HasPrefix(event.Message, "[CQ:image,type=flash") && strings.HasSuffix(event.Message, "]") {
-		return true
-	} else {
-		return false
+	for _, msg := range event.GetMsg() {
+		if msg.Type == "image" && msg.Data["type"] == "flash" {
+			return true
+		}
 	}
+	return false
 }
