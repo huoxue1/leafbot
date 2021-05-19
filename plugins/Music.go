@@ -141,11 +141,23 @@ func UseMusicHandle() {
 		SetBlock(false).
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-				id, err := strconv.Atoi(args[0])
-				if err != nil {
-					return
+				if args[0] == "id" {
+					id, err := strconv.Atoi(args[1])
+					if err != nil {
+						return
+					}
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
+				} else {
+					name := args[0]
+					music, err := searchMusic(name, 1, 0)
+					if err != nil {
+						bot.Send(event, message.Text("搜索歌曲错误\n"+err.Error()))
+						return
+					}
+					bot.Send(event, message.Music("163", int64(music.Result.Songs[0].Id)))
+
 				}
-				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
+
 			})
 }
 
