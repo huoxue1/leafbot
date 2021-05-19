@@ -16,6 +16,12 @@ import (
 var data []byte
 
 func Load(filePath string) error {
+	defer func() {
+		err := recover()
+		if err != nil {
+
+		}
+	}()
 	file, err := os.OpenFile(filePath, os.O_RDWR, 0666)
 	if err != nil {
 		log.Infoln("自动回复json文件解析失败，将使用默认配置")
@@ -43,11 +49,14 @@ func Load(filePath string) error {
 				}
 			default:
 				{
-					r := result.Array()[rand.Intn(len(result.Array()))]
+					i := len(result.Array())
+					if i <= 0 {
+						return
+					}
+					r := result.Array()[rand.Intn(i)]
 					bot.Send(event, r.String())
 				}
 			}
-
 		}
 	})
 	return nil
