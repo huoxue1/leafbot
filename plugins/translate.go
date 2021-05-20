@@ -45,6 +45,7 @@ func UseTranslateHandle() {
 						if err != nil {
 							return
 						}
+						bot.Send(event, message.TTS(nextEvent.Message))
 						tran, err := translate(nextEvent.Message, "AUTO")
 						if err != nil {
 							bot.Send(event, message.Text("翻译失败："+err.Error()))
