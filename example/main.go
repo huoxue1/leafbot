@@ -9,6 +9,7 @@ import (
 	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"github.com/3343780376/leafBot/plugins/manager"
+	_ "github.com/3343780376/leafBot/plugins/poke"
 	"os"
 	"runtime"
 )
@@ -51,7 +52,7 @@ func main() {
 	var port int
 	flag.IntVar(&port, "port", 13452, "端口")
 	flag.Parse()
-	if port != 0 {
+	if port != 13452 {
 		leafBot.DefaultConfig.Port = port
 	}
 	//拼接配置文件路径，并且加载配置文件

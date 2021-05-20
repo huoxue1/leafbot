@@ -16,14 +16,14 @@ func init() {
 		SetPluginName("poke").
 		AddRule(
 			func(event leafBot.Event, bot *leafBot.Bot) bool {
-				if event.UserId == event.SelfId {
+				if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
 					return false
 				}
 				return true
 			}).SetWeight(10).
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot) {
-				msg := fmt.Sprintf("服务器使用信息\n---------------\nCPU使用率：%v\n内存占有率：%v\n----------------", GetCpuPercent(), GetMemPercent())
+				msg := fmt.Sprintf("服务器使用信息\n\t---------------\nCPU使用率：%0.2f%%\n内存占有率：%v%%\n\t----------------", GetCpuPercent(), GetMemPercent())
 				bot.Send(event, message.Text(msg))
 			})
 }
