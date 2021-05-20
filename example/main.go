@@ -44,11 +44,9 @@ func init() {
 
 func main() {
 	dir, _ := os.Getwd() // 获取当前路径
-	if len(os.Args) > 1 {
-		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
-	} else {
-		leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
-	}
+
+	leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
+
 	var port int
 	flag.IntVar(&port, "port", 13452, "端口")
 	flag.Parse()
