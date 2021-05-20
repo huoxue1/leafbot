@@ -313,7 +313,7 @@ func UseMusicHandle() {
 							bot.Send(event, message.Text("搜索歌曲错误\n"+err.Error()))
 							return
 						}
-						bot.Send(event, message.Music("163", int64(music.Result.Songs[1].Id)))
+						bot.Send(event, message.Music("163", int64(music.Result.Songs[0].Id)))
 
 					}
 				} else if args[0] == "qq" {

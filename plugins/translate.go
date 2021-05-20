@@ -35,6 +35,7 @@ func UseTranslateHandle() {
 				switch len(args) {
 				case 0:
 					{
+						bot.Send(event, message.Text("请输入需要翻译的内容"))
 						nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot) bool {
 							if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
 								return true
@@ -44,6 +45,7 @@ func UseTranslateHandle() {
 						if err != nil {
 							return
 						}
+						bot.Send(event, message.TTS(nextEvent.Message))
 						tran, err := translate(nextEvent.Message, "AUTO")
 						if err != nil {
 							bot.Send(event, message.Text("翻译失败："+err.Error()))

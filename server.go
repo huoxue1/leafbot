@@ -11,6 +11,7 @@ import (
 )
 
 type connection struct {
+	SelfId   int
 	wsSocket *websocket.Conn  // 底层websocket
 	InChan   chan []byte      // 读队列
 	OutChan  chan interface{} // 写队列
@@ -112,7 +113,9 @@ func (con *connection) writeData() {
    @receiver con
 */
 func (con *connection) wsClose() {
-	log.Debugln("链接已关闭")
+	for _, handle := range DisConnectHandles {
+		handle.handle(con.SelfId)
+	}
 	_ = con.wsSocket.Close()
 
 	con.mutex.Lock()
@@ -131,23 +134,31 @@ func (con *connection) wsClose() {
 */
 func EventHandle(w http.ResponseWriter, r *http.Request) {
 	selfId, err := strconv.Atoi(r.Header.Get("X-Self-ID"))
+	role := r.Header.Get("X-Client-Role")
+	host := r.Header.Get("Host")
 
 	conn, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {
 		return
 	}
 	wscon := &connection{
+		SelfId:    selfId,
 		wsSocket:  conn,
 		InChan:    make(chan []byte, 10),
 		OutChan:   make(chan interface{}, 10),
 		isClosed:  false,
 		closeChan: make(chan byte),
 	}
+	// 将所有bot实例的client对象初始化
 	for _, bot := range DefaultConfig.Bots {
 		if bot.SelfId == selfId {
 			log.Infoln("bot：" + bot.Name + "已上线")
 			bot.Client = wscon
 		}
+	}
+	// 处理所有的connect事件
+	for _, handle := range ConnectHandles {
+		handle.handle(Connect{SelfId: selfId, ClientRole: role, Host: host}, GetBotById(selfId))
 	}
 	go wscon.readData()
 	go wscon.writeData()

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
@@ -9,6 +9,7 @@ import (
 	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"github.com/3343780376/leafBot/plugins/manager"
+	_ "github.com/3343780376/leafBot/plugins/poke"
 	"os"
 	"runtime"
 )
@@ -43,17 +44,14 @@ func init() {
 
 func main() {
 	dir, _ := os.Getwd() // 获取当前路径
-	if len(os.Args) > 1 {
-		leafBot.LoadConfig(os.Args[1], leafBot.JSON)
-	} else {
-		leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
-	}
-	list := leafBot.GetHandleList()
-	for s, strings := range list {
-		fmt.Println(s + "\n")
-		for _, s2 := range strings {
-			fmt.Println(s2)
-		}
+
+	leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
+
+	var port int
+	flag.IntVar(&port, "port", leafBot.DefaultConfig.Port, "端口")
+	flag.Parse()
+	if port != leafBot.DefaultConfig.Port {
+		leafBot.DefaultConfig.Port = port
 	}
 	//拼接配置文件路径，并且加载配置文件
 	leafBot.InitBots() //初始化Bot
