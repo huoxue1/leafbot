@@ -1,7 +1,10 @@
 package leafBot
 
+import uuid "github.com/satori/go.uuid"
+
 type (
 	PretreatmentHandle struct {
+		Id     string
 		Name   string
 		Enable bool
 		handle func(event Event, bot *Bot) bool
@@ -9,6 +12,7 @@ type (
 		weight int
 	}
 	messageHandle struct {
+		Id          string
 		Name        string
 		Enable      bool
 		handle      func(event Event, bot *Bot)
@@ -18,6 +22,7 @@ type (
 	}
 
 	requestHandle struct {
+		Id          string
 		Name        string
 		Enable      bool
 		handle      func(event Event, bot *Bot)
@@ -27,6 +32,7 @@ type (
 	}
 
 	noticeHandle struct {
+		Id         string
 		Name       string
 		Enable     bool
 		handle     func(event Event, bot *Bot)
@@ -35,6 +41,7 @@ type (
 		weight     int
 	}
 	commandHandle struct {
+		Id           string
 		Name         string
 		Enable       bool
 		disableGroup []int
@@ -46,21 +53,30 @@ type (
 		block        bool
 	}
 	metaHandle struct {
+		Id     string
 		Name   string
 		Enable bool
 		handle func(event Event, bot *Bot)
 		rules  []Rule
 		weight int
 	}
-	reqHandle struct {
-		selfId     int
-		host       string
-		clientRole string
+	connectHandle struct {
+		Id     string
+		Name   string
+		Enable bool
+		handle func(connect Connect, bot *Bot)
 	}
-)
-
-type (
-	connectHandle func()
+	disConnectHandle struct {
+		Id     string
+		Name   string
+		Enable bool
+		handle func(selfId int)
+	}
+	Connect struct {
+		SelfId     int
+		Host       string
+		ClientRole string
+	}
 )
 
 func (m *metaHandle) SetPluginName(name string) *metaHandle {
@@ -200,6 +216,7 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
 func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
 	m.Enable = true
+	m.Id = uuid.NewV4().String()
 	MetaHandles = append(MetaHandles, m)
 }
 
@@ -261,6 +278,7 @@ func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) 
 	c.handle = f
 	c.Enable = true
 	c.disableGroup = []int{}
+	c.Id = uuid.NewV4().String()
 	CommandHandles = append(CommandHandles, c)
 }
 
@@ -297,6 +315,7 @@ func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
 func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
 	n.handle = f
 	n.Enable = true
+	n.Id = uuid.NewV4().String()
 	NoticeHandles = append(NoticeHandles, n)
 }
 
@@ -333,6 +352,7 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
 func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
 	r.handle = f
 	r.Enable = true
+	r.Id = uuid.NewV4().String()
 	RequestHandles = append(RequestHandles, r)
 }
 
@@ -369,6 +389,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
 func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
 	m.Enable = true
+	m.Id = uuid.NewV4().String()
 	MessageHandles = append(MessageHandles, m)
 }
 
@@ -405,5 +426,6 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
 func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
 	p.handle = f
 	p.Enable = true
+	p.Id = uuid.NewV4().String()
 	PretreatmentHandles = append(PretreatmentHandles, p)
 }

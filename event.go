@@ -22,6 +22,9 @@ type (
 	CommandChain      []*commandHandle
 	MetaChain         []*metaHandle
 	PretreatmentChain []*PretreatmentHandle
+
+	ConnectChain    []*connectHandle
+	DisConnectChain []*disConnectHandle
 )
 
 var (
@@ -48,6 +51,8 @@ var (
 )
 
 var (
+	ConnectHandles      ConnectChain
+	DisConnectHandles   DisConnectChain
 	MessageHandles      MessageChain
 	RequestHandles      RequestChain
 	NoticeHandles       NoticeChain
