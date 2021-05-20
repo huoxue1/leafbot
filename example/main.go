@@ -48,9 +48,9 @@ func main() {
 	leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 
 	var port int
-	flag.IntVar(&port, "port", 13452, "端口")
+	flag.IntVar(&port, "port", leafBot.DefaultConfig.Port, "端口")
 	flag.Parse()
-	if port != 13452 {
+	if port != leafBot.DefaultConfig.Port {
 		leafBot.DefaultConfig.Port = port
 	}
 	//拼接配置文件路径，并且加载配置文件
