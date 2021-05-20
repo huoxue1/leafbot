@@ -23,7 +23,7 @@ func init() {
 			}).SetWeight(10).
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot) {
-				msg := fmt.Sprintf("服务器使用信息\n\t---------------\nCPU使用率：%0.2f%%\n内存占有率：%v%%\n\t----------------", GetCpuPercent(), GetMemPercent())
+				msg := fmt.Sprintf("服务器使用信息\n\t---------------\nCPU使用率：%0.2f%%\n内存占有率：%.2f%%\n\t----------------", GetCpuPercent(), GetMemPercent())
 				if event.GroupId != 0 {
 					bot.SendGroupMsg(event.GroupId, message.Text(msg))
 				} else {
