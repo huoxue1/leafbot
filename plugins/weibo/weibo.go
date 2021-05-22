@@ -1,12 +1,17 @@
 package weibo
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot/message"
 	"github.com/fogleman/gg"
 	log "github.com/sirupsen/logrus"
 	"io"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func init() {
@@ -19,19 +24,44 @@ func init() {
 }
 
 func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
-	draw(10)
+	if len(args) < 1 {
+		draw(10)
+	} else {
+		limit, err := strconv.Atoi(args[0])
+		if err != nil {
+			return
+		}
+		draw(limit)
+	}
+	srcByte, err := ioutil.ReadFile("./plugins/weibo/weibo.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res := base64.StdEncoding.EncodeToString(srcByte)
+
+	bot.Send(event, message.Image("base64://"+res))
 }
 
 func draw(limit int) {
-	context := gg.NewContext(300, 20*limit)
+	context := gg.NewContext(900, 100*(limit+1))
+	context.SetRGB255(255, 255, 0)
+	context.DrawRectangle(0, 0, 900, float64(100*(limit+1)))
 	weibo, err := getData()
+	context.Fill()
+	if err := context.LoadFontFace("./plugins/weibo/NotoSansBold.ttf", 40); err != nil {
+		log.Debugln(err)
+	}
+	context.SetRGB255(0, 0, 0)
+	fmt.Println(weibo)
 	if err != nil {
 		return
 	}
 	for i := 0; i < limit; i++ {
-		context.DrawString(weibo.Data[i].Name, 0, float64(20*i))
+		fmt.Println(weibo.Data[i].Name)
+		context.DrawString(strconv.Itoa(i+1)+"："+weibo.Data[i].Name, 0, float64(100*(i+1)))
 	}
-	err = context.SavePNG("weibo.png")
+	err = context.SavePNG("./plugins/weibo/weibo.png")
 	if err != nil {
 		log.Debugln("图片保存失败")
 	}
