@@ -37,7 +37,39 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     go get github.com/3343780376/leafBot
 ```
 
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/Features.md">实现功能</a>
+## 功能
+
+### 已实现功能
+
+- [x] 戳一戳实现查看服务器状态
+- [x] 插件管理
+- [x] 微博热搜
+- [x] 自动回复
+- [x] 黑名单管理
+- [x] 每日一图
+- [x] 闪照拦截
+- [x] 二维码生成
+- [x] 翻译插件
+- [x] setu
+
+### 预计实现功能
+
+- [ ] 群管插件，例如禁言，关键词撤回，自动踢人
+
+
+- [ ] 群荣誉提醒
+
+- [ ] 入群欢迎
+
+- [ ] p站log实现
+
+- [ ] github自动操作以及搜索
+
+- [ ] bilibili的av号和bv号解析
+
+- [ ] 天气卡片
+
+### 更多功能功能提交issue
 
 + ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">使用</a>
 
