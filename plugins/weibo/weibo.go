@@ -49,7 +49,7 @@ func draw(limit int) {
 	context.DrawRectangle(0, 0, 900, float64(100*(limit+1)))
 	weibo, err := getData()
 	context.Fill()
-	if err := context.LoadFontFace("./plugins/weibo/NotoSansBold.ttf", 40); err != nil {
+	if err := context.LoadFontFace("./config/NotoSansBold.ttf", 40); err != nil {
 		log.Debugln(err)
 	}
 	context.SetRGB255(0, 0, 0)

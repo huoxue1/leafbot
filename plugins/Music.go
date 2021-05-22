@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
@@ -219,6 +220,11 @@ type Music163 struct {
 }
 
 func UseMusicHandle() {
+	defer func() {
+		i := recover()
+		if i != nil {
+		}
+	}()
 	leafBot.OnCommand("/music").
 		SetPluginName("查询歌曲").
 		SetWeight(10).
@@ -366,6 +372,9 @@ func searchMusic(name string, limit int, offset int) (Music163, error) {
 	err = json.Unmarshal(data, &music)
 	if err != nil {
 		return Music163{}, err
+	}
+	if len(music.Result.Songs) < 1 {
+		return music, errors.New("点歌错误")
 	}
 	return music, err
 }
