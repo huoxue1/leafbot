@@ -10,6 +10,7 @@ import (
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"github.com/3343780376/leafBot/plugins/manager"
 	_ "github.com/3343780376/leafBot/plugins/poke"
+	_ "github.com/3343780376/leafBot/plugins/weibo"
 	"os"
 	"runtime"
 )
@@ -25,6 +26,7 @@ func init() {
 		SetWeight(10).
 		SetBlock(false).
 		AddHandle(Weather)
+
 	plugins.UseCreateQrCode()               //加载生成二维码插件
 	plugins.UseDayImage()                   // 加载每日一图插件
 	plugins.UseEchoHandle()                 // 加载echo插件
@@ -48,11 +50,14 @@ func main() {
 	leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 
 	var port int
-	flag.IntVar(&port, "port", leafBot.DefaultConfig.Port, "端口")
-	flag.Parse()
-	if port != leafBot.DefaultConfig.Port {
-		leafBot.DefaultConfig.Port = port
+	if len(os.Args) > 1 {
+		flag.IntVar(&port, "port", leafBot.DefaultConfig.Port, "端口")
+		flag.Parse()
+		if port != leafBot.DefaultConfig.Port {
+			leafBot.DefaultConfig.Port = port
+		}
 	}
+
 	//拼接配置文件路径，并且加载配置文件
 	leafBot.InitBots() //初始化Bot
 }

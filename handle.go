@@ -79,6 +79,39 @@ type (
 	}
 )
 
+func OnConnect() *connectHandle {
+	return &connectHandle{}
+}
+
+func OnDisConnect() *disConnectHandle {
+	return &disConnectHandle{}
+}
+
+func (d *disConnectHandle) SetPluginName(name string) *disConnectHandle {
+	d.Name = name
+	return d
+}
+
+func (d *disConnectHandle) AddHandle(f func(selfId int)) {
+	d.Id = uuid.NewV4().String()
+	d.Enable = true
+	d.handle = f
+	DisConnectHandles = append(DisConnectHandles, d)
+
+}
+
+func (c *connectHandle) SetPluginName(name string) *connectHandle {
+	c.Name = name
+	return c
+}
+
+func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
+	c.Id = uuid.NewV4().String()
+	c.Enable = true
+	c.handle = f
+	ConnectHandles = append(ConnectHandles, c)
+}
+
 func (m *metaHandle) SetPluginName(name string) *metaHandle {
 	m.Name = name
 	return m
@@ -107,6 +140,16 @@ func (m *messageHandle) SetPluginName(name string) *messageHandle {
 func (p *PretreatmentHandle) SetPluginName(name string) *PretreatmentHandle {
 	p.Name = name
 	return p
+}
+
+type ConnectInt interface {
+	SetPluginName(name string) *connectHandle
+	AddHandle(func(connect Connect, bot *Bot))
+}
+
+type DisConnectInt interface {
+	SetPluginName(name string) *disConnectHandle
+	AddHandle(func(selfId int))
 }
 
 type CommandInt interface {
