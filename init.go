@@ -32,6 +32,7 @@ type Config struct {
 
 var (
 	DefaultConfig = new(Config)
+	reloadSign    = make(chan int, 1)
 )
 
 // init
@@ -39,6 +40,7 @@ var (
    @Description:
 */
 func init() {
+
 	log.SetFormatter(&easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
@@ -182,4 +184,9 @@ func GetLogLevel(level string) log.Level {
 	default:
 		return log.InfoLevel
 	}
+}
+
+func reload() {
+	<-reloadSign
+
 }

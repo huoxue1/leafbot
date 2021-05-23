@@ -5,22 +5,35 @@ package leafBot
  * @Description: 获取所有的未被禁用handle
  * @return map[string][]string
  */
-func GetHandleList() map[string][]string {
+
+type baseHandle struct {
+	Id      string
+	Name    string
+	Enable  bool
+	IsAdmin bool
+}
+
+func GetHandleList() map[string][]baseHandle {
 	var (
-		list     = make(map[string][]string)
-		preList  []string
-		cmdList  []string
-		msgList  []string
-		reqList  []string
-		notList  []string
-		metaList []string
+		list     = make(map[string][]baseHandle)
+		preList  []baseHandle
+		cmdList  []baseHandle
+		msgList  []baseHandle
+		reqList  []baseHandle
+		notList  []baseHandle
+		metaList []baseHandle
 	)
 
 	for _, handle := range PretreatmentHandles {
 		if !handle.Enable {
 			continue
 		}
-		preList = append(preList, handle.Name)
+		preList = append(preList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["预处理响应器"] = preList
 
@@ -28,7 +41,12 @@ func GetHandleList() map[string][]string {
 		if !handle.Enable {
 			continue
 		}
-		cmdList = append(cmdList, handle.Name)
+		cmdList = append(cmdList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["command响应器"] = cmdList
 
@@ -36,7 +54,12 @@ func GetHandleList() map[string][]string {
 		if !handle.Enable {
 			continue
 		}
-		msgList = append(msgList, handle.Name)
+		msgList = append(msgList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["message响应器"] = msgList
 
@@ -44,7 +67,12 @@ func GetHandleList() map[string][]string {
 		if !handle.Enable {
 			continue
 		}
-		reqList = append(reqList, handle.Name)
+		reqList = append(reqList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["request响应器"] = reqList
 
@@ -52,7 +80,12 @@ func GetHandleList() map[string][]string {
 		if !handle.Enable {
 			continue
 		}
-		notList = append(notList, handle.Name)
+		notList = append(notList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["notice响应器"] = notList
 
@@ -60,7 +93,12 @@ func GetHandleList() map[string][]string {
 		if !handle.Enable {
 			continue
 		}
-		metaList = append(metaList, handle.Name)
+		metaList = append(metaList, baseHandle{
+			Id:      handle.Id,
+			Name:    handle.Name,
+			Enable:  handle.Enable,
+			IsAdmin: handle.IsAdmin,
+		})
 	}
 	list["meta响应器"] = metaList
 	return list
