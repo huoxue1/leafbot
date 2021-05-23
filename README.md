@@ -72,9 +72,9 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ### 更多功能功能提交issue
 
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">详细功能</a>
++ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/Features.md">详细功能</a>
 
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/Features.md">基础使用</a>
++ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">基础使用</a>
 
 + ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">自己构建</a>
 
