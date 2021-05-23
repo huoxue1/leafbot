@@ -156,102 +156,102 @@ func (c CommandChain) Swap(i, j int) {
    @param rules []Rule
    @param handles ...func(event Event, bot *Bot)
 */
-func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Event, bot *Bot)) {
-	for _, handle := range handles {
-		MessageHandles = append(MessageHandles, &messageHandle{
-			handle:      handle,
-			messageType: messageType,
-			rules:       rules,
-		})
-	}
-
-}
-
-func AddPretreatmentHandle(rules []Rule, weight int, handles ...func(event Event, bot *Bot) bool) {
-	for _, handle := range handles {
-		PretreatmentHandles = append(PretreatmentHandles, &PretreatmentHandle{
-			handle: handle,
-			rules:  rules,
-			weight: weight,
-		})
-	}
-}
-
-// AddNoticeHandle
-/*
-   @Description:
-   @param noticeType string
-   @param rules []Rule
-   @param weight int
-   @param handles ...func(event Event, bot *Bot)
-*/
-func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-	for _, handle := range handles {
-		NoticeHandles = append(NoticeHandles, &noticeHandle{
-			handle:     handle,
-			noticeType: noticeType,
-			rules:      rules,
-			weight:     weight,
-		})
-	}
-}
-
-// AddRequestHandle
-/*
-   @Description:
-   @param requestType string
-   @param rules []Rule
-   @param weight int
-   @param handles ...func(event Event, bot *Bot)
-*/
-func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-	for _, handle := range handles {
-		RequestHandles = append(RequestHandles, &requestHandle{
-			handle:      handle,
-			requestType: requestType,
-			rules:       rules,
-			weight:      weight,
-		})
-	}
-}
-
-// AddMetaHandles
-/*
-   @Description:
-   @param rules []Rule
-   @param weight int
-   @param handles ...func(event Event, bot *Bot)
-*/
-func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-	for _, handle := range handles {
-		MetaHandles = append(MetaHandles, &metaHandle{
-			handle: handle,
-			rules:  rules,
-			weight: weight,
-		})
-	}
-}
-
-// AddCommandHandle
-/*
-   @Description:
-   @param handle func(event Event, bot *Bot, args []string)
-   @param command string
-   @param allies []string
-   @param rules []Rule
-   @param weight int
-   @param block bool
-*/
-func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
-	CommandHandles = append(CommandHandles, &commandHandle{
-		handle:  handle,
-		command: command,
-		allies:  allies,
-		rules:   rules,
-		weight:  weight,
-		block:   block,
-	})
-}
+//func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Event, bot *Bot)) {
+//	for _, handle := range handles {
+//		MessageHandles = append(MessageHandles, &messageHandle{
+//			handle:      handle,
+//			messageType: messageType,
+//			rules:       rules,
+//		})
+//	}
+//
+//}
+//
+//func AddPretreatmentHandle(rules []Rule, weight int, handles ...func(event Event, bot *Bot) bool) {
+//	for _, handle := range handles {
+//		PretreatmentHandles = append(PretreatmentHandles, &PretreatmentHandle{
+//			handle: handle,
+//			rules:  rules,
+//			weight: weight,
+//		})
+//	}
+//}
+//
+//// AddNoticeHandle
+///*
+//   @Description:
+//   @param noticeType string
+//   @param rules []Rule
+//   @param weight int
+//   @param handles ...func(event Event, bot *Bot)
+//*/
+//func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+//	for _, handle := range handles {
+//		NoticeHandles = append(NoticeHandles, &noticeHandle{
+//			handle:     handle,
+//			noticeType: noticeType,
+//			rules:      rules,
+//			weight:     weight,
+//		})
+//	}
+//}
+//
+//// AddRequestHandle
+///*
+//   @Description:
+//   @param requestType string
+//   @param rules []Rule
+//   @param weight int
+//   @param handles ...func(event Event, bot *Bot)
+//*/
+//func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+//	for _, handle := range handles {
+//		RequestHandles = append(RequestHandles, &requestHandle{
+//			handle:      handle,
+//			requestType: requestType,
+//			rules:       rules,
+//			weight:      weight,
+//		})
+//	}
+//}
+//
+//// AddMetaHandles
+///*
+//   @Description:
+//   @param rules []Rule
+//   @param weight int
+//   @param handles ...func(event Event, bot *Bot)
+//*/
+//func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
+//	for _, handle := range handles {
+//		MetaHandles = append(MetaHandles, &metaHandle{
+//			handle: handle,
+//			rules:  rules,
+//			weight: weight,
+//		})
+//	}
+//}
+//
+//// AddCommandHandle
+///*
+//   @Description:
+//   @param handle func(event Event, bot *Bot, args []string)
+//   @param command string
+//   @param allies []string
+//   @param rules []Rule
+//   @param weight int
+//   @param block bool
+//*/
+//func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
+//	CommandHandles = append(CommandHandles, &commandHandle{
+//		handle:  handle,
+//		command: command,
+//		allies:  allies,
+//		rules:   rules,
+//		weight:  weight,
+//		block:   block,
+//	})
+//}
 
 // eventMain
 /*
@@ -283,7 +283,7 @@ func eventMain() {
 	}
 
 	go func() {
-		for true {
+		for {
 			data, ok := <-eventChan
 			if !ok {
 				continue
@@ -575,7 +575,16 @@ func processRequestEventHandle(event Event) {
    @param event Event
 */
 func processMetaEventHandle(event Event) {
-
+	for _, handle := range MetaHandles {
+		rule := checkRule(event, handle.rules)
+		if handle.rules == nil {
+			rule = true
+		}
+		if !rule || !handle.Enable {
+			continue
+		}
+		go handle.handle(event, GetBotById(event.SelfId))
+	}
 }
 
 // GetBotById

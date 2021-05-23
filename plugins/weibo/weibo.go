@@ -24,12 +24,16 @@ func init() {
 }
 
 func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
+
 	if len(args) < 1 {
 		draw(10)
 	} else {
 		limit, err := strconv.Atoi(args[0])
 		if err != nil {
 			return
+		}
+		if limit >= 50 {
+			bot.Send(event, []message.MessageSegment{message.Text("非法参数"), message.At(int64(event.UserId))})
 		}
 		draw(limit)
 	}
