@@ -34,6 +34,7 @@ func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		}
 		if limit >= 50 {
 			bot.Send(event, []message.MessageSegment{message.Text("非法参数"), message.At(int64(event.UserId))})
+			return
 		}
 		draw(limit)
 	}
