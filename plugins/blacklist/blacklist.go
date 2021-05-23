@@ -63,7 +63,7 @@ func InitBlackList(filePath string) {
 		SetWeight(10).
 		SetPluginName("添加黑名单用户").
 		SetBlock(false).
-		AddAllies("/添加黑名单用户").
+		AddAllies("添加黑名单用户").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 				datas := strings.Split(args[0], ",")
@@ -85,7 +85,7 @@ func InitBlackList(filePath string) {
 		AddRule(leafBot.OnlySuperUser).SetWeight(10).
 		SetBlock(false).
 		SetPluginName("添加黑名单群").
-		AddAllies("/添加黑名单群").
+		AddAllies("添加黑名单群").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 				datas := strings.Split(args[0], ",")

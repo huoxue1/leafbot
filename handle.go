@@ -4,46 +4,40 @@ import uuid "github.com/satori/go.uuid"
 
 type (
 	PretreatmentHandle struct {
-		Id     string
-		Name   string
-		Enable bool
-		handle func(event Event, bot *Bot) bool
-		rules  []Rule
-		weight int
+		baseHandle
+		disableGroup []int
+		handle       func(event Event, bot *Bot) bool
+		rules        []Rule
+		weight       int
 	}
 	messageHandle struct {
-		Id          string
-		Name        string
-		Enable      bool
-		handle      func(event Event, bot *Bot)
-		messageType string
-		rules       []Rule
-		weight      int
+		baseHandle
+		disableGroup []int
+		handle       func(event Event, bot *Bot)
+		messageType  string
+		rules        []Rule
+		weight       int
 	}
 
 	requestHandle struct {
-		Id          string
-		Name        string
-		Enable      bool
-		handle      func(event Event, bot *Bot)
-		requestType string
-		rules       []Rule
-		weight      int
+		baseHandle
+		disableGroup []int
+		handle       func(event Event, bot *Bot)
+		requestType  string
+		rules        []Rule
+		weight       int
 	}
 
 	noticeHandle struct {
-		Id         string
-		Name       string
-		Enable     bool
-		handle     func(event Event, bot *Bot)
-		noticeType string
-		rules      []Rule
-		weight     int
+		baseHandle
+		disableGroup []int
+		handle       func(event Event, bot *Bot)
+		noticeType   string
+		rules        []Rule
+		weight       int
 	}
 	commandHandle struct {
-		Id           string
-		Name         string
-		Enable       bool
+		baseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot, args []string)
 		command      string
@@ -53,23 +47,19 @@ type (
 		block        bool
 	}
 	metaHandle struct {
-		Id     string
-		Name   string
-		Enable bool
-		handle func(event Event, bot *Bot)
-		rules  []Rule
-		weight int
+		baseHandle
+		disableGroup []int
+		handle       func(event Event, bot *Bot)
+		rules        []Rule
+		weight       int
 	}
 	connectHandle struct {
-		Id     string
-		Name   string
-		Enable bool
-		handle func(connect Connect, bot *Bot)
+		baseHandle
+		disableGroup []int
+		handle       func(connect Connect, bot *Bot)
 	}
 	disConnectHandle struct {
-		Id     string
-		Name   string
-		Enable bool
+		baseHandle
 		handle func(selfId int)
 	}
 	Connect struct {
@@ -259,6 +249,7 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
 func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
 	m.Enable = true
+	m.disableGroup = []int{}
 	m.Id = uuid.NewV4().String()
 	MetaHandles = append(MetaHandles, m)
 }
@@ -359,6 +350,7 @@ func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
 	n.handle = f
 	n.Enable = true
 	n.Id = uuid.NewV4().String()
+	n.disableGroup = []int{}
 	NoticeHandles = append(NoticeHandles, n)
 }
 
@@ -395,6 +387,7 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
 func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
 	r.handle = f
 	r.Enable = true
+	r.disableGroup = []int{}
 	r.Id = uuid.NewV4().String()
 	RequestHandles = append(RequestHandles, r)
 }
@@ -432,6 +425,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
 func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.handle = f
 	m.Enable = true
+	m.disableGroup = []int{}
 	m.Id = uuid.NewV4().String()
 	MessageHandles = append(MessageHandles, m)
 }
@@ -469,6 +463,7 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
 func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
 	p.handle = f
 	p.Enable = true
+	p.disableGroup = []int{}
 	p.Id = uuid.NewV4().String()
 	PretreatmentHandles = append(PretreatmentHandles, p)
 }

@@ -42,7 +42,6 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 ### 已实现功能
 
 - [x] 戳一戳实现查看服务器状态
-- [x] 插件管理
 - [x] 微博热搜
 - [x] 自动回复
 - [x] 黑名单管理
@@ -50,13 +49,15 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 - [x] 闪照拦截
 - [x] 二维码生成
 - [x] 翻译插件
+- [x] 点歌插件
 - [x] setu
 
 ### 预计实现功能
 
 - [ ] 群管插件，例如禁言，关键词撤回，自动踢人
 
-
+- [ ] 插件管理
+  
 - [ ] 群荣誉提醒
 
 - [ ] 入群欢迎
@@ -71,7 +72,9 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ### 更多功能功能提交issue
 
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">使用</a>
++ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">详细功能</a>
+
++ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/Features.md">基础使用</a>
 
 + ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">自己构建</a>
 
