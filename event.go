@@ -422,7 +422,7 @@ func processNoticeHandle(event Event) {
 			v.noticeType = event.NoticeType
 		}
 		if v.noticeType == event.NoticeType {
-			go v.handle(event, GetBotById(event.SelfId))
+			v.handle(event, GetBotById(event.SelfId))
 		}
 	}
 }
@@ -512,7 +512,7 @@ func processMessageHandle() {
 		}
 		if commands[0] == handle.command {
 			a = 1
-			go handle.handle(event, GetBotById(event.SelfId), commands[1:])
+			handle.handle(event, GetBotById(event.SelfId), commands[1:])
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 			if handle.block {
@@ -522,7 +522,7 @@ func processMessageHandle() {
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 				a = 1
-				go handle.handle(event, GetBotById(event.SelfId), commands[1:])
+				handle.handle(event, GetBotById(event.SelfId), commands[1:])
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 				if !handle.block {
@@ -547,7 +547,7 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		go handle.handle(event, GetBotById(event.SelfId))
+		handle.handle(event, GetBotById(event.SelfId))
 	}
 }
 
@@ -557,6 +557,12 @@ func processMessageHandle() {
    @param event Event
 */
 func processRequestEventHandle(event Event) {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Infoln(err)
+		}
+	}()
 	for _, handle := range RequestHandles {
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
@@ -565,7 +571,7 @@ func processRequestEventHandle(event Event) {
 		if !rule || !handle.Enable {
 			continue
 		}
-		go handle.handle(event, GetBotById(event.SelfId))
+		handle.handle(event, GetBotById(event.SelfId))
 	}
 }
 
@@ -575,6 +581,12 @@ func processRequestEventHandle(event Event) {
    @param event Event
 */
 func processMetaEventHandle(event Event) {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Infoln(err)
+		}
+	}()
 	for _, handle := range MetaHandles {
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
@@ -583,7 +595,7 @@ func processMetaEventHandle(event Event) {
 		if !rule || !handle.Enable {
 			continue
 		}
-		go handle.handle(event, GetBotById(event.SelfId))
+		handle.handle(event, GetBotById(event.SelfId))
 	}
 }
 
