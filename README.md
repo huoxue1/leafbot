@@ -85,3 +85,5 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 ### 特别感谢
 
 [wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot)
+
+[Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
