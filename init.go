@@ -3,7 +3,7 @@ package leafBot
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hjson/hjson-go"
+	"github.com/hjson/hjson-go" //nolint:gci
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 	yaml "gopkg.in/yaml.v3"
@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
+	"strings" //nolint:gci
 )
 
 type Bot struct {

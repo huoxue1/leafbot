@@ -384,19 +384,19 @@ func viewsMessage(event Event) {
 		if ISGUI {
 			MessageChan <- event
 		}
-		go processMessageHandle()
+		processMessageHandle()
 
 	case "notice":
-		go processNoticeHandle(event)
+		processNoticeHandle(event)
 	case "request":
 		log.Infoln(fmt.Sprintf("request_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 			event.RequestType, event.GroupId, event.UserId))
-		go processRequestEventHandle(event)
+		processRequestEventHandle(event)
 
 	case "meta_event":
 		log.Infoln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
 			event.PostType, event.MetaEventType, event.Interval))
-		go processMetaEventHandle(event)
+		processMetaEventHandle(event)
 	}
 }
 
@@ -422,7 +422,16 @@ func processNoticeHandle(event Event) {
 			v.noticeType = event.NoticeType
 		}
 		if v.noticeType == event.NoticeType {
-			v.handle(event, GetBotById(event.SelfId))
+			go func(handle2 *noticeHandle) {
+				defer func() {
+					err := recover()
+					if err != nil {
+						log.Errorln(handle2.Name + "发生不可挽回的错误")
+						log.Errorln(err)
+					}
+				}()
+				handle2.handle(event, GetBotById(event.SelfId))
+			}(v)
 		}
 	}
 }
@@ -512,7 +521,17 @@ func processMessageHandle() {
 		}
 		if commands[0] == handle.command {
 			a = 1
-			handle.handle(event, GetBotById(event.SelfId), commands[1:])
+
+			go func(handle2 *commandHandle) {
+				defer func() {
+					err := recover()
+					if err != nil {
+						log.Errorln(handle2.Name + "发生不可挽回的错误")
+						log.Errorln(err)
+					}
+				}()
+				handle2.handle(event, GetBotById(event.SelfId), commands[1:])
+			}(handle)
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
 			if handle.block {
@@ -522,10 +541,19 @@ func processMessageHandle() {
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 				a = 1
-				handle.handle(event, GetBotById(event.SelfId), commands[1:])
+				go func(handle2 *commandHandle) {
+					defer func() {
+						err := recover()
+						if err != nil {
+							log.Errorln(handle2.Name + "发生不可挽回的错误")
+							log.Errorln(err)
+						}
+					}()
+					handle2.handle(event, GetBotById(event.SelfId), commands[1:])
+				}(handle)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
-				if !handle.block {
+				if handle.block {
 					return
 				}
 			}
@@ -547,7 +575,16 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		handle.handle(event, GetBotById(event.SelfId))
+		go func(handle2 *messageHandle) {
+			defer func() {
+				err := recover()
+				if err != nil {
+					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(err)
+				}
+			}()
+			handle2.handle(event, GetBotById(event.SelfId))
+		}(handle)
 	}
 }
 
@@ -571,7 +608,16 @@ func processRequestEventHandle(event Event) {
 		if !rule || !handle.Enable {
 			continue
 		}
-		handle.handle(event, GetBotById(event.SelfId))
+		go func(handle2 *requestHandle) {
+			defer func() {
+				err := recover()
+				if err != nil {
+					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(err)
+				}
+			}()
+			handle2.handle(event, GetBotById(event.SelfId))
+		}(handle)
 	}
 }
 
@@ -595,7 +641,17 @@ func processMetaEventHandle(event Event) {
 		if !rule || !handle.Enable {
 			continue
 		}
-		handle.handle(event, GetBotById(event.SelfId))
+		go func(handle2 *metaHandle) {
+			defer func() {
+				err := recover()
+				if err != nil {
+					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(err)
+				}
+			}()
+			handle2.handle(event, GetBotById(event.SelfId))
+		}(handle)
+
 	}
 }
 

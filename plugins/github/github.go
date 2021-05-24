@@ -1,8 +1,7 @@
 package github
 
 import (
-	_ "embed"
-	"fmt"
+	"fmt" //nolint:gci
 	"github.com/google/go-github/v35/github"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
@@ -13,7 +12,6 @@ var (
 	client *github.Client
 )
 
-//go:embed token.txt
 var tokenContent string
 
 func Init(token string) {

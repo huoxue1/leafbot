@@ -2,11 +2,11 @@ package plugins
 
 import (
 	"encoding/json"
-	"fmt"
+	"fmt" //nolint:gci
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
-	"io"
+	"io" //nolint:gci
 	"net/http"
 )
 
