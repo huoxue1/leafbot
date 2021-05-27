@@ -52,7 +52,8 @@ func draw(limit int) {
 	context := gg.NewContext(900, 100*(limit+1))
 	context.SetRGB255(255, 255, 0)
 	context.DrawRectangle(0, 0, 900, float64(100*(limit+1)))
-	weibo, err := getData()
+	//weibo, err := getData()
+	weibo, err := getDataAlApi(limit)
 	context.Fill()
 	if err := context.LoadFontFace("./config/NotoSansBold.ttf", 40); err != nil {
 		log.Debugln(err)
@@ -62,14 +63,38 @@ func draw(limit int) {
 	if err != nil {
 		return
 	}
-	for i := 0; i < limit; i++ {
-		fmt.Println(weibo.Data[i].Name)
-		context.DrawString(strconv.Itoa(i+1)+"："+weibo.Data[i].Name, 0, float64(100*(i+1)))
+	//for i := 0; i < limit; i++ {
+	//	fmt.Println(weibo.Data[i].Name)
+	//	context.DrawString(strconv.Itoa(i+1)+"："+weibo.Data[i].Name, 0, float64(100*(i+1)))
+	//}
+	for i, datum := range weibo.Data {
+		context.DrawString(strconv.Itoa(i+1)+"："+datum.HotWord+"  "+datum.HotWordNum, 0, float64(100*(i+1)))
 	}
 	err = context.SavePNG("./plugins/weibo/weibo.png")
 	if err != nil {
 		log.Debugln("图片保存失败")
 	}
+}
+
+func getDataAlApi(num int) (AlApi, error) {
+	resp, err := http.Get("https://v1.alapi.cn/api/new/wbtop?num=" + strconv.Itoa(num))
+	if err != nil {
+		return AlApi{}, err
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(resp.Body)
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return AlApi{}, err
+	}
+	weibo := AlApi{}
+	err = json.Unmarshal(data, &weibo)
+	return weibo, err
 }
 
 func getData() (Weibo, error) {
