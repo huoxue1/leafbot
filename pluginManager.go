@@ -6,29 +6,29 @@ package leafBot
  * @return map[string][]string
  */
 
-type baseHandle struct {
+type BaseHandle struct {
 	Id      string
 	Name    string
 	Enable  bool
 	IsAdmin bool
 }
 
-func GetHandleList() map[string][]baseHandle {
+func GetHandleList() map[string][]BaseHandle {
 	var (
-		list     = make(map[string][]baseHandle)
-		preList  []baseHandle
-		cmdList  []baseHandle
-		msgList  []baseHandle
-		reqList  []baseHandle
-		notList  []baseHandle
-		metaList []baseHandle
+		list     = make(map[string][]BaseHandle)
+		preList  []BaseHandle
+		cmdList  []BaseHandle
+		msgList  []BaseHandle
+		reqList  []BaseHandle
+		notList  []BaseHandle
+		metaList []BaseHandle
 	)
 
 	for _, handle := range PretreatmentHandles {
 		if !handle.Enable {
 			continue
 		}
-		preList = append(preList, baseHandle{
+		preList = append(preList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,
@@ -41,7 +41,7 @@ func GetHandleList() map[string][]baseHandle {
 		if !handle.Enable {
 			continue
 		}
-		cmdList = append(cmdList, baseHandle{
+		cmdList = append(cmdList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,
@@ -54,7 +54,7 @@ func GetHandleList() map[string][]baseHandle {
 		if !handle.Enable {
 			continue
 		}
-		msgList = append(msgList, baseHandle{
+		msgList = append(msgList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,
@@ -67,7 +67,7 @@ func GetHandleList() map[string][]baseHandle {
 		if !handle.Enable {
 			continue
 		}
-		reqList = append(reqList, baseHandle{
+		reqList = append(reqList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,
@@ -80,7 +80,7 @@ func GetHandleList() map[string][]baseHandle {
 		if !handle.Enable {
 			continue
 		}
-		notList = append(notList, baseHandle{
+		notList = append(notList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,
@@ -93,7 +93,7 @@ func GetHandleList() map[string][]baseHandle {
 		if !handle.Enable {
 			continue
 		}
-		metaList = append(metaList, baseHandle{
+		metaList = append(metaList, BaseHandle{
 			Id:      handle.Id,
 			Name:    handle.Name,
 			Enable:  handle.Enable,

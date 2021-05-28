@@ -30,7 +30,9 @@
 
     <link rel="stylesheet" href="../static/css/layui.css" media="all">
     <script src="../static/js/jquery.js"></script>
-   <script src="../static/js/layui.js"></script></head>
+    <script src="../static/js/layui.js"></script></head>
+<script src="../static/js/vue.js"></script>
+<script src="../static/js/axios.js"></script>
 <body onload="f()">
 
 <div class="layui-layout layui-layout-admin">
@@ -38,31 +40,32 @@
         <div class="layui-logo">LeftBot</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="#">Message</a></li>
-            <li class="layui-nav-item"><a href="#">Request</a></li>
-            <li class="layui-nav-item"><a href="#">Notice</a></li>
-<!--            <li class="layui-nav-item">-->
-<!--                <a href="javascript:;">nav groups<span class="layui-nav-more"></span></a>-->
-<!--                <dl class="layui-nav-child layui-anim layui-anim-upbit">-->
-<!--                    <dd><a href="#">menu 11</a></dd>-->
-<!--                    <dd><a href="#">menu 22</a></dd>-->
-<!--                    <dd><a href="#">menu 33</a></dd>-->
-<!--                </dl>-->
-<!--            </li>-->
+            <li class="layui-nav-item"><a href="#" onclick="meau_message_click();return false;">消息</a></li>
+            <li class="layui-nav-item"><a href="#">请求事件</a></li>
+            <li class="layui-nav-item"><a href="#">提醒事件</a></li>
+            <li class="layui-nav-item"><a href="#" onclick="meau_plugin_click();return false;">插件管理</a></li>
+            <!--            <li class="layui-nav-item">-->
+            <!--                <a href="javascript:;">nav groups<span class="layui-nav-more"></span></a>-->
+            <!--                <dl class="layui-nav-child layui-anim layui-anim-upbit">-->
+            <!--                    <dd><a href="#">menu 11</a></dd>-->
+            <!--                    <dd><a href="#">menu 22</a></dd>-->
+            <!--                    <dd><a href="#">menu 33</a></dd>-->
+            <!--                </dl>-->
+            <!--            </li>-->
             <span class="layui-nav-bar" style="left: 242.75px; top: 55px; width: 0px; opacity: 0;"></span></ul>
-<!--        <ul class="layui-nav layui-layout-right">-->
-<!--            <li class="layui-nav-item">-->
-<!--                <a href="javascript:">-->
-<!--                    <img src="./layout 管理界面大布局示例 - Layui_files/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">-->
-<!--                    tester-->
-<!--                    <span class="layui-nav-more"></span></a>-->
-<!--                <dl class="layui-nav-child">-->
-<!--                    <dd><a href="#">set 1</a></dd>-->
-<!--                    <dd><a href="#">set 2</a></dd>-->
-<!--                </dl>-->
-<!--            </li>-->
-<!--            <li class="layui-nav-item"><a href="#">Sign out</a></li>-->
-<!--            <span class="layui-nav-bar"></span></ul>-->
+        <!--        <ul class="layui-nav layui-layout-right">-->
+        <!--            <li class="layui-nav-item">-->
+        <!--                <a href="javascript:">-->
+        <!--                    <img src="./layout 管理界面大布局示例 - Layui_files/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">-->
+        <!--                    tester-->
+        <!--                    <span class="layui-nav-more"></span></a>-->
+        <!--                <dl class="layui-nav-child">-->
+        <!--                    <dd><a href="#">set 1</a></dd>-->
+        <!--                    <dd><a href="#">set 2</a></dd>-->
+        <!--                </dl>-->
+        <!--            </li>-->
+        <!--            <li class="layui-nav-item"><a href="#">Sign out</a></li>-->
+        <!--            <span class="layui-nav-bar"></span></ul>-->
     </div>
 
     <div class="layui-side layui-bg-black">
@@ -72,28 +75,44 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">Message<span class="layui-nav-more"></span></a>
-<!--                    <dl class="layui-nav-child">-->
-<!--                        <dd><a href="javascript:;">menu 1</a></dd>-->
-<!--                        <dd><a href="javascript:;">menu 2</a></dd>-->
-<!--                        <dd><a href="javascript:;">menu 3</a></dd>-->
-<!--                        <dd><a href="#">the links</a></dd>-->
-<!--                    </dl>-->
+                    <!--                    <dl class="layui-nav-child">-->
+                    <!--                        <dd><a href="javascript:;">menu 1</a></dd>-->
+                    <!--                        <dd><a href="javascript:;">menu 2</a></dd>-->
+                    <!--                        <dd><a href="javascript:;">menu 3</a></dd>-->
+                    <!--                        <dd><a href="#">the links</a></dd>-->
+                    <!--                    </dl>-->
                 </li>
-<!--                <li class="layui-nav-item">-->
-<!--                    <a href="javascript:;">Private<span class="layui-nav-more"></span></a>-->
-<!--                    <dl class="layui-nav-child">-->
-<!--                        <dd><a href="javascript:;">list 1</a></dd>-->
-<!--                        <dd><a href="javascript:;">list 2</a></dd>-->
-<!--                        <dd><a href="#">超链接</a></dd>-->
-<!--                    </dl>-->
-<!--                </li>-->
-<!--                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>-->
-<!--                <li class="layui-nav-item"><a href="#">the links</a></li>-->
+                <!--                <li class="layui-nav-item">-->
+                <!--                    <a href="javascript:;">Private<span class="layui-nav-more"></span></a>-->
+                <!--                    <dl class="layui-nav-child">-->
+                <!--                        <dd><a href="javascript:;">list 1</a></dd>-->
+                <!--                        <dd><a href="javascript:;">list 2</a></dd>-->
+                <!--                        <dd><a href="#">超链接</a></dd>-->
+                <!--                    </dl>-->
+                <!--                </li>-->
+                <!--                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>-->
+                <!--                <li class="layui-nav-item"><a href="#">the links</a></li>-->
                 <span class="layui-nav-bar"></span></ul>
         </div>
     </div>
+    <div id="plugin_manager" class="layui-body" style="display: none">
+        <table class="layui-table" >
+            <thead>
+            <td>插件id</td>
+            <td>插件名</td>
+            <td>是否可用</td>
+            </thead>
+            <template v-for = "plugin in plugins.data">
+                <tr>
+                    <td>{[plugin.Id]}</td>
+                    <td>{[plugin.Name]}</td>
+                    <td><input type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
+                </tr>
+            </template>
+        </table>
+    </div>
 
-    <div class="layui-body">
+    <div id="message" class="layui-body">
         <!-- 内容主体区域 -->
 
         <table class="layui-table" lay-filter = "table" id="table">
@@ -110,43 +129,43 @@
 
             </tbody>
         </table>
-<!--        <div style="padding: 15px;">-->
-<!--            内容主体区域-->
+        <!--        <div style="padding: 15px;">-->
+        <!--            内容主体区域-->
 
-<!--            <br><br>-->
+        <!--            <br><br>-->
 
-<!--            <blockquote class="layui-elem-quote layui-text">-->
-<!--                <ul>-->
-<!--                    <li>-->
-<!--                        你也可以单独打开管理界面大布局的演示页面：-->
-<!--                        <a class="layui-btn layui-btn-normal" href="#" target="_blank">单独打开</a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        该页面只是简单的管理系统的界面基础布局示例，并不是一整套界面布局方案，您可以关注基于 layui 的通用型管理系统界面模板解决方案：-->
-<!--                        <a href="https://www.layui.com/layuiadmin/" target="_blank" class="layui-btn">layuiAdmin</a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        layui 之所以赢得如此多人的青睐，更多是在于它“前后界面兼备”的能力。既可编织出绚丽的前台页面，又可满足繁杂的管理系统的界面需求。-->
-<!--                        <br>layui 管理基本布局， 致力于让每一位开发者都能轻松搭建自己的管理系统模板。-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </blockquote>-->
+        <!--            <blockquote class="layui-elem-quote layui-text">-->
+        <!--                <ul>-->
+        <!--                    <li>-->
+        <!--                        你也可以单独打开管理界面大布局的演示页面：-->
+        <!--                        <a class="layui-btn layui-btn-normal" href="#" target="_blank">单独打开</a>-->
+        <!--                    </li>-->
+        <!--                    <li>-->
+        <!--                        该页面只是简单的管理系统的界面基础布局示例，并不是一整套界面布局方案，您可以关注基于 layui 的通用型管理系统界面模板解决方案：-->
+        <!--                        <a href="https://www.layui.com/layuiadmin/" target="_blank" class="layui-btn">layuiAdmin</a>-->
+        <!--                    </li>-->
+        <!--                    <li>-->
+        <!--                        layui 之所以赢得如此多人的青睐，更多是在于它“前后界面兼备”的能力。既可编织出绚丽的前台页面，又可满足繁杂的管理系统的界面需求。-->
+        <!--                        <br>layui 管理基本布局， 致力于让每一位开发者都能轻松搭建自己的管理系统模板。-->
+        <!--                    </li>-->
+        <!--                </ul>-->
+        <!--            </blockquote>-->
 
-<!--            <a href="https://www.layui.com/doc/element/layout.html#admin" target="_blank" class="layui-btn">查看该布局代码</a>-->
+        <!--            <a href="https://www.layui.com/doc/element/layout.html#admin" target="_blank" class="layui-btn">查看该布局代码</a>-->
 
-<!--            <br><br><br>-->
+        <!--            <br><br><br>-->
 
-<!--            <div class="layui-card layui-panel">-->
-<!--                <div class="layui-card-header">-->
-<!--                    下面是充数内容，为的是出现滚动条-->
-<!--                </div>-->
-<!--                <div class="layui-card-body">-->
-<!--                    充数-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <br><br>-->
+        <!--            <div class="layui-card layui-panel">-->
+        <!--                <div class="layui-card-header">-->
+        <!--                    下面是充数内容，为的是出现滚动条-->
+        <!--                </div>-->
+        <!--                <div class="layui-card-body">-->
+        <!--                    充数-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            <br><br>-->
 
-<!--        </div>-->
+        <!--        </div>-->
     </div>
 
     <div class="layui-footer">
@@ -179,6 +198,46 @@
 </div>
 <!--<script src="./layout 管理界面大布局示例 - Layui_files/layui.js.下载" charset="utf-8"></script>-->
 <script>
+
+
+
+    var v = new Vue({
+        el : "#plugin_manager",
+        delimiters:['{[',']}'],
+        data :{
+            content : "<thead>\n" +
+                "            <td>插件id</td>\n" +
+                "            <td>插件名</td>\n" +
+                "            <td>是否可用</td>\n" +
+                "            </thead>\n" +
+                "            <template v-for = \"plugin in plugins\">\n" +
+                "                <tr>\n" +
+                "                    <td>{[plugin.id]}</td>\n" +
+                "                    <td>{[plugin.name]}</td>\n" +
+                "                    <td>{[plugin.name]}</td>\n" +
+                "                </tr>\n" +
+                "            </template>",
+            plugins : []
+        },
+        created(){
+            this.get_plugins()
+        },
+        methods :{
+            get_plugins : function (){
+                axios.post("/get_plugins").then(response=>(this.plugins = response))
+            }
+        }
+    })
+
+    function meau_message_click() {
+        $("#plugin_manager").css("display","none")
+        $("#message").css("display","block")
+    }
+
+    function meau_plugin_click() {
+        $("#plugin_manager").css("display","block")
+        $("#message").css("display","none")
+    }
 
     function send_msg() {
         var self_id = $("select[name='self_id']").val()

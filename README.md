@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://ishkong.github.io/go-cqhttp-docs/"><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2709879415,936942073&fm=26&gp=0.jpg" width="200" height="200" alt="go-cqhttp"></a>
+  <a href=""><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2709879415,936942073&fm=26&gp=0.jpg" width="200" height="200" alt="LeafBot"></a>
 </p>
 
 
