@@ -4,14 +4,14 @@ import uuid "github.com/satori/go.uuid"
 
 type (
 	PretreatmentHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot) bool
 		rules        []Rule
 		weight       int
 	}
 	messageHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot)
 		messageType  string
@@ -20,7 +20,7 @@ type (
 	}
 
 	requestHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot)
 		requestType  string
@@ -29,7 +29,7 @@ type (
 	}
 
 	noticeHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot)
 		noticeType   string
@@ -37,7 +37,7 @@ type (
 		weight       int
 	}
 	commandHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot, args []string)
 		command      string
@@ -47,19 +47,19 @@ type (
 		block        bool
 	}
 	metaHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(event Event, bot *Bot)
 		rules        []Rule
 		weight       int
 	}
 	connectHandle struct {
-		baseHandle
+		BaseHandle
 		disableGroup []int
 		handle       func(connect Connect, bot *Bot)
 	}
 	disConnectHandle struct {
-		baseHandle
+		BaseHandle
 		handle func(selfId int)
 	}
 	Connect struct {

@@ -50,14 +50,25 @@ func InitWindow() {
 	engine := gin.New()
 	gin.SetMode(gin.ReleaseMode)
 	engine.StaticFS("/static/", http.Dir("./gui/view/static/"))
+	engine.StaticFile("/", "./gui/view/html/index.html")
 	engine.LoadHTMLGlob("./gui/view/html/*.html")
-	engine.GET("/", func(context *gin.Context) {
-		context.HTML(200, "index.html", nil)
-	})
+	//engine.GET("/", func(context *gin.Context) {
+	//	context.HTML(200, "index.html", nil)
+	//})
 
 	engine.POST("/get_config", GetConfig)
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
+
+	engine.POST("/get_plugins", func(context *gin.Context) {
+		list := leafBot.GetHandleList()
+		var pluginList []leafBot.BaseHandle
+
+		for _, handles := range list {
+			pluginList = append(pluginList, handles...)
+		}
+		context.JSON(200, pluginList)
+	})
 
 	engine.POST("/send_msg", CallApi)
 	engine.GET("/data", data)
