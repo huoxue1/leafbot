@@ -12,7 +12,7 @@ func UseCreateQrCode() {
 	leafBot.OnCommand("/createQrcode").
 		AddAllies("生产二维码").
 		SetWeight(10).
-		SetPluginName("二维码生产").
+		SetPluginName("二维码生成").
 		SetBlock(false).
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {

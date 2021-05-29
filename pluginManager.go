@@ -1,6 +1,13 @@
 package leafBot
 
-import log "github.com/sirupsen/logrus"
+import (
+	"encoding/base64"
+	"github.com/3343780376/leafBot/message"
+	"github.com/fogleman/gg"
+	log "github.com/sirupsen/logrus"
+	"io/ioutil"
+	"strconv"
+)
 
 // GetHandleList
 /**
@@ -14,6 +21,85 @@ type BaseHandle struct {
 	Enable     bool
 	IsAdmin    bool
 	HandleType string
+}
+
+func InitPluginManager() {
+	OnCommand("/ban_plugin").SetPluginName("禁用插件").
+		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, args []string) {
+		if len(args) < 0 {
+			bot.Send(event, message.Text("参数不够"))
+			return
+		}
+		BanPluginById(args[0])
+		bot.Send(event, message.Text("禁用插件成功"))
+	})
+
+	OnCommand("/use_plugin").SetPluginName("启用插件").
+		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, args []string) {
+		if len(args) < 0 {
+			bot.Send(event, message.Text("参数不够"))
+			return
+		}
+		StartPluginById(args[0])
+		bot.Send(event, message.Text("启用插件成功"))
+	})
+
+	OnCommand("/get_plugins").SetPluginName("获取插件列表").
+		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, args []string) {
+		handleList := GetHandleList()
+		//for s, handles := range handleList {
+		//	msg += s+"\n"
+		//	for _, handle := range handles {
+		//		msg += handle.Id+"\t\t\t"+handle.Name+"\t\t\t"+strconv.FormatBool(handle.Enable)+"\n"
+		//	}
+		//}
+		draw(handleList)
+		srcByte, err := ioutil.ReadFile("./config/plugin.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		res := base64.StdEncoding.EncodeToString(srcByte)
+
+		bot.Send(event, message.Image("base64://"+res))
+	})
+}
+
+func draw(data map[string][]BaseHandle) {
+	context := gg.NewContext(900, 100*(8+pluginNum))
+	context.SetRGB255(255, 255, 0)
+	context.DrawRectangle(0, 0, 900, float64(100*(pluginNum+8)))
+	//weibo, err := getData()
+	context.Fill()
+	if err := context.LoadFontFace("./config/NotoSansBold.ttf", 40); err != nil {
+		log.Debugln(err)
+	}
+	context.SetRGB255(0, 0, 0)
+
+	//for i := 0; i < limit; i++ {
+	//	fmt.Println(weibo.Data[i].Name)
+	//	context.DrawString(strconv.Itoa(i+1)+"："+weibo.Data[i].Name, 0, float64(100*(i+1)))
+	//}
+	context.DrawString("插件Id", 100, 100)
+	context.DrawString("插件名", 400, 100)
+	context.DrawString("是否启用", 700, 100)
+	n := 2
+	for s, handles := range data {
+		context.SetRGB255(255, 0, 0)
+		context.DrawString(s, 0, float64(100*n))
+		n++
+		context.SetRGB255(0, 0, 0)
+		for _, handle := range handles {
+			context.DrawString(handle.Id, 100, float64(100*n))
+			context.DrawString(handle.Name, 300, float64(100*n))
+			context.DrawString(strconv.FormatBool(handle.Enable), 600, float64(100*n))
+			n++
+		}
+	}
+	err := context.SavePNG("./config/plugin.png")
+	if err != nil {
+		log.Debugln("图片保存失败")
+	}
 }
 
 func GetHandleList() map[string][]BaseHandle {

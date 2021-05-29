@@ -28,6 +28,8 @@ func init() {
 		SetBlock(false).
 		AddHandle(Weather)
 
+	leafBot.InitPluginManager()
+
 	plugins.UseCreateQrCode()               //加载生成二维码插件
 	plugins.UseDayImage()                   // 加载每日一图插件
 	plugins.UseEchoHandle()                 // 加载echo插件
