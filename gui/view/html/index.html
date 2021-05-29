@@ -100,13 +100,15 @@
             <thead>
             <td>插件id</td>
             <td>插件名</td>
+            <td>插件类型</td>
             <td>是否可用</td>
             </thead>
             <template v-for = "plugin in plugins.data">
                 <tr>
                     <td>{[plugin.Id]}</td>
                     <td>{[plugin.Name]}</td>
-                    <td><input type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
+                    <td>{[plugin.HandleType]}</td>
+                    <td><input v-bind:id="plugin.Id" onchange="update_plugin_status(this)"  type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
                 </tr>
             </template>
         </table>
@@ -205,31 +207,37 @@
         el : "#plugin_manager",
         delimiters:['{[',']}'],
         data :{
-            content : "<thead>\n" +
-                "            <td>插件id</td>\n" +
-                "            <td>插件名</td>\n" +
-                "            <td>是否可用</td>\n" +
-                "            </thead>\n" +
-                "            <template v-for = \"plugin in plugins\">\n" +
-                "                <tr>\n" +
-                "                    <td>{[plugin.id]}</td>\n" +
-                "                    <td>{[plugin.name]}</td>\n" +
-                "                    <td>{[plugin.name]}</td>\n" +
-                "                </tr>\n" +
-                "            </template>",
-            plugins : []
+            plugins : [{
+
+            }]
         },
         created(){
             this.get_plugins()
         },
+        watch : {
+          plugins : function (old,ne){
+              console.log(old,ne)
+          }
+        },
         methods :{
             get_plugins : function (){
                 axios.post("/get_plugins").then(response=>(this.plugins = response))
-            }
+            },
         }
     })
 
-    function meau_message_click() {
+    function update_plugin_status(dom){
+        $.ajax({
+            type : "POST",
+            url : "http://127.0.0.1:3000/update_plugin_states",
+            async : true,
+            data : {"id":dom.id,"status":dom.checked},
+            success : function (){
+                v.get_plugins()
+            }
+        })
+    }
+    function meau_message_click(){
         $("#plugin_manager").css("display","none")
         $("#message").css("display","block")
     }
@@ -330,6 +338,8 @@
 
     var ws = new WebSocket("ws://localhost:3000/data")
     ws.onmessage = function(data){
+        let table = document.getElementById("message")
+        table.scrollTop = table.scrollHeight
         var content = eval('(' + data.data + ')');
         message = "<tr>" +
             "<td>"+content.message_id+"</td>" +

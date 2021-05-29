@@ -15,18 +15,6 @@ import (
 	"time"
 )
 
-type (
-	MessageChain      []*messageHandle
-	RequestChain      []*requestHandle
-	NoticeChain       []*noticeHandle
-	CommandChain      []*commandHandle
-	MetaChain         []*metaHandle
-	PretreatmentChain []*PretreatmentHandle
-
-	ConnectChain    []*connectHandle
-	DisConnectChain []*disConnectHandle
-)
-
 var (
 	c = make(chan Event, 10)
 )
@@ -89,65 +77,6 @@ type (
 		rules []Rule
 	}
 )
-
-func (m MessageChain) Len() int {
-	return len(m)
-}
-func (m MessageChain) Less(i, j int) bool {
-	return m[i].weight < m[j].weight
-}
-func (m MessageChain) Swap(i, j int) {
-	m[i], m[j] = m[j], m[i]
-}
-
-func (p PretreatmentChain) Len() int {
-	return len(p)
-}
-func (p PretreatmentChain) Less(i, j int) bool {
-	return p[i].weight < p[j].weight
-}
-func (p PretreatmentChain) Swap(i, j int) {
-	p[i], p[j] = p[j], p[i]
-}
-
-func (m MetaChain) Len() int {
-	return len(m)
-}
-func (m MetaChain) Less(i, j int) bool {
-	return m[i].weight < m[j].weight
-}
-func (m MetaChain) Swap(i, j int) {
-	m[i], m[j] = m[j], m[i]
-}
-
-func (r RequestChain) Len() int {
-	return len(r)
-}
-func (r RequestChain) Less(i, j int) bool {
-	return r[i].weight < r[j].weight
-}
-func (r RequestChain) Swap(i, j int) {
-	r[i], r[j] = r[j], r[i]
-}
-
-func (n NoticeChain) Len() int {
-	return len(n)
-}
-func (n NoticeChain) Less(i, j int) bool {
-	return n[i].weight < n[j].weight
-}
-func (n NoticeChain) Swap(i, j int) {
-	n[i], n[j] = n[j], n[i]
-}
-func (c CommandChain) Len() int {
-	return len(c)
-}
-func (c CommandChain) Less(i, j int) bool {
-	return c[i].weight < c[j].weight
-}
-func (c CommandChain) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
 
 // AddMessageHandle
 /*

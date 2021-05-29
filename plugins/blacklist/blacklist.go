@@ -44,7 +44,7 @@ func InitBlackList(filePath string) {
 		return
 	}
 
-	leafBot.OnPretreatment().SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) bool {
+	leafBot.OnPretreatment().SetPluginName("黑名单预处理").SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) bool {
 		for _, user := range BlackList.Users {
 			if user == event.UserId {
 				return false

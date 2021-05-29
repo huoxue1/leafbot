@@ -24,6 +24,7 @@ func init() {
 	manager.InitBanPlugin()
 	leafBot.OnCommand("/天气").
 		SetWeight(10).
+		SetPluginName("天气").
 		SetBlock(false).
 		AddHandle(Weather)
 

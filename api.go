@@ -615,14 +615,13 @@ func (b *Bot) SendAt(event Event, message interface{}) int {
 }
 
 // SendGroupMsg
-/*
-   @Description:
-   @receiver b
-   @param groupId int
-   @param message string
-   @param autoEscape bool
-   @return int32
-*/
+/**
+ * @Description:
+ * @receiver b
+ * @param groupId
+ * @param message
+ * @return int32
+ */
 func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
 	switch message.(type) {

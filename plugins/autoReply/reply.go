@@ -36,7 +36,9 @@ func Load(filePath string) error {
 
 	content := gjson.ParseBytes(data)
 
-	leafBot.OnMessage("").SetPluginName("自动回复").AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+	leafBot.OnMessage("").
+		SetPluginName("自动回复").
+		AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
 		all := strings.ReplaceAll(event.Message, fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
 		result := content.Get(strings.TrimSpace(all))
 		if result.String() == "" {

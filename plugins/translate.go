@@ -26,6 +26,7 @@ func UseTranslateHandle() {
 		AddAllies("翻译").
 		SetWeight(10).
 		SetBlock(false).
+		SetPluginName("翻译").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
 				//if len(args)<1 {
