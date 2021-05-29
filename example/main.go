@@ -24,8 +24,11 @@ func init() {
 	manager.InitBanPlugin()
 	leafBot.OnCommand("/天气").
 		SetWeight(10).
+		SetPluginName("天气").
 		SetBlock(false).
 		AddHandle(Weather)
+
+	leafBot.InitPluginManager()
 
 	plugins.UseCreateQrCode()               //加载生成二维码插件
 	plugins.UseDayImage()                   // 加载每日一图插件

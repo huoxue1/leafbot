@@ -11,12 +11,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
+	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"github.com/zserge/lorca"
 	"net/http"
 	"os"
 	"os/signal"
+	"sort"
 	"strconv"
 )
+
+func init() {
+	log.SetFormatter(&easy.Formatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
+	},
+	)
+}
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -60,6 +70,20 @@ func InitWindow() {
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
 
+	engine.POST("/update_plugin_states", func(context *gin.Context) {
+		id := context.PostForm("id")
+		status, err := strconv.ParseBool(context.PostForm("status"))
+		if err != nil {
+			log.Errorln("改变插件状态出错" + err.Error())
+		}
+		if status {
+			leafBot.StartPluginById(id)
+		} else {
+			leafBot.BanPluginById(id)
+		}
+		context.JSON(200, nil)
+	})
+
 	engine.POST("/get_plugins", func(context *gin.Context) {
 		list := leafBot.GetHandleList()
 		var pluginList []leafBot.BaseHandle
@@ -67,6 +91,11 @@ func InitWindow() {
 		for _, handles := range list {
 			pluginList = append(pluginList, handles...)
 		}
+		sort.SliceStable(pluginList, func(i, j int) bool {
+			id1, _ := strconv.Atoi(pluginList[i].Id)
+			id2, _ := strconv.Atoi(pluginList[j].Id)
+			return id1 < id2
+		})
 		context.JSON(200, pluginList)
 	})
 

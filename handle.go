@@ -1,6 +1,30 @@
 package leafBot
 
-import uuid "github.com/satori/go.uuid"
+import (
+	"strconv"
+	"sync"
+)
+
+type (
+	MessageChain      []*messageHandle
+	RequestChain      []*requestHandle
+	NoticeChain       []*noticeHandle
+	CommandChain      []*commandHandle
+	MetaChain         []*metaHandle
+	PretreatmentChain []*PretreatmentHandle
+
+	ConnectChain    []*connectHandle
+	DisConnectChain []*disConnectHandle
+)
+
+var (
+	pluginNum = 0
+	lock      sync.Mutex
+)
+
+type M interface {
+	get(id string) (interface{}, bool)
+}
 
 type (
 	PretreatmentHandle struct {
@@ -83,9 +107,16 @@ func (d *disConnectHandle) SetPluginName(name string) *disConnectHandle {
 }
 
 func (d *disConnectHandle) AddHandle(f func(selfId int)) {
-	d.Id = uuid.NewV4().String()
+	d.HandleType = "disConnect"
+	lock.Lock()
+	pluginNum++
+	d.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
 	d.Enable = true
 	d.handle = f
+	if d.Name == "" {
+		d.Name = getFunctionName(f, '/')
+	}
 	DisConnectHandles = append(DisConnectHandles, d)
 
 }
@@ -96,9 +127,16 @@ func (c *connectHandle) SetPluginName(name string) *connectHandle {
 }
 
 func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
-	c.Id = uuid.NewV4().String()
+	c.HandleType = "connect"
+	lock.Lock()
+	pluginNum++
+	c.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
 	c.Enable = true
 	c.handle = f
+	if c.Name == "" {
+		c.Name = getFunctionName(f, '/')
+	}
 	ConnectHandles = append(ConnectHandles, c)
 }
 
@@ -247,10 +285,17 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
  * @param f
  */
 func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
+	m.HandleType = "meta"
 	m.handle = f
 	m.Enable = true
 	m.disableGroup = []int{}
-	m.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	m.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	if m.Name == "" {
+		m.Name = getFunctionName(f, '/')
+	}
 	MetaHandles = append(MetaHandles, m)
 }
 
@@ -309,10 +354,17 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  * @param f
  */
 func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
+	c.HandleType = "command"
 	c.handle = f
 	c.Enable = true
 	c.disableGroup = []int{}
-	c.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	c.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	if c.Name == "" {
+		c.Name = getFunctionName(f, '/')
+	}
 	CommandHandles = append(CommandHandles, c)
 }
 
@@ -347,10 +399,17 @@ func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
  * @param f
  */
 func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
+	n.HandleType = "notice"
 	n.handle = f
 	n.Enable = true
-	n.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	n.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
 	n.disableGroup = []int{}
+	if n.Name == "" {
+		n.Name = getFunctionName(f, '/')
+	}
 	NoticeHandles = append(NoticeHandles, n)
 }
 
@@ -385,10 +444,17 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
  * @param f
  */
 func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
+	r.HandleType = "request"
 	r.handle = f
 	r.Enable = true
 	r.disableGroup = []int{}
-	r.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	r.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	if r.Name == "" {
+		r.Name = getFunctionName(f, '/')
+	}
 	RequestHandles = append(RequestHandles, r)
 }
 
@@ -423,10 +489,17 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
  * @param f
  */
 func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
+	m.HandleType = "message"
 	m.handle = f
 	m.Enable = true
 	m.disableGroup = []int{}
-	m.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	m.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	if m.Name == "" {
+		m.Name = getFunctionName(f, '/')
+	}
 	MessageHandles = append(MessageHandles, m)
 }
 
@@ -461,9 +534,143 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
  * @param f
  */
 func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
+	p.HandleType = "Pretreatment"
 	p.handle = f
 	p.Enable = true
 	p.disableGroup = []int{}
-	p.Id = uuid.NewV4().String()
+	lock.Lock()
+	pluginNum++
+	p.Id = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	if p.Name == "" {
+		p.Name = getFunctionName(f, '/')
+	}
 	PretreatmentHandles = append(PretreatmentHandles, p)
+}
+
+func (m MessageChain) Len() int {
+	return len(m)
+}
+func (m MessageChain) Less(i, j int) bool {
+	return m[i].weight < m[j].weight
+}
+func (m MessageChain) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+func (p PretreatmentChain) Len() int {
+	return len(p)
+}
+func (p PretreatmentChain) Less(i, j int) bool {
+	return p[i].weight < p[j].weight
+}
+func (p PretreatmentChain) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+func (m MetaChain) Len() int {
+	return len(m)
+}
+func (m MetaChain) Less(i, j int) bool {
+	return m[i].weight < m[j].weight
+}
+func (m MetaChain) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+func (r RequestChain) Len() int {
+	return len(r)
+}
+func (r RequestChain) Less(i, j int) bool {
+	return r[i].weight < r[j].weight
+}
+func (r RequestChain) Swap(i, j int) {
+	r[i], r[j] = r[j], r[i]
+}
+
+func (n NoticeChain) Len() int {
+	return len(n)
+}
+func (n NoticeChain) Less(i, j int) bool {
+	return n[i].weight < n[j].weight
+}
+func (n NoticeChain) Swap(i, j int) {
+	n[i], n[j] = n[j], n[i]
+}
+func (c CommandChain) Len() int {
+	return len(c)
+}
+func (c CommandChain) Less(i, j int) bool {
+	return c[i].weight < c[j].weight
+}
+func (c CommandChain) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
+}
+
+func (m MessageChain) get(id string) (interface{}, bool) {
+	for _, handle := range m {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+
+func (n NoticeChain) get(id string) (interface{}, bool) {
+	for _, handle := range n {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+
+func (r RequestChain) get(id string) (interface{}, bool) {
+	for _, handle := range r {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+func (c CommandChain) get(id string) (interface{}, bool) {
+	for _, handle := range c {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+func (m MetaChain) get(id string) (interface{}, bool) {
+	for _, handle := range m {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+func (p PretreatmentChain) get(id string) (interface{}, bool) {
+	for _, handle := range p {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+
+func (c ConnectChain) get(id string) (interface{}, bool) {
+	for _, handle := range c {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
+}
+func (d DisConnectChain) get(id string) (interface{}, bool) {
+	for _, handle := range d {
+		if handle.Id == id {
+			return handle, true
+		}
+	}
+	return nil, false
 }
