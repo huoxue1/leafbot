@@ -77,9 +77,9 @@ func InitWindow() {
 			log.Errorln("改变插件状态出错" + err.Error())
 		}
 		if status {
-			leafBot.StartPluginById(id)
+			leafBot.StartPluginByID(id)
 		} else {
-			leafBot.BanPluginById(id)
+			leafBot.BanPluginByID(id)
 		}
 		context.JSON(200, nil)
 	})
@@ -92,8 +92,8 @@ func InitWindow() {
 			pluginList = append(pluginList, handles...)
 		}
 		sort.SliceStable(pluginList, func(i, j int) bool {
-			id1, _ := strconv.Atoi(pluginList[i].Id)
-			id2, _ := strconv.Atoi(pluginList[j].Id)
+			id1, _ := strconv.Atoi(pluginList[i].ID)
+			id2, _ := strconv.Atoi(pluginList[j].ID)
 			return id1 < id2
 		})
 		context.JSON(200, pluginList)

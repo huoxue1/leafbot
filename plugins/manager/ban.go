@@ -1,9 +1,9 @@
 package manager
 
-import (
+import ( //nolint:gci
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
-	"strconv"
+	"strconv" //nolint:gci
 )
 
 func InitBanPlugin() {
@@ -32,11 +32,11 @@ func InitBanPlugin() {
 					}
 
 					if msg.Type == "at" {
-						banId, err := strconv.Atoi(msg.Data["qq"])
+						banID, err := strconv.Atoi(msg.Data["qq"])
 						if err != nil {
 							continue
 						}
-						banIds = append(banIds, banId)
+						banIds = append(banIds, banID)
 					}
 				}
 				if len(banIds) < 1 {

@@ -1,0 +1,35 @@
+{
+  "app": "com.tencent.miniapp_01",
+  "view": "view_8C8E89B49BE609866298ADDFF2DBABA4",
+  "ver": "1.0.0.19",
+  "prompt": "[QQ小程序]天气",
+  "meta": {
+    "detail_1": {
+      "appid": "1108323226",
+      "title": "天气",
+      "desc": "点击查看[金堂]更多天气信息~",
+      "icon": "https:\/\/miniapp.gtimg.cn\/public\/appicon\/cc9392ff813f24776a6555e6c8fae7ba_200.jpg",
+      "preview": "http:\/\/pubminishare-30161.picsz.qpic.cn\/c349b101-5b08-4530-a7ce-536173018c12",
+      "url": "m.q.qq.com\/a\/s\/1ee839f680c72d991b7c232ae8cf94ea",
+      "scene": 0,
+      "host": {
+        "uin": 3343780376,
+        "nick": "火&雪&"
+      },
+      "shareTemplateId": "8C8E89B49BE609866298ADDFF2DBABA4",
+      "shareTemplateData": {},
+      "showLittleTail": "",
+      "gamePoints": "",
+      "gamePointsUrl": ""
+    }
+  },
+  "config": {
+    "type": "normal",
+    "width": 0,
+    "height": 0,
+    "forward": 0,
+    "autoSize": 0,
+    "ctime": 1621219175,
+    "token": "ff0a444dbc44296c407b7b6ea86d37d4"
+  }
+}

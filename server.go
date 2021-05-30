@@ -2,16 +2,16 @@ package leafBot
 
 import (
 	"encoding/json"
-	"github.com/gorilla/websocket"
+	"github.com/gorilla/websocket" //nolint:gci
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"sync"
-	"time"
+	"time" //nolint:gci
 )
 
 type connection struct {
-	SelfId   int
+	SelfID   int
 	wsSocket *websocket.Conn  // 底层websocket
 	InChan   chan []byte      // 读队列
 	OutChan  chan interface{} // 写队列
@@ -70,8 +70,7 @@ func (con *connection) readData() {
    @receiver con
 */
 func (con *connection) FilterEventOrResponse() {
-	for true {
-		time.Sleep(10)
+	for {
 		data := <-con.InChan
 		//fmt.Println(string(data))
 		err := json.Unmarshal(data, new(Event))
@@ -114,7 +113,7 @@ func (con *connection) writeData() {
 */
 func (con *connection) wsClose() {
 	for _, handle := range DisConnectHandles {
-		handle.handle(con.SelfId)
+		handle.handle(con.SelfID)
 	}
 	_ = con.wsSocket.Close()
 
@@ -142,7 +141,7 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	wscon := &connection{
-		SelfId:    selfId,
+		SelfID:    selfId,
 		wsSocket:  conn,
 		InChan:    make(chan []byte, 10),
 		OutChan:   make(chan interface{}, 10),
@@ -158,7 +157,7 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 	}
 	// 处理所有的connect事件
 	for _, handle := range ConnectHandles {
-		handle.handle(Connect{SelfId: selfId, ClientRole: role, Host: host}, GetBotById(selfId))
+		handle.handle(Connect{SelfID: selfId, ClientRole: role, Host: host}, GetBotById(selfId))
 	}
 	go wscon.readData()
 	go wscon.writeData()

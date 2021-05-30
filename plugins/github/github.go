@@ -24,19 +24,22 @@ func Init(token string) {
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client = github.NewClient(tc)
-	responses := SearchResponse(ctx)
+	responses, err := SearchResponse(ctx)
+	if err != nil {
+		log.Errorln("获取信息失败")
+		return
+	}
 	for _, respons := range responses {
 		log.Infoln(respons)
 	}
 }
 
-func SearchResponse(ctx context.Context) []string {
+func SearchResponse(ctx context.Context) ([]string, error) {
 	var msgs []string
 	repositories, _, err := client.Search.Repositories(ctx, "LeafBot", &github.SearchOptions{})
-	if err != nil {
-
+	if repositories == nil {
+		return nil, err
 	}
-
 	for _, repository := range repositories.Repositories {
 
 		msg := fmt.Sprintf("%v\nDescription: %v\nStar/Fork/Issue: %d / %d / %d\nLanguage: %v\nLicense: \nLastPushed: %v\nJump:%v",
@@ -53,5 +56,5 @@ func SearchResponse(ctx context.Context) []string {
 		msgs = append(msgs, msg)
 	}
 
-	return msgs
+	return msgs, err
 }
