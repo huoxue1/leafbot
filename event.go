@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/3343780376/leafBot/message"
+	"github.com/3343780376/leafBot/message" //nolint:gci
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"
@@ -298,10 +298,19 @@ func viewsMessage(event Event) {
 	for _, handle := range PretreatmentHandles {
 		bot := GetBotById(event.SelfId)
 		rule := checkRule(event, handle.rules)
+		// 执行rule判断
 		if !rule || !handle.Enable {
 			continue
 		}
+		// 判断所在群是否禁用
+		for _, group := range handle.disableGroup {
+			if event.GroupId == group {
+				return
+			}
+		}
+		// 执行handle
 		b := handle.handle(event, bot)
+		// 判断是否被block
 		if !b {
 			return
 		}
@@ -500,6 +509,13 @@ func processMessageHandle() {
 		if handle.messageType != "" && handle.messageType != event.MessageType {
 			continue
 		}
+
+		for _, group := range handle.disableGroup {
+			if event.GroupId == group {
+				return
+			}
+		}
+
 		rule := checkRule(event, handle.rules)
 		if !rule || !handle.Enable {
 			continue
@@ -530,6 +546,13 @@ func processRequestEventHandle(event Event) {
 		}
 	}()
 	for _, handle := range RequestHandles {
+
+		for _, group := range handle.disableGroup {
+			if event.GroupId == group {
+				return
+			}
+		}
+
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
 			rule = true
@@ -563,6 +586,13 @@ func processMetaEventHandle(event Event) {
 		}
 	}()
 	for _, handle := range MetaHandles {
+
+		for _, group := range handle.disableGroup {
+			if event.GroupId == group {
+				return
+			}
+		}
+
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
 			rule = true
