@@ -2,12 +2,13 @@ package leafBot
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/websocket" //nolint:gci
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"sync"
-	"time" //nolint:gci
+	//nolint:gci
 )
 
 type connection struct {
@@ -26,21 +27,6 @@ var upgrade = websocket.Upgrader{
 		return true
 	}}
 
-// GetBot
-/*
-   @Description:
-   @param name string
-   @return *Bot
-*/
-func GetBot(name string) *Bot {
-	for _, bot := range DefaultConfig.Bots {
-		if bot.Name == name {
-			return bot
-		}
-	}
-	return nil
-}
-
 // readData
 /*
    @Description:
@@ -49,7 +35,6 @@ func GetBot(name string) *Bot {
 func (con *connection) readData() {
 	go func() {
 		for {
-			time.Sleep(10)
 			_, data, err := con.wsSocket.ReadMessage()
 			if err != nil {
 				con.wsClose()
@@ -91,7 +76,6 @@ func (con *connection) FilterEventOrResponse() {
 func (con *connection) writeData() {
 	go func() {
 		for {
-			time.Sleep(10)
 			select {
 			case data := <-con.OutChan:
 				if err := con.wsSocket.WriteJSON(data); err != nil {
@@ -112,6 +96,7 @@ func (con *connection) writeData() {
    @receiver con
 */
 func (con *connection) wsClose() {
+	log.Infoln(fmt.Sprintf("bot%v已断开链接", con.SelfID))
 	for _, handle := range DisConnectHandles {
 		handle.handle(con.SelfID)
 	}
@@ -148,10 +133,11 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 		isClosed:  false,
 		closeChan: make(chan byte),
 	}
+
 	// 将所有bot实例的client对象初始化
 	for _, bot := range DefaultConfig.Bots {
 		if bot.SelfId == selfId {
-			log.Infoln("bot：" + bot.Name + "已上线")
+			log.Infoln("bot：" + strconv.Itoa(bot.SelfId) + "已上线")
 			bot.Client = wscon
 		}
 	}

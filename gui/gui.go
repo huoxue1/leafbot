@@ -40,11 +40,10 @@ func InitWindow() {
 		log.Infoln(err)
 	}()
 	go func() {
-
 		ui, err := lorca.New("http://127.0.0.1:3000", "", 800, 600)
 		go func() {
 			c := make(chan os.Signal)
-			signal.Notify(c)
+			signal.Notify(c) //nolint:govet
 			for {
 				log.Infoln(<-c)
 				ui.Close()

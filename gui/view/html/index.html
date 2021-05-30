@@ -105,10 +105,10 @@
             </thead>
             <template v-for = "plugin in plugins.data">
                 <tr>
-                    <td>{[plugin.Id]}</td>
+                    <td>{[plugin.ID]}</td>
                     <td>{[plugin.Name]}</td>
                     <td>{[plugin.HandleType]}</td>
-                    <td><input v-bind:id="plugin.Id" onchange="update_plugin_status(this)"  type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
+                    <td><input v-bind:id="plugin.ID" onchange="update_plugin_status(this)"  type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
                 </tr>
             </template>
         </table>

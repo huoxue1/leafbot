@@ -332,7 +332,7 @@ func viewsMessage(event Event) {
 		processRequestEventHandle(event)
 
 	case "meta_event":
-		log.Infoln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
+		log.Debugln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
 			event.PostType, event.MetaEventType, event.Interval))
 		processMetaEventHandle(event)
 	}

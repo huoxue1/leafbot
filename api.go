@@ -4,7 +4,7 @@ import (
 	"encoding/json" //nolint:gci
 	message2 "github.com/3343780376/leafBot/message"
 	uuid "github.com/satori/go.uuid"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -59,10 +59,6 @@ var (
 		Notify:        "notify",
 		OfflineFile:   "offline_file",
 		GroupCard:     "group_card"}
-
-	MessageTypeApi = ConstMessageType{
-		Group:   "group",
-		Private: "private"}
 )
 
 type MessageIds struct {
@@ -639,7 +635,7 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	data := getResponse(&response{}, echo)
 	_ = json.Unmarshal(data, &responseMsgJson)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return responseMsgJson.Data.MessageID
 }
 
@@ -677,7 +673,7 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	data := getResponse(&response{}, echo)
 	_ = json.Unmarshal(data, &responseMsgJson)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return responseMsgJson.Data.MessageID
 }
 
@@ -702,7 +698,7 @@ func (b *Bot) DeleteMsg(messageId int32) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // GetMsg
@@ -729,7 +725,7 @@ func (b *Bot) GetMsg(messageId int32) GetMessage {
 	data := getResponse(&response{}, echo)
 	_ = json.Unmarshal(data, &defaultJson)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return defaultJson.Data
 }
 
@@ -760,7 +756,7 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupCard
@@ -790,7 +786,7 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SendMsg
@@ -836,7 +832,7 @@ func (b *Bot) SendLike(userId int, times int) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupKick
@@ -866,7 +862,7 @@ func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupAnonymousBan
@@ -896,7 +892,7 @@ func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupWholeBan
@@ -924,7 +920,7 @@ func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupAdmin
@@ -953,7 +949,7 @@ func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupAnonymous
@@ -979,7 +975,7 @@ func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupName
@@ -1005,7 +1001,7 @@ func (b *Bot) SetGroupName(groupId int, groupName string) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupLeave
@@ -1031,7 +1027,7 @@ func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupSpecialTitle
@@ -1063,7 +1059,7 @@ func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string,
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetFriendAddRequest
@@ -1092,7 +1088,7 @@ func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupAddRequest
@@ -1124,7 +1120,7 @@ func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reas
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // GetLoginInfo
@@ -1144,7 +1140,7 @@ func (b *Bot) GetLoginInfo() LoginInfo {
 	var response responseLogoInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1175,7 +1171,7 @@ func (b *Bot) GetStrangerInfo(userId int, noCache bool) Senders {
 	var response responseStrangerInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1196,7 +1192,7 @@ func (b *Bot) GetFriendList() []FriendList {
 	var response responseFriendListJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1227,7 +1223,7 @@ func (b *Bot) GetGroupInfo(groupId int, noCache bool) GroupInfo {
 	var response responseGroupInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1248,7 +1244,7 @@ func (b *Bot) GetGroupList() []GroupInfo {
 	var response responseGroupListJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1282,7 +1278,7 @@ func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) GroupMem
 	var response responseGroupMemberInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1310,7 +1306,7 @@ func (b *Bot) GetGroupMemberList(groupId int) []GroupMemberInfo {
 	var response responseGroupMemberListJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1341,7 +1337,7 @@ func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) GroupHonorInfo {
 	var response responseGroupHonorInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1369,7 +1365,7 @@ func (b *Bot) GetCookies(domain string) Cookie {
 	var response responseCookiesJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1390,7 +1386,7 @@ func (b *Bot) GetCsrfToken() CsrfToken {
 	var response responseCsrfTokenJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1418,7 +1414,7 @@ func (b *Bot) GetCredentials(domain string) Credentials {
 	var response responseCredentialsJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1449,7 +1445,7 @@ func (b *Bot) GetRecord(file, outFormat string) Record {
 	var response responseRecordJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1477,7 +1473,7 @@ func (b *Bot) GetImage(file string) Image {
 	var response responseImageJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1498,7 +1494,7 @@ func (b *Bot) CanSendImage() Bool {
 	var response responseCanSendJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1519,7 +1515,7 @@ func (b *Bot) CanSendRecord() Bool {
 	var response responseCanSendJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1540,7 +1536,7 @@ func (b *Bot) GetStatus() OnlineStatus {
 	var response responseOnlineStatus
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1564,7 +1560,7 @@ func (b *Bot) SetRestart(delay int) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // CleanCache
@@ -1580,7 +1576,7 @@ func (b *Bot) CleanCache() {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 //新增
@@ -1615,7 +1611,7 @@ func (b *Bot) DownloadFile(url string, threadCount int, headers []string) Downlo
 	var response responseDownloadFilePathJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1646,7 +1642,7 @@ func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) MessageHistory {
 	var response responseMessageHistoryJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1674,7 +1670,7 @@ func (b *Bot) GetOnlineClients(noCache bool) Clients {
 	var response responseOnlineClientsJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1702,7 +1698,7 @@ func (b *Bot) GetVipInfoTest(UserId int) VipInfo {
 	var response responseVipInfoJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1730,7 +1726,7 @@ func (b *Bot) SendGroupNotice(groupId int, content string) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
 // ReloadEventFilter
@@ -1747,7 +1743,7 @@ func (b *Bot) ReloadEventFilter() {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupNameSpecial
@@ -1774,7 +1770,7 @@ func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
 // SetGroupPortrait
@@ -1804,7 +1800,7 @@ func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 }
 
 // GetMsgSpecial
@@ -1831,7 +1827,7 @@ func (b *Bot) GetMsgSpecial(messageId int) MsgData {
 	var response responseMsgDataJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1859,7 +1855,7 @@ func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
 	var response responseForwardMsgJson
 	_ = json.Unmarshal(data, &response)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1887,7 +1883,7 @@ func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 // GetWordSlices
@@ -1914,7 +1910,7 @@ func (b *Bot) GetWordSlices(content string) []string {
 	var response responseWordSliceJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1942,7 +1938,7 @@ func (b *Bot) OcrImage(image string) OcrImage {
 	var response responseOcrImageJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1963,7 +1959,7 @@ func (b *Bot) GetGroupSystemMsg() GroupSystemMsg {
 	var response responseGroupSystemMsgJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -1991,7 +1987,7 @@ func (b *Bot) GetGroupFileSystemInfo(groupId int) GroupFileSystemInfo {
 	var response responseGroupFileSystemInfoJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -2019,7 +2015,7 @@ func (b *Bot) GetGroupRootFiles(groupId int) GroupRootFiles {
 	var response responseGroupRootFilesJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -2050,7 +2046,7 @@ func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) GroupFilesByFo
 	var response responseGroupFilesByFolderJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -2084,7 +2080,7 @@ func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) FileUrl {
 	var response responseGroupFileUrlJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -2112,7 +2108,7 @@ func (b *Bot) GetGroupAtAllRemain(groupId int) GroupAtAllRemain {
 	var response responseGroupAtAllRemainJson
 	_ = json.Unmarshal(data, &response)
 	contents, _ := json.Marshal(d)
-	log.Println(string(contents) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(contents) + "\n\t\t\t\t\t" + string(data))
 	return response.Data
 }
 
@@ -2146,7 +2142,7 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 }
 
 func (b *Bot) CallApi(Action string, param interface{}) interface{} {
@@ -2159,6 +2155,6 @@ func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	b.Client.OutChan <- d
 	data := getResponse(&response{}, echo)
 	content, _ := json.Marshal(d)
-	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
+	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return content
 }
