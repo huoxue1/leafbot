@@ -57,6 +57,7 @@ func main() {
 		if port != leafBot.DefaultConfig.Port {
 			leafBot.DefaultConfig.Port = port
 		}
+
 	}
 
 	//拼接配置文件路径，并且加载配置文件
