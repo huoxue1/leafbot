@@ -1,11 +1,11 @@
 package leafBot
 
 import (
-	"encoding/base64"
+	"encoding/base64" //nolint:gci
 	"github.com/3343780376/leafBot/message"
 	"github.com/fogleman/gg"
 	log "github.com/sirupsen/logrus"
-	"io/ioutil"
+	"io/ioutil" //nolint:gci
 	"strconv"
 )
 
@@ -16,7 +16,7 @@ import (
  */
 
 type BaseHandle struct {
-	Id         string
+	ID         string
 	Name       string
 	Enable     bool
 	IsAdmin    bool
@@ -30,7 +30,7 @@ func InitPluginManager() {
 			bot.Send(event, message.Text("参数不够"))
 			return
 		}
-		BanPluginById(args[0])
+		BanPluginByID(args[0])
 		bot.Send(event, message.Text("禁用插件成功"))
 	})
 
@@ -40,7 +40,7 @@ func InitPluginManager() {
 			bot.Send(event, message.Text("参数不够"))
 			return
 		}
-		StartPluginById(args[0])
+		StartPluginByID(args[0])
 		bot.Send(event, message.Text("启用插件成功"))
 	})
 
@@ -90,7 +90,7 @@ func draw(data map[string][]BaseHandle) {
 		n++
 		context.SetRGB255(0, 0, 0)
 		for _, handle := range handles {
-			context.DrawString(handle.Id, 100, float64(100*n))
+			context.DrawString(handle.ID, 100, float64(100*n))
 			context.DrawString(handle.Name, 300, float64(100*n))
 			context.DrawString(strconv.FormatBool(handle.Enable), 600, float64(100*n))
 			n++
@@ -116,7 +116,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range PretreatmentHandles {
 
 		preList = append(preList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -128,7 +128,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range CommandHandles {
 
 		cmdList = append(cmdList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -140,7 +140,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range MessageHandles {
 
 		msgList = append(msgList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -152,7 +152,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range RequestHandles {
 
 		reqList = append(reqList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -164,7 +164,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range NoticeHandles {
 
 		notList = append(notList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -176,7 +176,7 @@ func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range MetaHandles {
 
 		metaList = append(metaList, BaseHandle{
-			Id:         handle.Id,
+			ID:         handle.ID,
 			Name:       handle.Name,
 			Enable:     handle.Enable,
 			IsAdmin:    handle.IsAdmin,
@@ -187,12 +187,12 @@ func GetHandleList() map[string][]BaseHandle {
 	return list
 }
 
-// BanPluginById
+// BanPluginByID
 /**
  * @Description: 根据id禁用插件
  * @param id
  */
-func BanPluginById(id string) {
+func BanPluginByID(id string) {
 	handle, ok := CommandHandles.get(id)
 	if ok {
 		handle.(*commandHandle).Enable = false
@@ -278,7 +278,7 @@ func BanPluginByName(name string) int {
 	return num
 }
 
-func StartPluginById(id string) {
+func StartPluginByID(id string) {
 	handle, ok := CommandHandles.get(id)
 	if ok {
 		handle.(*commandHandle).Enable = true

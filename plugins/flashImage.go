@@ -1,11 +1,12 @@
 package plugins
 
 import (
-	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot" //nolint:gci
 	"github.com/3343780376/leafBot/message"
 	"strconv"
 	"strings"
-	"time"
+
+	"time" //nolint:gci
 )
 
 /*
@@ -29,7 +30,7 @@ func UseFlashImage(userId int) {
 	})
 }
 
-func UseFlashImageToGroup(groupId int) {
+func UseFlashImageToGroup(groupID int) {
 
 	leafBot.
 		OnMessage("").
@@ -45,7 +46,7 @@ func UseFlashImageToGroup(groupId int) {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 						strconv.Itoa(event.UserId) + "所发闪照")
 				}
-				bot.SendGroupMsg(groupId, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
+				bot.SendGroupMsg(groupID, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
 			})
 
 }

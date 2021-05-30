@@ -1,7 +1,7 @@
 package leafBot
 
 import (
-	"encoding/json"
+	"encoding/json" //nolint:gci
 	message2 "github.com/3343780376/leafBot/message"
 	uuid "github.com/satori/go.uuid"
 	"log"
@@ -47,14 +47,6 @@ type (
 )
 
 var (
-
-	//MessageSubTypeApi = ConstMessageSubType{
-	//	Friend: "friend",
-	//	Group: "group",
-	//	Other: "other",
-	//	Normal: "normal",
-	//	Anonymous: "anonymous",
-	//	Notice: "notice"}
 	NoticeTypeApi = ConstNoticeType{
 		GroupUpload:   "group_upload",
 		GroupAdmin:    "group_admin",
@@ -74,7 +66,7 @@ var (
 )
 
 type MessageIds struct {
-	MessageId int32 `json:"message_id"`
+	MessageID int32 `json:"message_id"`
 }
 
 type LoginInfo struct {
@@ -648,7 +640,7 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	_ = json.Unmarshal(data, &responseMsgJson)
 	content, _ := json.Marshal(d)
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
-	return responseMsgJson.Data.MessageId
+	return responseMsgJson.Data.MessageID
 }
 
 // SendPrivateMsg
@@ -686,7 +678,7 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	_ = json.Unmarshal(data, &responseMsgJson)
 	content, _ := json.Marshal(d)
 	log.Println(string(content) + "\n\t\t\t\t\t" + string(data))
-	return responseMsgJson.Data.MessageId
+	return responseMsgJson.Data.MessageID
 }
 
 // DeleteMsg

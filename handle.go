@@ -87,7 +87,7 @@ type (
 		handle func(selfId int)
 	}
 	Connect struct {
-		SelfId     int
+		SelfID     int
 		Host       string
 		ClientRole string
 	}
@@ -110,7 +110,7 @@ func (d *disConnectHandle) AddHandle(f func(selfId int)) {
 	d.HandleType = "disConnect"
 	lock.Lock()
 	pluginNum++
-	d.Id = strconv.Itoa(pluginNum)
+	d.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	d.Enable = true
 	d.handle = f
@@ -130,7 +130,7 @@ func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
 	c.HandleType = "connect"
 	lock.Lock()
 	pluginNum++
-	c.Id = strconv.Itoa(pluginNum)
+	c.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	c.Enable = true
 	c.handle = f
@@ -291,7 +291,7 @@ func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.disableGroup = []int{}
 	lock.Lock()
 	pluginNum++
-	m.Id = strconv.Itoa(pluginNum)
+	m.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	if m.Name == "" {
 		m.Name = getFunctionName(f, '/')
@@ -360,7 +360,7 @@ func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) 
 	c.disableGroup = []int{}
 	lock.Lock()
 	pluginNum++
-	c.Id = strconv.Itoa(pluginNum)
+	c.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	if c.Name == "" {
 		c.Name = getFunctionName(f, '/')
@@ -404,7 +404,7 @@ func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
 	n.Enable = true
 	lock.Lock()
 	pluginNum++
-	n.Id = strconv.Itoa(pluginNum)
+	n.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	n.disableGroup = []int{}
 	if n.Name == "" {
@@ -450,7 +450,7 @@ func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
 	r.disableGroup = []int{}
 	lock.Lock()
 	pluginNum++
-	r.Id = strconv.Itoa(pluginNum)
+	r.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	if r.Name == "" {
 		r.Name = getFunctionName(f, '/')
@@ -495,7 +495,7 @@ func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
 	m.disableGroup = []int{}
 	lock.Lock()
 	pluginNum++
-	m.Id = strconv.Itoa(pluginNum)
+	m.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	if m.Name == "" {
 		m.Name = getFunctionName(f, '/')
@@ -540,7 +540,7 @@ func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
 	p.disableGroup = []int{}
 	lock.Lock()
 	pluginNum++
-	p.Id = strconv.Itoa(pluginNum)
+	p.ID = strconv.Itoa(pluginNum)
 	lock.Unlock()
 	if p.Name == "" {
 		p.Name = getFunctionName(f, '/')
@@ -609,7 +609,7 @@ func (c CommandChain) Swap(i, j int) {
 
 func (m MessageChain) get(id string) (interface{}, bool) {
 	for _, handle := range m {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -618,7 +618,7 @@ func (m MessageChain) get(id string) (interface{}, bool) {
 
 func (n NoticeChain) get(id string) (interface{}, bool) {
 	for _, handle := range n {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -627,7 +627,7 @@ func (n NoticeChain) get(id string) (interface{}, bool) {
 
 func (r RequestChain) get(id string) (interface{}, bool) {
 	for _, handle := range r {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -635,7 +635,7 @@ func (r RequestChain) get(id string) (interface{}, bool) {
 }
 func (c CommandChain) get(id string) (interface{}, bool) {
 	for _, handle := range c {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -643,7 +643,7 @@ func (c CommandChain) get(id string) (interface{}, bool) {
 }
 func (m MetaChain) get(id string) (interface{}, bool) {
 	for _, handle := range m {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -651,7 +651,7 @@ func (m MetaChain) get(id string) (interface{}, bool) {
 }
 func (p PretreatmentChain) get(id string) (interface{}, bool) {
 	for _, handle := range p {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -660,7 +660,7 @@ func (p PretreatmentChain) get(id string) (interface{}, bool) {
 
 func (c ConnectChain) get(id string) (interface{}, bool) {
 	for _, handle := range c {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}
@@ -668,7 +668,7 @@ func (c ConnectChain) get(id string) (interface{}, bool) {
 }
 func (d DisConnectChain) get(id string) (interface{}, bool) {
 	for _, handle := range d {
-		if handle.Id == id {
+		if handle.ID == id {
 			return handle, true
 		}
 	}

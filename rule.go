@@ -33,8 +33,6 @@ func OnlySuperUser(event Event, bot *Bot) bool {
 }
 
 func OnlyGroupMessage(event Event, bot *Bot) bool {
-	if event.MessageType == "group" {
-		return true
-	}
-	return false
+
+	return event.MessageType == "group"
 }

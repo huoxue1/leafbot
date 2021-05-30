@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	"flag" //nolint:gci
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
@@ -11,7 +11,7 @@ import (
 	"github.com/3343780376/leafBot/plugins/manager"
 	_ "github.com/3343780376/leafBot/plugins/poke"
 	_ "github.com/3343780376/leafBot/plugins/weibo"
-	"os"
+	"os" //nolint:gci
 	"runtime"
 )
 
@@ -40,10 +40,8 @@ func init() {
 	plugins.UseFlashImageToGroup(972264701) //加载闪照破解后发到对应群的插件
 
 	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
-	err := autoReply.Load("./config/data.json")
-	if err != nil {
-
-	} //加载自动回复插件
+	_ = autoReply.Load("./config/data.json")
+	//加载自动回复插件
 
 }
 

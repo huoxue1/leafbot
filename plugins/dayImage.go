@@ -2,7 +2,7 @@ package plugins
 
 import (
 	"encoding/json"
-	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot" //nolint:gci
 	"github.com/3343780376/leafBot/message"
 	"io"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 type dayPicture struct {
 	Status int `json:"status"`
 	Bing   struct {
-		Url       string `json:"url"`
+		URL       string `json:"url"`
 		Copyright string `json:"copyright"`
 	} `json:"bing"`
 }
@@ -30,14 +30,14 @@ func UseDayImage() {
 					if err != nil {
 						return
 					}
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.URL)})
 				} else {
 					day, _ := strconv.Atoi(args[0])
 					image, err := getDayImage(day)
 					if err != nil {
 						return
 					}
-					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.Url)})
+					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.URL)})
 				}
 			})
 }
@@ -47,13 +47,11 @@ func getDayImage(day int) (dayPicture, error) {
 	if err != nil {
 		return dayPicture{}, err
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-
-		}
-	}(resp.Body)
+	defer resp.Body.Close()
 	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return dayPicture{}, err
+	}
 	picture := dayPicture{}
 	err = json.Unmarshal(data, &picture)
 	return picture, err

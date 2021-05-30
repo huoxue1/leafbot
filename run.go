@@ -1,9 +1,9 @@
 package leafBot
 
 import (
-	"fmt"
+	"fmt" //nolint:gci
 	log "github.com/sirupsen/logrus"
-	"os"
+	"os" //nolint:gci
 )
 
 // run
@@ -16,8 +16,8 @@ func run(bot *Bot) {
 
 }
 
-func writeGoConfig(selfId int) {
-	err := os.WriteFile("config.yml", []byte(fmt.Sprintf(gocqConfig, selfId)), 0666)
+func writeGoConfig(selfID int) {
+	err := os.WriteFile("config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
 	if err != nil {
 		return
 	}

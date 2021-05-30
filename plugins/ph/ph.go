@@ -2,7 +2,7 @@ package ph
 
 import (
 	"github.com/fogleman/gg"
-	"testing"
+	"testing" //nolint:gci
 )
 
 func Testph(T *testing.T) {

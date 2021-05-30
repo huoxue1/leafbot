@@ -3,14 +3,14 @@ package plugins
 import (
 	"encoding/json"
 	"errors"
-	"github.com/3343780376/leafBot"
+	"github.com/3343780376/leafBot" //nolint:gci
 	"github.com/3343780376/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
+	"strings" //nolint:gci
 )
 
 type MusicQQ struct {
@@ -73,7 +73,7 @@ type MusicQQ struct {
 					Pubtime int `json:"pubtime"`
 					Pure    int `json:"pure"`
 					Singer  []struct {
-						Id          int    `json:"id"`
+						ID          int    `json:"id"`
 						Mid         string `json:"mid"`
 						Name        string `json:"name"`
 						NameHilight string `json:"name_hilight"`
@@ -123,7 +123,7 @@ type MusicQQ struct {
 				Pubtime int `json:"pubtime"`
 				Pure    int `json:"pure"`
 				Singer  []struct {
-					Id          int    `json:"id"`
+					ID          int    `json:"id"`
 					Mid         string `json:"mid"`
 					Name        string `json:"name"`
 					NameHilight string `json:"name_hilight"`
@@ -168,7 +168,7 @@ type MusicQQ struct {
 type Music163 struct {
 	Result struct {
 		Songs []struct {
-			Id      int    `json:"id"`
+			ID      int    `json:"id"`
 			Name    string `json:"name"`
 			Artists []struct {
 				Id        int           `json:"id"`
@@ -250,7 +250,7 @@ func UseMusicHandle() {
 							}
 							m := "搜索结果为：\n\n "
 							for _, song := range music.Result.Songs {
-								m += "id：" + strconv.Itoa(song.Id) + "\n"
+								m += "id：" + strconv.Itoa(song.ID) + "\n"
 								m += "歌名：" + song.Name + "\n"
 								m += "作者：" + song.Artists[0].Name + "\n\n"
 							}
@@ -267,7 +267,7 @@ func UseMusicHandle() {
 						}
 						m := "搜索结果为：\n\n "
 						for _, song := range music.Result.Songs {
-							m += "id：" + strconv.Itoa(song.Id) + "\n"
+							m += "id：" + strconv.Itoa(song.ID) + "\n"
 							m += "歌名：" + song.Name + "\n"
 							m += "作者：" + song.Artists[0].Name + "\n\n"
 						}
@@ -284,7 +284,7 @@ func UseMusicHandle() {
 						}
 						m := "搜索结果为：\n\n "
 						for _, song := range music.Result.Songs {
-							m += "id：" + strconv.Itoa(song.Id) + "\n"
+							m += "id：" + strconv.Itoa(song.ID) + "\n"
 							m += "歌名：" + song.Name + "\n"
 							m += "作者：" + song.Artists[0].Name + "\n\n"
 						}
@@ -319,7 +319,7 @@ func UseMusicHandle() {
 							bot.Send(event, message.Text("搜索歌曲错误\n"+err.Error()))
 							return
 						}
-						bot.Send(event, message.Music("163", int64(music.Result.Songs[0].Id)))
+						bot.Send(event, message.Music("163", int64(music.Result.Songs[0].ID)))
 
 					}
 				} else if args[0] == "qq" {
