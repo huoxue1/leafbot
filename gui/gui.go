@@ -5,7 +5,7 @@
 
 package gui
 
-import (
+import ( //nolint:gci
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"github.com/zserge/lorca"
-	"net/http"
+	"net/http" //nolint:gci
 	"os"
 	"os/signal"
 	"sort"
@@ -151,34 +151,34 @@ func GetConfig(ctx *gin.Context) {
 }
 
 func GetGroupList(ctx *gin.Context) {
-	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
 		return
 	}
-	bot := leafBot.GetBotById(selfId)
+	bot := leafBot.GetBotById(selfID)
 	list := bot.GetGroupList()
 	ctx.JSON(200, list)
 }
 
 func GetFriendList(ctx *gin.Context) {
-	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
 		return
 	}
-	bot := leafBot.GetBotById(selfId)
+	bot := leafBot.GetBotById(selfID)
 	list := bot.GetFriendList()
 	ctx.JSON(200, list)
 }
 
 func CallApi(ctx *gin.Context) {
-	selfId, err := strconv.Atoi(ctx.PostForm("self_id"))
+	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	id, err := strconv.Atoi(ctx.PostForm("id"))
 	message1 := ctx.PostForm("message")
 	messageType := ctx.PostForm("message_type")
 	if err != nil {
 		ctx.JSON(404, nil)
 	}
-	bot := leafBot.GetBotById(selfId)
-	msgId := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
-	ctx.JSON(200, msgId)
+	bot := leafBot.GetBotById(selfID)
+	msgID := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
+	ctx.JSON(200, msgID)
 }
