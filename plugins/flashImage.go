@@ -13,12 +13,12 @@ import (
 	当获取到闪照信息之后，
 	会向提供的qq号进行转发该闪照
 */
-func UseFlashImage(userId int) {
+func UseFlashImage(userID int) {
 	leafBot.OnMessage("").SetPluginName("闪照拦截").AddRule(FlashMessageRule).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
-		if userId == 0 {
-			userId = leafBot.DefaultConfig.Admin
+		if userID == 0 {
+			userID = leafBot.DefaultConfig.Admin
 		}
-		mess := message.MessageSegment{}
+		var mess message.MessageSegment
 		if event.MessageType == "group" {
 			mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
 				strconv.Itoa(event.UserId) + "所发闪照")
@@ -26,7 +26,7 @@ func UseFlashImage(userId int) {
 			mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 				strconv.Itoa(event.UserId) + "所发闪照")
 		}
-		bot.SendPrivateMsg(userId, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
+		bot.SendPrivateMsg(userID, append(message.ParseMessageFromString(strings.ReplaceAll(event.Message, "type=flash,", "")), mess))
 	})
 }
 
@@ -38,7 +38,7 @@ func UseFlashImageToGroup(groupID int) {
 		SetPluginName("闪照拦截").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot) {
-				mess := message.MessageSegment{}
+				var mess message.MessageSegment
 				if event.MessageType == "group" {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
 						strconv.Itoa(event.UserId) + "所发闪照")
@@ -46,7 +46,7 @@ func UseFlashImageToGroup(groupID int) {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 						strconv.Itoa(event.UserId) + "所发闪照")
 				}
-				bot.SendGroupMsg(groupID, append(message.ParseMessageFromString(strings.Replace(event.Message, "type=flash,", "", -1)), mess))
+				bot.SendGroupMsg(groupID, append(message.ParseMessageFromString(strings.ReplaceAll(event.Message, "type=flash,", "")), mess))
 			})
 
 }

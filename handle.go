@@ -79,8 +79,7 @@ type (
 	}
 	connectHandle struct {
 		BaseHandle
-		disableGroup []int
-		handle       func(connect Connect, bot *Bot)
+		handle func(connect Connect, bot *Bot)
 	}
 	disConnectHandle struct {
 		BaseHandle
