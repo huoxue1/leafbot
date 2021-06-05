@@ -25,7 +25,8 @@ jobs:
           version: latest
           args: release --rm-dist
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          main: ./example/main.go
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       #- name: Checkout Dist
       #  uses: actions/checkout@v2
