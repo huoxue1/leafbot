@@ -20,6 +20,7 @@ builds:
       - linux
       - windows
 archives:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   - replacements:
       darwin: Darwin
       linux: Linux
