@@ -39,7 +39,7 @@ func Load(filePath string) error {
 	leafBot.OnMessage("").
 		SetPluginName("自动回复").
 		AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
-		all := strings.ReplaceAll(event.Message, fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
+		all := strings.ReplaceAll(event.Message.CQString(), fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
 		result := content.Get(strings.TrimSpace(all))
 		if result.String() == "" {
 			return

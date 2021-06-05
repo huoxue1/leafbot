@@ -315,7 +315,7 @@ func viewsMessage(event Event) {
 			return
 		}
 	}
-	log.Debugln("预处理执行完毕" + event.Message)
+	log.Debugln("预处理执行完毕" + event.Message.CQString())
 	switch event.PostType {
 	case "message":
 		c <- event
@@ -453,7 +453,11 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		commands := strings.Split(event.Message, " ")
+		if event.Message[0].Type != "text" {
+			continue
+		}
+
+		commands := strings.Split(event.Message[0].Data["text"], " ")
 		if len(commands) < 1 {
 			continue
 		}
@@ -636,5 +640,5 @@ func GetBotById(id int) *Bot {
  * @return message.Message
  */
 func (e Event) GetMsg() message.Message {
-	return message.ParseMessageFromString(e.Message)
+	return e.Message
 }

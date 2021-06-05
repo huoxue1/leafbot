@@ -4,8 +4,6 @@ import (
 	"github.com/3343780376/leafBot" //nolint:gci
 	"github.com/3343780376/leafBot/message"
 	"strconv"
-	"strings"
-
 	"time" //nolint:gci
 )
 
@@ -26,7 +24,7 @@ func UseFlashImage(userID int) {
 			mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 				strconv.Itoa(event.UserId) + "所发闪照")
 		}
-		bot.SendPrivateMsg(userID, append(message.ParseMessageFromString(strings.ReplaceAll(event.Message, "type=flash,", "")), mess))
+		bot.SendPrivateMsg(userID, []message.MessageSegment{mess, event.Message[0].Delete("type")})
 	})
 }
 
@@ -46,7 +44,7 @@ func UseFlashImageToGroup(groupID int) {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 						strconv.Itoa(event.UserId) + "所发闪照")
 				}
-				bot.SendGroupMsg(groupID, append(message.ParseMessageFromString(strings.ReplaceAll(event.Message, "type=flash,", "")), mess))
+				bot.SendGroupMsg(groupID, []message.MessageSegment{mess, event.Message[0].Delete("type")})
 			})
 
 }

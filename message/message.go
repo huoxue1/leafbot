@@ -273,6 +273,11 @@ func (m MessageSegment) Add(key string, val interface{}) MessageSegment {
 	return m
 }
 
+func (m MessageSegment) Delete(key string) MessageSegment {
+	delete(m.Data, key)
+	return m
+}
+
 // ReplyWithMessage returns a reply message
 func ReplyWithMessage(messageID int64, m ...MessageSegment) Message {
 	return append(Message{Reply(messageID)}, m...)

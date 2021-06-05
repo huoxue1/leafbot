@@ -240,8 +240,9 @@ func UseMusicHandle() {
 				case 1:
 					{
 						if args[0] == "help" {
-							bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
-								"第一个参数为搜索信息，第二个参数为返回条数"))
+							bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId,
+								message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
+									"第一个参数为搜索信息，第二个参数为返回条数"))
 						} else {
 							music, err := searchMusic(args[0], 10, 0)
 							if err != nil {

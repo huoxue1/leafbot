@@ -90,32 +90,32 @@ type Status struct {
 }
 
 type Event struct {
-	Anonymous     anonymous `json:"anonymous"`
-	Font          int       `json:"font"`
-	GroupId       int       `json:"group_id"`
-	Message       string    `json:"message"`
-	MessageType   string    `json:"message_type"`
-	PostType      string    `json:"post_type"`
-	RawMessage    string    `json:"raw_message"`
-	SelfId        int       `json:"self_id"`
-	Sender        Senders   `json:"sender"`
-	SubType       string    `json:"sub_type"`
-	UserId        int       `json:"user_id"`
-	Time          int       `json:"time"`
-	NoticeType    string    `json:"notice_type"`
-	RequestType   string    `json:"request_type"`
-	Comment       string    `json:"comment"`
-	Flag          string    `json:"flag"`
-	OperatorId    int       `json:"operator_id"`
-	File          Files     `json:"file"`
-	Duration      int64     `json:"duration"`
-	TargetId      int64     `json:"target_id"` //运气王id
-	HonorType     string    `json:"honor_type"`
-	MetaEventType string    `json:"meta_event_type"`
-	Status        Status    `json:"status"`
-	Interval      int       `json:"interval"`
-	CardNew       string    `json:"card_new"` //新名片
-	CardOld       string    `json:"card_old"` //旧名片
+	Anonymous     anonymous        `json:"anonymous"`
+	Font          int              `json:"font"`
+	GroupId       int              `json:"group_id"`
+	Message       message2.Message `json:"message"`
+	MessageType   string           `json:"message_type"`
+	PostType      string           `json:"post_type"`
+	RawMessage    string           `json:"raw_message"`
+	SelfId        int              `json:"self_id"`
+	Sender        Senders          `json:"sender"`
+	SubType       string           `json:"sub_type"`
+	UserId        int              `json:"user_id"`
+	Time          int              `json:"time"`
+	NoticeType    string           `json:"notice_type"`
+	RequestType   string           `json:"request_type"`
+	Comment       string           `json:"comment"`
+	Flag          string           `json:"flag"`
+	OperatorId    int              `json:"operator_id"`
+	File          Files            `json:"file"`
+	Duration      int64            `json:"duration"`
+	TargetId      int64            `json:"target_id"` //运气王id
+	HonorType     string           `json:"honor_type"`
+	MetaEventType string           `json:"meta_event_type"`
+	Status        Status           `json:"status"`
+	Interval      int              `json:"interval"`
+	CardNew       string           `json:"card_new"` //新名片
+	CardOld       string           `json:"card_old"` //旧名片
 	MessageIds
 }
 

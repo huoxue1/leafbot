@@ -2,6 +2,7 @@ package leafBot
 
 import (
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -91,6 +92,34 @@ type (
 		ClientRole string
 	}
 )
+
+func OnStartWith(str string) *messageHandle {
+	c := &messageHandle{}
+	c.AddRule(func(event Event, bot *Bot) bool {
+		if event.Message[0].Type != "text" {
+			return false
+		}
+		if strings.HasPrefix(event.Message[0].Data["text"], str) {
+			return true
+		}
+		return false
+	})
+	return c
+}
+
+func OnEndWith(str string) *messageHandle {
+	c := &messageHandle{}
+	c.AddRule(func(event Event, bot *Bot) bool {
+		if event.Message[0].Type != "text" {
+			return false
+		}
+		if strings.HasSuffix(event.Message[0].Data["text"], str) {
+			return true
+		}
+		return false
+	})
+	return c
+}
 
 func OnConnect() *connectHandle {
 	return &connectHandle{}

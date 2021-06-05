@@ -36,6 +36,7 @@ func (con *connection) readData() {
 	go func() {
 		for {
 			_, data, err := con.wsSocket.ReadMessage()
+			log.Debugln(string(data))
 			if err != nil {
 				con.wsClose()
 			}
