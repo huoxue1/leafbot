@@ -1,39 +1,88 @@
-# This is an example .goreleaser.yml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
+env:
+  - GO111MODULE=on
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-
 builds:
-  - binary: LeafBot
-    main: ./example/main.go
-    goos:
-      - windows
-      - linux
-    goarch:
-      - amd64
-      - 386
-  - env:
+  main: /example/main.go
+  - id: nowin
+    env:
       - CGO_ENABLED=0
+      - GO111MODULE=on
     goos:
       - linux
+#      - darwin
+    goarch:
+      - 386
+      - amd64
+#      - arm
+#      - arm64
+#    goarm:
+#      - 7
+#    ignore:
+#      - goos: darwin
+#        goarch: arm
+#      - goos: darwin
+#        goarch: 386
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+#    ldflags:
+#      - -s -w -X github.com/Mrs4s/go-cqhttp/coolq.Version=v{{.Version}}
+  - id: win
+    env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+    goos:
       - windows
-archives:
-  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+    goarch:
+      - 386
+      - amd64
+#      - arm
+    goarm:
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+#    ldflags:
+#      - -s -w -X github.com/Mrs4s/go-cqhttp/coolq.Version=v{{.Version}}
+
 checksum:
-  name_template: 'checksums.txt'
-snapshot:
-  name_template: "{{ .Tag }}-next"
+  name_template: "{{ .ProjectName }}_checksums.txt"
 changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - "^docs:"
+      - "^test:"
+      - fix typo
+      - Merge pull request
+      - Merge branch
+      - Merge remote-tracking
+      - go mod tidy
+
+archives:
+  - id: binary
+    builds:
+      - win
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    format_overrides:
+      - goos: windows
+        format: binary
+  - id: nowin
+    builds:
+      - nowin
+      - win
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+nfpms:
+  - license: AGPL 3.0
+    homepage: https://github.com/huoxue1/leafBot
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - deb
+      - rpm
+    maintainer: HuoXue1
