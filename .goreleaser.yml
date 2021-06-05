@@ -6,7 +6,7 @@ before:
 builds:
 
   - id: nowin
-    main: ./example/main.go
+    main: /example/main.go
     env:
       - CGO_ENABLED=0
       - GO111MODULE=on
