@@ -4,8 +4,9 @@ before:
   hooks:
     - go mod tidy
 builds:
-  main: /example/main.go
+
   - id: nowin
+    main: ./example/main.go
     env:
       - CGO_ENABLED=0
       - GO111MODULE=on
