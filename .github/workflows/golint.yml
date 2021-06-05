@@ -17,8 +17,8 @@ jobs:
       - name: Commit back
         continue-on-error: true
         run: |
-          git config --local user.name 'github-actions[bot]'
-          git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config --local user.name 'huoxue1'
+          git config --local user.email '3343780376@qq.com'
           git add --all
           git commit -m "ci(chore): Fix stylings"
           git push
