@@ -6,6 +6,7 @@
 package gui
 
 import ( //nolint:gci
+	"embed"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,9 @@ import ( //nolint:gci
 	"sort"
 	"strconv"
 )
+
+//go:embed static
+var static embed.FS
 
 func init() {
 	log.SetFormatter(&easy.Formatter{
@@ -40,7 +44,7 @@ func InitWindow() {
 		log.Infoln(err)
 	}()
 	go func() {
-		ui, err := lorca.New("http://127.0.0.1:3000", "", 800, 600)
+		ui, err := lorca.New("http://127.0.0.1:3000/static/static/html/default.html", "", 800, 600)
 		go func() {
 			c := make(chan os.Signal)
 			signal.Notify(c) //nolint:govet
@@ -58,11 +62,11 @@ func InitWindow() {
 	}()
 	engine := gin.New()
 	gin.SetMode(gin.ReleaseMode)
-	engine.StaticFS("/static/", http.Dir("./gui/view/static/"))
-	engine.StaticFile("/", "./gui/view/html/index.html")
-	engine.LoadHTMLGlob("./gui/view/html/*.html")
+	engine.StaticFS("/static/", http.FS(static))
+	//engine.StaticFile("/", "./gui/view/static/html/default.html")
+	//engine.LoadHTMLGlob("./gui/view/html/*.html")
 	//engine.GET("/", func(context *gin.Context) {
-	//	context.HTML(200, "index.html", nil)
+	//	context.HTML(200, "default.html", nil)
 	//})
 
 	engine.POST("/get_config", GetConfig)
