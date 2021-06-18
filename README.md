@@ -51,12 +51,13 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 - [x] 翻译插件
 - [x] 点歌插件
 - [x] setu
+- [x] 插件管理
 
 ### 预计实现功能
 
 - [ ] 群管插件，例如禁言，关键词撤回，自动踢人
 
-- [ ] 插件管理
+
   
 - [ ] 群荣誉提醒
 
