@@ -338,15 +338,16 @@
 
     var ws = new WebSocket("ws://localhost:3000/data")
     ws.onmessage = function(data){
-        let table = document.getElementById("message")
+        var table = document.getElementById("tbody")
         table.scrollTop = table.scrollHeight
+
         var content = eval('(' + data.data + ')');
         message = "<tr>" +
             "<td>"+content.message_id+"</td>" +
             "<td>"+content.message_type+"</td>"+
             "<td>"+content.group_id+"</td>"+
             "<td>"+content.user_id+"</td>"+
-            "<td>"+content.message+"</td>"+
+            "<td>"+content.raw_message+"</td>"+
             "</tr>"
         document.getElementById("tbody").innerHTML += message
         // table.reload('table',{

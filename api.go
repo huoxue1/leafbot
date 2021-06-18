@@ -513,6 +513,12 @@ type IncreaseApi interface {
 	SendGroupNotice(groupId int, content string)
 	ReloadEventFilter()
 	UploadGroupFile(groupId int, file string, name string, folder string) error
+	GetStatus() Status
+	SetEssenceMsg(messageId int)
+	DeleteEssenceMsg(messageId int)
+	GetEssenceMsgList(groupId int)
+	CheckUrlSafely(url string) int
+	//GetModelShow(model string)
 }
 
 type SpecialApi interface {
@@ -1433,7 +1439,7 @@ func (b *Bot) GetRecord(file, outFormat string) Record {
 		OutFormat string `json:"out_format"`
 	}
 	var d = UseApi{
-		Action: "get_Record",
+		Action: "get_record",
 		Params: param{
 			File:      file,
 			OutFormat: outFormat,
@@ -1462,7 +1468,7 @@ func (b *Bot) GetImage(file string) Image {
 		File string `json:"file"`
 	}
 	var d = UseApi{
-		Action: "get_Record",
+		Action: "get_image",
 		Params: param{
 			File: file,
 		},
@@ -2157,4 +2163,20 @@ func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	content, _ := json.Marshal(d)
 	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	return content
+}
+
+func (b *Bot) SetEssenceMsg(messageId int) {
+	panic("implement me")
+}
+
+func (b *Bot) DeleteEssenceMsg(messageId int) {
+	panic("implement me")
+}
+
+func (b *Bot) GetEssenceMsgList(groupId int) {
+	panic("implement me")
+}
+
+func (b *Bot) CheckUrlSafely(url string) int {
+	panic("implement me")
 }

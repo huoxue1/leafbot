@@ -24,6 +24,7 @@ func UseFlashImage(userID int) {
 			mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 				strconv.Itoa(event.UserId) + "所发闪照")
 		}
+
 		bot.SendPrivateMsg(userID, []message.MessageSegment{mess, event.Message[0].Delete("type")})
 	})
 }

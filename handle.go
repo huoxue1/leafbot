@@ -86,6 +86,7 @@ type (
 		BaseHandle
 		handle func(selfId int)
 	}
+
 	Connect struct {
 		SelfID     int
 		Host       string
