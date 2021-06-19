@@ -3,15 +3,19 @@ package leafBot
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/3343780376/leafBot/utils"
 	"github.com/hjson/hjson-go" //nolint:gci
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
-	yaml "gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"strings" //nolint:gci
+	"time"
 )
 
 type Bot struct {
@@ -32,7 +36,7 @@ type Config struct {
 
 var (
 	DefaultConfig = new(Config)
-	reloadSign    = make(chan int, 1)
+	hook          *utils.LogHook
 )
 
 // init
@@ -40,12 +44,18 @@ var (
    @Description:
 */
 func init() {
-
-	log.SetFormatter(&easy.Formatter{
+	w, err := rotatelogs.New(path.Join("logs", "%Y-%m-%d.log"), rotatelogs.WithRotationTime(time.Hour*24))
+	if err != nil {
+		log.Errorf("rotatelogs init err: %v", err)
+		panic(err)
+	}
+	f := &easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
-	},
-	)
+	}
+	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
+	hook = utils.NewLogHook(f, levels, w)
+	log.AddHook(hook)
 }
 
 const (
@@ -140,7 +150,7 @@ func initConfig(path string, fileType string) error {
 		return err
 	}
 
-	log.SetLevel(GetLogLevel(DefaultConfig.LogLevel))
+	hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
 	log.Infoln("已加载配置：" + string(data))
 	return err
 }
@@ -184,9 +194,4 @@ func GetLogLevel(level string) log.Level {
 	default:
 		return log.InfoLevel
 	}
-}
-
-func reload() {
-	<-reloadSign
-
 }

@@ -3,18 +3,17 @@
 3 * @DATA :  16:22
 4 */
 
-package gui
+package leafBot
 
 import ( //nolint:gci
 
 	"embed"
-	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/huoxue1/lorca"
 	log "github.com/sirupsen/logrus"
-	easy "github.com/t-tomalak/logrus-easy-formatter"
+	"io"
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"
@@ -22,16 +21,8 @@ import ( //nolint:gci
 	"strconv"
 )
 
-//go:embed static
+//go:embed gui/static
 var static embed.FS
-
-func init() {
-	log.SetFormatter(&easy.Formatter{
-		TimestampFormat: "2006-01-02 15:04:05",
-		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
-	},
-	)
-}
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -45,7 +36,7 @@ func InitWindow() {
 		log.Infoln(err)
 	}()
 	go func() {
-		ui, err := lorca.New("http://127.0.0.1:3000/static/static/html/default.html", "", 800, 600)
+		ui, err := lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
 		go func() {
 			c := make(chan os.Signal)
 			signal.Notify(c) //nolint:govet
@@ -61,9 +52,13 @@ func InitWindow() {
 		<-ui.Done()
 		os.Exit(3)
 	}()
+	if DefaultConfig.LogLevel != "debug" {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DefaultWriter = io.Discard
+	}
 	engine := gin.New()
-	gin.SetMode(gin.ReleaseMode)
-	engine.StaticFS("/static/", http.FS(static))
+
+	engine.StaticFS("/static", http.FS(static))
 	//engine.StaticFile("/", "./gui/view/static/html/default.html")
 	//engine.LoadHTMLGlob("./gui/view/html/*.html")
 	//engine.GET("/", func(context *gin.Context) {
@@ -81,16 +76,16 @@ func InitWindow() {
 			log.Errorln("改变插件状态出错" + err.Error())
 		}
 		if status {
-			leafBot.StartPluginByID(id)
+			StartPluginByID(id)
 		} else {
-			leafBot.BanPluginByID(id)
+			BanPluginByID(id)
 		}
 		context.JSON(200, nil)
 	})
 
 	engine.POST("/get_plugins", func(context *gin.Context) {
-		list := leafBot.GetHandleList()
-		var pluginList []leafBot.BaseHandle
+		list := GetHandleList()
+		var pluginList []BaseHandle
 
 		for _, handles := range list {
 			pluginList = append(pluginList, handles...)
@@ -134,7 +129,7 @@ func data(ctx *gin.Context) {
 
 	go func() {
 		for {
-			event := <-leafBot.MessageChan
+			event := <-MessageChan
 			log.Debugln("已向前端发送信息")
 			err = conn.WriteJSON(&event)
 			if err != nil {
@@ -149,7 +144,7 @@ func data(ctx *gin.Context) {
 
 func GetConfig(ctx *gin.Context) {
 	var bots []int
-	for _, bot := range leafBot.DefaultConfig.Bots {
+	for _, bot := range DefaultConfig.Bots {
 		bots = append(bots, bot.SelfId)
 	}
 	ctx.JSON(200, bots)
@@ -160,7 +155,7 @@ func GetGroupList(ctx *gin.Context) {
 	if err != nil {
 		return
 	}
-	bot := leafBot.GetBotById(selfID)
+	bot := GetBotById(selfID)
 	list := bot.GetGroupList()
 	ctx.JSON(200, list)
 }
@@ -170,7 +165,7 @@ func GetFriendList(ctx *gin.Context) {
 	if err != nil {
 		return
 	}
-	bot := leafBot.GetBotById(selfID)
+	bot := GetBotById(selfID)
 	list := bot.GetFriendList()
 	ctx.JSON(200, list)
 }
@@ -183,7 +178,7 @@ func CallApi(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(404, nil)
 	}
-	bot := leafBot.GetBotById(selfID)
+	bot := GetBotById(selfID)
 	msgID := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }

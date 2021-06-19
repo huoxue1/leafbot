@@ -3,7 +3,6 @@ package main
 import (
 	"flag" //nolint:gci
 	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/gui"
 	"github.com/3343780376/leafBot/message"
 	"github.com/3343780376/leafBot/plugins"
 	"github.com/3343780376/leafBot/plugins/autoReply"
@@ -17,7 +16,7 @@ import (
 
 func init() {
 	if runtime.GOOS == "windows" {
-		go gui.InitWindow()
+		go leafBot.InitWindow()
 	}
 	//为bot添加weather响应器，命令为 ”/天气“ ,allies为命令别名，
 	//参数格式为一个字符串数组，rule为一个结构体，响应前会先判断所以rules为true，weight为权重，block为是否阻断
