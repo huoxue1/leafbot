@@ -88,3 +88,6 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 [wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot)
 
 [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
+
+
+<img src="https://raw.githubusercontent.com/huoxue1/leafBot/master/docs/gui.png" alt="示例">
