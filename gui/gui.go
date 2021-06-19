@@ -6,14 +6,15 @@
 package gui
 
 import ( //nolint:gci
+
 	"embed"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/huoxue1/lorca"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
-	"github.com/zserge/lorca"
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"

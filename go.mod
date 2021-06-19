@@ -14,6 +14,7 @@ require (
 	github.com/google/go-github/v35 v35.2.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/hjson/hjson-go v3.1.0+incompatible
+	github.com/huoxue1/lorca v0.1.11
 	github.com/json-iterator/go v1.1.10
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -26,7 +27,6 @@ require (
 	github.com/tidwall/gjson v1.7.5
 	github.com/tklauser/go-sysconf v0.3.6 // indirect
 	github.com/ugorji/go v1.2.5 // indirect
-	github.com/zserge/lorca v0.1.9
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
