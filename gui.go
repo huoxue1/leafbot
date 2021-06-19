@@ -98,6 +98,24 @@ func InitWindow() {
 		context.JSON(200, pluginList)
 	})
 
+	engine.GET("/get_log", func(context *gin.Context) {
+		conn, err := upGrader.Upgrade(context.Writer, context.Request, nil)
+		if err != nil {
+			log.Errorln(err)
+			return
+		}
+		go func() {
+			for {
+				event := <-hook.LogChan
+				err = conn.WriteMessage(websocket.TextMessage, []byte(event))
+				if err != nil {
+					log.Debugln("前端日志消息发送失败" + err.Error())
+					continue
+				}
+			}
+		}()
+	})
+
 	engine.POST("/send_msg", CallApi)
 	engine.GET("/data", data)
 	if err := engine.Run(":3000"); err != nil {

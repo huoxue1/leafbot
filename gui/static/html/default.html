@@ -16,6 +16,10 @@
         #send_message{
             width: 30%;
         }
+        .red{
+            color: red;
+            width: 190px;
+        }
 
 
     </style>
@@ -32,13 +36,7 @@
     <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
 
     <!-- 引入 layui.js -->
-    <script src="//unpkg.com/layui@2.6.8/dist/layui.js">
 
-            <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body onload="f()">
 
 <div class="layui-layout layui-layout-admin">
@@ -46,10 +44,11 @@
         <div class="layui-logo">LeftBot</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="#" onclick="meau_message_click();return false;">消息</a></li>
+            <li class="layui-nav-item"><a href="#">消息</a></li>
             <li class="layui-nav-item"><a href="#">请求事件</a></li>
             <li class="layui-nav-item"><a href="#">提醒事件</a></li>
-            <li class="layui-nav-item"><a href="#" onclick="meau_plugin_click();return false;">插件管理</a></li>
+            <li class="layui-nav-item"><a href="#" >插件管理</a></li>
+            <li class="layui-nav-item"><a href="#" >日志</a></li>
             <!--            <li class="layui-nav-item">-->
             <!--                <a href="javascript:;">nav groups<span class="layui-nav-more"></span></a>-->
             <!--                <dl class="layui-nav-child layui-anim layui-anim-upbit">-->
@@ -117,6 +116,14 @@
                     <td><input v-bind:id="plugin.ID" onchange="update_plugin_status(this)"  type="checkbox" name="xxx" v-model="plugin.Enable" lay-skin="switch"></td>
                 </tr>
             </template>
+        </table>
+    </div>
+
+    <div id="log" class="layui-body" style="display: none">
+        <table class="layui-table" lay-filter = "table" >
+            <tbody id="log_body">
+
+            </tbody>
         </table>
     </div>
 
@@ -204,7 +211,10 @@
         </form>
     </div>
 </div>
-
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
 
@@ -231,7 +241,6 @@
             },
         }
     })
-
     function update_plugin_status(dom){
         $.ajax({
             type : "POST",
@@ -242,15 +251,6 @@
                 v.get_plugins()
             }
         })
-    }
-    function meau_message_click(){
-        $("#plugin_manager").css("display","none")
-        $("#message").css("display","block")
-    }
-
-    function meau_plugin_click() {
-        $("#plugin_manager").css("display","block")
-        $("#message").css("display","none")
     }
 
     function send_msg() {
@@ -372,10 +372,36 @@
     ws.onclose = function (data){
 
     }
+
+    var ws1 = new WebSocket("ws://localhost:3000/get_log")
+    ws1.onmessage = function (message) {
+        var content = message.data
+        console.log(content.toString().substring(0,29));
+        console.log(content.toString().substring(29))
+        var mes = "<tr><td class='red'>"+content.toString().substring(0,29)+"</td>"+"<td>"+content.toString().substring(29)+"</td></tr>"
+        document.getElementById("log_body").innerHTML += mes
+    }
     //JavaScript 代码区域
     layui.use('element', function(){
         var element = layui.element;
-
+        var log  = $("#log")
+        var plugin = $("#plugin_manager")
+        var message = $("#message")
+        element.on('nav',function (elem) {
+            if (elem.context.innerText === "消息"){
+                plugin.css("display","none")
+                log.css("display","none")
+                message.css("display","block")
+            }else if (elem.context.innerText === "插件管理"){
+                plugin.css("display","block")
+                log.css("display","none")
+                message.css("display","none")
+            }else if (elem.context.innerText === "日志"){
+                plugin.css("display","none")
+                log.css("display","block")
+                message.css("display","none")
+            }
+        })
     });
 </script>
 

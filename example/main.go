@@ -29,14 +29,14 @@ func init() {
 
 	leafBot.InitPluginManager()
 
-	plugins.UseCreateQrCode()               //加载生成二维码插件
-	plugins.UseDayImage()                   // 加载每日一图插件
-	plugins.UseEchoHandle()                 // 加载echo插件
-	plugins.UseMusicHandle()                // 加载音乐插件
-	plugins.UseSetuHandle()                 // 加载涩图插件
-	plugins.UseTranslateHandle()            // 加载翻译插件
-	plugins.UseFlashImage(0)                // 加载闪照破解插件
-	plugins.UseFlashImageToGroup(972264701) //加载闪照破解后发到对应群的插件
+	plugins.UseCreateQrCode()      //加载生成二维码插件
+	plugins.UseDayImage()          // 加载每日一图插件
+	plugins.UseEchoHandle()        // 加载echo插件
+	plugins.UseMusicHandle()       // 加载音乐插件
+	plugins.UseSetuHandle()        // 加载涩图插件
+	plugins.UseTranslateHandle()   // 加载翻译插件
+	plugins.UseFlashImage(0)       // 加载闪照破解插件
+	plugins.UseFlashImageToGroup() //加载闪照破解后发到对应群的插件
 
 	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
 	_ = autoReply.Load("./config/data.json")

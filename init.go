@@ -32,6 +32,9 @@ type Config struct {
 	Port      int    `json:"port"`
 	LogLevel  string `json:"log_level"`
 	SuperUser []int  `json:"super_user"`
+	Plugins   struct {
+		FlashGroupID int `json:"flash_group_id"`
+	} `json:"plugins"`
 }
 
 var (

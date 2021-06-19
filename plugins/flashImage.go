@@ -29,7 +29,7 @@ func UseFlashImage(userID int) {
 	})
 }
 
-func UseFlashImageToGroup(groupID int) {
+func UseFlashImageToGroup() {
 
 	leafBot.
 		OnMessage("").
@@ -37,6 +37,12 @@ func UseFlashImageToGroup(groupID int) {
 		SetPluginName("闪照拦截").
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot) {
+
+				groupId := leafBot.DefaultConfig.Plugins.FlashGroupID
+				if leafBot.DefaultConfig.Plugins.FlashGroupID == -1 {
+					groupId = event.GroupId
+				}
+
 				var mess message.MessageSegment
 				if event.MessageType == "group" {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自群" + strconv.Itoa(event.GroupId) + "用户" +
@@ -45,7 +51,7 @@ func UseFlashImageToGroup(groupID int) {
 					mess = message.Text(time.Now().Format("2006-01-02 15:04:05") + "\n来自私聊信息" + "用户" +
 						strconv.Itoa(event.UserId) + "所发闪照")
 				}
-				bot.SendGroupMsg(groupID, []message.MessageSegment{mess, event.Message[0].Delete("type")})
+				bot.SendGroupMsg(groupId, []message.MessageSegment{mess, event.Message[0].Delete("type")})
 			})
 
 }
