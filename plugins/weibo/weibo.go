@@ -24,7 +24,10 @@ func init() {
 }
 
 func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
-
+	if leafBot.DefaultConfig.Plugins.AlApiToken == "" {
+		bot.Send(event, message.Text("未检测到alapitoken，请联系bot管理员为其配置。\n申请地址https://admin.alapi.cn/api_manager/token_manager"))
+		return
+	}
 	if len(args) < 1 {
 		draw(10)
 	} else {
@@ -77,7 +80,7 @@ func draw(limit int) {
 }
 
 func getDataAlApi(num int) (AlApi, error) {
-	resp, err := http.Get("https://v1.alapi.cn/api/new/wbtop?num=" + strconv.Itoa(num))
+	resp, err := http.Get("https://v2.alapi.cn/api/new/wbtop?token=" + leafBot.DefaultConfig.Plugins.AlApiToken + "&num=" + strconv.Itoa(num))
 	if err != nil {
 		return AlApi{}, err
 	}

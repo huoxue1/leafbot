@@ -33,7 +33,8 @@ type Config struct {
 	LogLevel  string `json:"log_level"`
 	SuperUser []int  `json:"super_user"`
 	Plugins   struct {
-		FlashGroupID int `json:"flash_group_id"`
+		FlashGroupID int    `json:"flash_group_id"`
+		AlApiToken   string `json:"al_api_token"`
 	} `json:"plugins"`
 }
 
