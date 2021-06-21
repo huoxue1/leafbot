@@ -642,3 +642,23 @@ func GetBotById(id int) *Bot {
 func (e Event) GetMsg() message.Message {
 	return e.Message
 }
+
+func (e Event) GetPlainText() string {
+	content := ""
+	for _, mes := range e.Message {
+		if mes.Type == "text" {
+			content += mes.Data["text"]
+		}
+	}
+	return content
+}
+
+func (e Event) GetImages() []message.MessageSegment {
+	var images []message.MessageSegment
+	for _, mes := range e.Message {
+		if mes.Type == "image" {
+			images = append(images, mes)
+		}
+	}
+	return images
+}

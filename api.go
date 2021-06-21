@@ -1933,7 +1933,7 @@ func (b *Bot) OcrImage(image string) OcrImage {
 		Image string `json:"image"`
 	}
 	var d = UseApi{
-		Action: ".ocr_image",
+		Action: "ocr_image",
 		Params: param{
 			Image: image,
 		},

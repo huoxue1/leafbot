@@ -49,6 +49,7 @@
             <li class="layui-nav-item"><a href="#">提醒事件</a></li>
             <li class="layui-nav-item"><a href="#" >插件管理</a></li>
             <li class="layui-nav-item"><a href="#" >日志</a></li>
+            <li class="layui-nav-item"><a href="#" >配置文件生成</a></li>
             <!--            <li class="layui-nav-item">-->
             <!--                <a href="javascript:;">nav groups<span class="layui-nav-more"></span></a>-->
             <!--                <dl class="layui-nav-child layui-anim layui-anim-upbit">-->
@@ -400,6 +401,8 @@
                 plugin.css("display","none")
                 log.css("display","block")
                 message.css("display","none")
+            }else {
+                console.log(elem.context.innerText)
             }
         })
     });

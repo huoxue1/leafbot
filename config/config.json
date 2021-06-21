@@ -18,5 +18,10 @@
   ],
   "host": "127.0.0.1",
   "port": 8080,
-  "log_level": "info"
+  "log_level": "info",
+  "plugins" : {
+    "flash_group_id" : 972264701,
+    "al_api_token" : "K2vmkj4KVyP9vfzh",
+    "enable_reply_tome": true
+  }
 }

@@ -3,6 +3,7 @@ module github.com/3343780376/leafBot
 go 1.16
 
 require (
+	github.com/PuerkitoBio/goquery v1.7.0 // indirect
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/everpcpc/pixiv v0.0.0-20210128034500-a54eb720d8f3
 	github.com/fogleman/gg v1.3.0
@@ -13,6 +14,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-github/v35 v35.2.0
 	github.com/gorilla/websocket v1.4.2
+	github.com/guonaihong/gout v0.1.12 // indirect
 	github.com/hjson/hjson-go v3.1.0+incompatible
 	github.com/huoxue1/lorca v0.1.11
 	github.com/json-iterator/go v1.1.10

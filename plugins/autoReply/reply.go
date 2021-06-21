@@ -9,6 +9,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -38,7 +39,24 @@ func Load(filePath string) error {
 
 	leafBot.OnMessage("").
 		SetPluginName("自动回复").
-		AddRule(leafBot.OnlyToMe).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+		AddRule(func(event leafBot.Event, bot *leafBot.Bot) bool {
+
+			if leafBot.DefaultConfig.Plugins.EnableReplyTome {
+				if event.MessageType == "private" {
+					return true
+				}
+				msg := event.GetMsg()
+				for _, segment := range msg {
+					if segment.Type == "at" && segment.Data["qq"] == strconv.Itoa(event.SelfId) {
+						return true
+					}
+				}
+
+				return false
+			} else {
+				return true
+			}
+		}).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
 		all := strings.ReplaceAll(event.Message.CQString(), fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
 		result := content.Get(strings.TrimSpace(all))
 		if result.String() == "" {
