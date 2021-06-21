@@ -526,7 +526,7 @@ type SpecialApi interface {
 	SetGroupPortrait(groupId int, file string, cache int)
 	GetMsgSpecial(messageId int) MsgData
 	GetForwardMsg(messageId int) []ForwardMsg
-	SendGroupForwardMsg(groupId int, messages []Node)
+	SendGroupForwardMsg(groupId int, messages interface{})
 	GetWordSlices(content string) []string
 	OcrImage(image string) OcrImage
 	GetGroupSystemMsg() GroupSystemMsg
@@ -1872,11 +1872,11 @@ func (b *Bot) GetForwardMsg(messageId int) []ForwardMsg {
    @param groupId int
    @param messages []Node
 */
-func (b *Bot) SendGroupForwardMsg(groupId int, messages []Node) {
+func (b *Bot) SendGroupForwardMsg(groupId int, messages interface{}) {
 	echo := uuid.NewV4().String()
 	type param struct {
-		GroupId  int    `json:"group_id"`
-		Messages []Node `json:"messages"`
+		GroupId  int         `json:"group_id"`
+		Messages interface{} `json:"messages"`
 	}
 	var d = UseApi{
 		Action: "send_group_forward_msg",

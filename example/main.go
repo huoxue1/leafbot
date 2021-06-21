@@ -9,6 +9,7 @@ import (
 	"github.com/3343780376/leafBot/plugins/blacklist"
 	"github.com/3343780376/leafBot/plugins/manager"
 	_ "github.com/3343780376/leafBot/plugins/poke"
+	"github.com/3343780376/leafBot/plugins/searchImage"
 	_ "github.com/3343780376/leafBot/plugins/weibo"
 	"os" //nolint:gci
 	"runtime"
@@ -28,7 +29,7 @@ func init() {
 		AddHandle(Weather)
 
 	leafBot.InitPluginManager()
-
+	searchImage.InitImage()
 	plugins.UseCreateQrCode()      //加载生成二维码插件
 	plugins.UseDayImage()          // 加载每日一图插件
 	plugins.UseEchoHandle()        // 加载echo插件
