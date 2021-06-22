@@ -16,10 +16,12 @@ func InitImage() {
 		}
 		mess := message.Message{}
 		for _, image := range images {
-			mess = append(mess, message.CustomNode(event.Sender.NickName, int64(event.UserId), "[CQ:image,file="+image+"]"))
+			mess = append(mess, message.Image(image))
+			//mess = append(mess, message.CustomNode(event.Sender.NickName, int64(event.UserId), "[CQ:image,file="+image+"]"))
 
 		}
-		bot.SendGroupForwardMsg(event.GroupId, mess)
+		bot.Send(event, mess)
+		//bot.SendGroupForwardMsg(event.GroupId, mess)
 	})
 }
 
