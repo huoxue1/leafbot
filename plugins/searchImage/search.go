@@ -20,6 +20,7 @@ func InitImage() {
 			//mess = append(mess, message.CustomNode(event.Sender.NickName, int64(event.UserId), "[CQ:image,file="+image+"]"))
 
 		}
+
 		bot.Send(event, mess)
 		//bot.SendGroupForwardMsg(event.GroupId, mess)
 	})

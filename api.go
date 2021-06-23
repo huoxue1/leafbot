@@ -167,12 +167,12 @@ type (
 	}
 
 	GetMessage struct {
-		Time      int32   `json:"time"`
-		Group     bool    `json:"group"`
-		MessageId int32   `json:"message_id"`
-		RealId    int32   `json:"real_id"`
-		Sender    Senders `json:"sender"`
-		Message   string  `json:"message"`
+		Time      int32            `json:"time"`
+		Group     bool             `json:"group"`
+		MessageId int32            `json:"message_id"`
+		RealId    int32            `json:"real_id"`
+		Sender    Senders          `json:"sender"`
+		Message   message2.Message `json:"message"`
 	}
 
 	FriendList struct {
