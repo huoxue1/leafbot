@@ -11,6 +11,7 @@ import (
 	//nolint:gci
 )
 
+// 一个ws连接对象
 type connection struct {
 	SelfID   int
 	wsSocket *websocket.Conn  // 底层websocket
@@ -22,6 +23,7 @@ type connection struct {
 	closeChan chan byte // 关闭通知
 }
 
+// ws协议
 var upgrade = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -29,7 +31,7 @@ var upgrade = websocket.Upgrader{
 
 // readData
 /*
-   @Description:
+   @Description: ws连接读循环
    @receiver con
 */
 func (con *connection) readData() {
@@ -52,7 +54,7 @@ func (con *connection) readData() {
 
 // FilterEventOrResponse
 /*
-   @Description:
+   @Description: 从ws的读队列分别过滤是事件还是api响应
    @receiver con
 */
 func (con *connection) FilterEventOrResponse() {
@@ -71,7 +73,7 @@ func (con *connection) FilterEventOrResponse() {
 
 // writeData
 /*
-   @Description:
+   @Description: 从ws写队列死循环写入数据
    @receiver con
 */
 func (con *connection) writeData() {
@@ -93,7 +95,7 @@ func (con *connection) writeData() {
 
 // wsClose
 /*
-   @Description:
+   @Description: 关闭ws连接
    @receiver con
 */
 func (con *connection) wsClose() {
@@ -113,7 +115,7 @@ func (con *connection) wsClose() {
 
 // EventHandle
 /*
-   @Description:
+   @Description: ws的httphandle
    @param w http.ResponseWriter
    @param r *http.Request
 */
@@ -153,7 +155,7 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 
 // getResponse
 /*
-   @Description:
+   @Description: 死循环根据echo获取api响应
    @param r *response
    @param echo string
    @return []byte

@@ -74,6 +74,7 @@ func (l *LogHook) AddWriter(writer ...io.Writer) {
 
 func (l *LogHook) AddLevel(level ...log.Level) {
 	l.levels = append(l.levels, level...)
+
 }
 
 func NewLogHook(formatter log.Formatter, levels []log.Level, writers ...io.Writer) *LogHook {

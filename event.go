@@ -53,7 +53,7 @@ var (
 
 // sessionHandle
 /*
-   @Description:
+   @Description: 遍历所有的session发现是否需要将消息传到对应的handle里面
    @param event Event
 */
 func sessionHandle(event Event) {
@@ -78,113 +78,9 @@ type (
 	}
 )
 
-// AddMessageHandle
-/*
-   @Description:
-   @param messageType string
-   @param rules []Rule
-   @param handles ...func(event Event, bot *Bot)
-*/
-//func AddMessageHandle(messageType string, rules []Rule, handles ...func(event Event, bot *Bot)) {
-//	for _, handle := range handles {
-//		MessageHandles = append(MessageHandles, &messageHandle{
-//			handle:      handle,
-//			messageType: messageType,
-//			rules:       rules,
-//		})
-//	}
-//
-//}
-//
-//func AddPretreatmentHandle(rules []Rule, weight int, handles ...func(event Event, bot *Bot) bool) {
-//	for _, handle := range handles {
-//		PretreatmentHandles = append(PretreatmentHandles, &PretreatmentHandle{
-//			handle: handle,
-//			rules:  rules,
-//			weight: weight,
-//		})
-//	}
-//}
-//
-//// AddNoticeHandle
-///*
-//   @Description:
-//   @param noticeType string
-//   @param rules []Rule
-//   @param weight int
-//   @param handles ...func(event Event, bot *Bot)
-//*/
-//func AddNoticeHandle(noticeType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-//	for _, handle := range handles {
-//		NoticeHandles = append(NoticeHandles, &noticeHandle{
-//			handle:     handle,
-//			noticeType: noticeType,
-//			rules:      rules,
-//			weight:     weight,
-//		})
-//	}
-//}
-//
-//// AddRequestHandle
-///*
-//   @Description:
-//   @param requestType string
-//   @param rules []Rule
-//   @param weight int
-//   @param handles ...func(event Event, bot *Bot)
-//*/
-//func AddRequestHandle(requestType string, rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-//	for _, handle := range handles {
-//		RequestHandles = append(RequestHandles, &requestHandle{
-//			handle:      handle,
-//			requestType: requestType,
-//			rules:       rules,
-//			weight:      weight,
-//		})
-//	}
-//}
-//
-//// AddMetaHandles
-///*
-//   @Description:
-//   @param rules []Rule
-//   @param weight int
-//   @param handles ...func(event Event, bot *Bot)
-//*/
-//func AddMetaHandles(rules []Rule, weight int, handles ...func(event Event, bot *Bot)) {
-//	for _, handle := range handles {
-//		MetaHandles = append(MetaHandles, &metaHandle{
-//			handle: handle,
-//			rules:  rules,
-//			weight: weight,
-//		})
-//	}
-//}
-//
-//// AddCommandHandle
-///*
-//   @Description:
-//   @param handle func(event Event, bot *Bot, args []string)
-//   @param command string
-//   @param allies []string
-//   @param rules []Rule
-//   @param weight int
-//   @param block bool
-//*/
-//func AddCommandHandle(handle func(event Event, bot *Bot, args []string), command string, allies []string, rules []Rule, weight int, block bool) {
-//	CommandHandles = append(CommandHandles, &commandHandle{
-//		handle:  handle,
-//		command: command,
-//		allies:  allies,
-//		rules:   rules,
-//		weight:  weight,
-//		block:   block,
-//	})
-//}
-
 // eventMain
 /*
-   @Description:
+   @Description: 事件总处理器，所有的事件都从这里开始处理
 */
 func eventMain() {
 	sort.Sort(&MessageHandles)
@@ -230,7 +126,7 @@ func eventMain() {
 
 // GetOneEvent
 /*
-   @Description:
+   @Description: 向session队列里面添加一个对象，等待用户的响应，设置超时时间
    @receiver b
    @param rules ...Rule
    @return Event  Event
@@ -255,11 +151,11 @@ func (b *Bot) GetOneEvent(rules ...Rule) (Event, error) {
 
 // GetMoreEvent
 /*
-   @Description:
+   @Description: 获取一个通道不断从用户获取消息
    @receiver b
    @param rules ...Rule
-   @return int  int
-   @return chan  Event
+   @return int  int 对应session在队列中的编号，后面关闭需要该编号
+   @return chan  Event  事件通道
 */
 func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
 	s := session{
@@ -273,7 +169,7 @@ func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
 
 // CloseMessageChan
 /*
-   @Description:
+   @Description: 关闭session，即从等待队列中删除
    @receiver b
    @param id int
 */
@@ -434,8 +330,10 @@ func processMessageHandle() {
 	event := <-c
 	a := 0
 	log.Debugln(len(CommandHandles))
+	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
 
+		// 判断该cmd在该群是否被禁用
 		disable := true
 		for _, group := range handle.disableGroup {
 			if event.GroupId == group {
@@ -446,10 +344,12 @@ func processMessageHandle() {
 			continue
 		}
 
+		// 检查rules
 		rule := checkRule(event, handle.rules)
 		if handle.rules == nil {
 			rule = true
 		}
+		// 判断rules和插件是否被禁用
 		if !rule || !handle.Enable {
 			continue
 		}

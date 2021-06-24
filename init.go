@@ -157,6 +157,7 @@ func initConfig(path string, fileType string) error {
 
 	hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
 	log.Infoln("已加载配置：" + string(data))
+	log.SetLevel(log.DebugLevel)
 	return err
 }
 
