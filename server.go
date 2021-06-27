@@ -137,13 +137,23 @@ func EventHandle(w http.ResponseWriter, r *http.Request) {
 		closeChan: make(chan byte),
 	}
 
-	// 将所有bot实例的client对象初始化
-	for _, bot := range DefaultConfig.Bots {
-		if bot.SelfId == selfId {
-			log.Infoln("bot：" + strconv.Itoa(bot.SelfId) + "已上线")
-			bot.Client = wscon
+	// 判断bot列表里面是否存在该bot，不存在则append进去，存在则将ws链接进行赋值
+	if a := func() bool {
+		for _, bot := range DefaultConfig.Bots {
+			if bot.SelfId == selfId {
+				bot.Client = wscon
+				return true
+			}
 		}
+		return false
+	}(); !a {
+		DefaultConfig.Bots = append(DefaultConfig.Bots, &Bot{
+			Name:   "",
+			SelfId: selfId,
+			Client: wscon,
+		})
 	}
+	log.Infoln("bot：" + strconv.Itoa(selfId) + "已上线")
 	// 处理所有的connect事件
 	for _, handle := range ConnectHandles {
 		handle.handle(Connect{SelfID: selfId, ClientRole: role, Host: host}, GetBotById(selfId))

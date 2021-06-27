@@ -30,6 +30,11 @@ var upGrader = websocket.Upgrader{
 	},
 }
 
+var (
+	logConn  *websocket.Conn
+	dataCoon *websocket.Conn
+)
+
 func InitWindow() {
 	defer func() {
 		err := recover()
@@ -104,16 +109,20 @@ func InitWindow() {
 			log.Errorln(err)
 			return
 		}
-		go func() {
-			for {
-				event := <-hook.LogChan
-				err = conn.WriteMessage(websocket.TextMessage, []byte(event))
-				if err != nil {
-					log.Debugln("前端日志消息发送失败" + err.Error())
-					continue
+		if logConn == nil {
+			logConn = conn
+			go func() {
+				for {
+					event := <-hook.LogChan
+					err = logConn.WriteMessage(websocket.TextMessage, []byte(event))
+					if err != nil {
+						log.Debugln("前端日志消息发送失败" + err.Error())
+						continue
+					}
 				}
-			}
-		}()
+			}()
+		}
+		logConn = conn
 	})
 
 	engine.POST("/send_msg", CallApi)
@@ -131,32 +140,36 @@ func data(ctx *gin.Context) {
 		return
 	}
 
-	go func() {
-		for {
-			_, message, err := conn.ReadMessage()
-			if err != nil {
-				log.Debugln("接收消息失败" + err.Error())
-				break
+	if dataCoon == nil {
+		dataCoon = conn
+		go func() {
+			for {
+				_, m, err := dataCoon.ReadMessage()
+				if err != nil {
+					log.Debugln("接收消息失败" + err.Error())
+					break
+				}
+				if string(m) == "ping" {
+					m = []byte("pong")
+				}
+				//写入ws数据
 			}
-			if string(message) == "ping" {
-				message = []byte("pong")
-			}
-			//写入ws数据
-		}
-	}()
+		}()
 
-	go func() {
-		for {
-			event := <-MessageChan
-			log.Debugln("已向前端发送信息")
-			err = conn.WriteJSON(&event)
-			if err != nil {
-				log.Debugln("消息发送失败" + err.Error())
-				continue
+		go func() {
+			for {
+				event := <-MessageChan
+				log.Debugln("已向前端发送信息")
+				err = dataCoon.WriteJSON(&event)
+				if err != nil {
+					log.Debugln("消息发送失败" + err.Error())
+					continue
+				}
 			}
-		}
 
-	}()
+		}()
+	}
+	dataCoon = conn
 
 }
 
