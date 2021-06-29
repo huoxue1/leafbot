@@ -27,7 +27,7 @@ func init() {
 		SetPluginName("天气").
 		SetBlock(false).
 		AddHandle(Weather)
-
+	plugins.Ocr()
 	leafBot.InitPluginManager()
 	searchImage.InitImage()
 	plugins.UseCreateQrCode()      //加载生成二维码插件
