@@ -7,6 +7,7 @@ import (
 	"github.com/3343780376/leafBot/plugins"
 	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
+	"github.com/3343780376/leafBot/plugins/groupWelcome"
 	"github.com/3343780376/leafBot/plugins/manager"
 	_ "github.com/3343780376/leafBot/plugins/poke"
 	"github.com/3343780376/leafBot/plugins/searchImage"
@@ -28,6 +29,7 @@ func init() {
 		SetBlock(false).
 		AddHandle(Weather)
 	plugins.Ocr()
+	groupWelcome.WelcomeInit()
 	leafBot.InitPluginManager()
 	searchImage.InitImage()
 	plugins.UseCreateQrCode()      //加载生成二维码插件

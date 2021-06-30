@@ -1,16 +1,6 @@
 {
   "bots": [
-    {
-      "name": "commit",
-      "self_id": 3180808826
-    },
-    {
-      "name": "bot1",
-      "self_id": 1743224847
-    },{
-      "name": "bot2",
-      "self_id": 3343780376
-    }
+
   ],
   "admin": 3343780376,
   "super_user": [
@@ -22,6 +12,12 @@
   "plugins" : {
     "flash_group_id" : 972264701,
     "al_api_token" : "K2vmkj4KVyP9vfzh",
-    "enable_reply_tome": true
+    "enable_reply_tome": true,
+    "welcome": [
+      {
+        "groupId": 123456,
+        "message": "欢迎来到该群"
+      }
+    ]
   }
 }

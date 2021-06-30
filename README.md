@@ -51,6 +51,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 - [x] 翻译插件
 - [x] 点歌插件
 - [x] setu
+- [x] 入群欢迎
 - [x] 插件管理
 
 ### 预计实现功能
@@ -60,8 +61,6 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
   
 - [ ] 群荣誉提醒
-
-- [ ] 入群欢迎
 
 - [ ] p站log实现
 

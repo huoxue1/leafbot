@@ -36,6 +36,10 @@ type Config struct {
 		FlashGroupID    int    `json:"flash_group_id"`
 		AlApiToken      string `json:"al_api_token"`
 		EnableReplyTome bool   `json:"enable_reply_tome"`
+		Welcome         []struct {
+			GroupId int    `json:"group_id"`
+			Message string `json:"message"`
+		} `json:"welcome"`
 	} `json:"plugins"`
 }
 
