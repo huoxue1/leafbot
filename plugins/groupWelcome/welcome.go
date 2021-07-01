@@ -1,7 +1,12 @@
+// Package groupWelcome /**
 package groupWelcome
 
 import "github.com/3343780376/leafBot"
 
+// WelcomeInit
+/**
+ * @Description:
+ */
 func WelcomeInit() {
 	leafBot.OnNotice(leafBot.NoticeTypeApi.GroupIncrease).SetWeight(10).SetPluginName("入群欢迎").AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
 		for _, s := range leafBot.DefaultConfig.Plugins.Welcome {

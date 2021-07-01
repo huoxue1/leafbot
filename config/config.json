@@ -15,7 +15,7 @@
     "enable_reply_tome": true,
     "welcome": [
       {
-        "groupId": 123456,
+        "group_id": 972264701,
         "message": "欢迎来到该群"
       }
     ]
