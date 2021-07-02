@@ -28,6 +28,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 
 ---
+## 因打暑假工，项目咕咕两个月
 ## 已添加windows的gui界面，前提是基于chorme引擎
 ### 特别感谢wdvxdr1123大佬的<a href="https://github.com/wdvxdr1123/ZeroBot/tree/main/message">CQ码</a>解析和消息部分
 
