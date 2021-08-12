@@ -3,7 +3,6 @@ package plugins
 import (
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
-	"strconv"
 )
 
 func Ocr() {
@@ -22,8 +21,10 @@ func Ocr() {
 		ocrImage := bot.OcrImage(images[0].Data["file"])
 		mess := "识别结果:\n识别语言:" + ocrImage.Language
 		for _, text := range ocrImage.Texts {
-			mess += "\n" + text.Text + "  置信度:" + strconv.Itoa(text.Confidence)
+			mess += "\n" + text.Text
+
 		}
+
 		bot.Send(event, message.ReplyWithMessage(int64(event.MessageID), message.Text(mess)))
 	})
 }
