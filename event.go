@@ -56,7 +56,8 @@ var (
    @Description: 遍历所有的session发现是否需要将消息传到对应的handle里面
    @param event Event
 */
-func sessionHandle(event Event) {
+func sessionHandle(event Event) bool {
+	DISUSE := false
 	sessions.Range(func(key, value interface{}) bool {
 		s := value.(session)
 		rule := checkRule(event, s.rules)
@@ -65,9 +66,12 @@ func sessionHandle(event Event) {
 		}
 		if rule {
 			s.queue <- event
+			DISUSE = true
 		}
 		return true
 	})
+
+	return DISUSE
 }
 
 type (
@@ -330,6 +334,11 @@ func processMessageHandle() {
 	event := <-c
 	a := 0
 	log.Debugln(len(CommandHandles))
+
+	if sessionHandle(event) {
+		return
+	}
+
 	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
 
@@ -404,8 +413,6 @@ func processMessageHandle() {
 	if a == 1 {
 		return
 	}
-
-	go sessionHandle(event)
 
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		event.MessageType, event.GroupId, event.UserId, event.Message))
