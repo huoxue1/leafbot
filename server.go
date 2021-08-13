@@ -113,13 +113,13 @@ func (con *connection) wsClose() {
 	}
 }
 
-// EventHandle
+// eventHandle
 /*
    @Description: ws的httphandle
    @param w http.ResponseWriter
    @param r *http.Request
 */
-func EventHandle(w http.ResponseWriter, r *http.Request) {
+func eventHandle(w http.ResponseWriter, r *http.Request) {
 	selfId, err := strconv.Atoi(r.Header.Get("X-Self-ID"))
 	role := r.Header.Get("X-Client-Role")
 	host := r.Header.Get("Host")

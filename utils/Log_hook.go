@@ -39,6 +39,7 @@ func (l *LogHook) Fire(entry *log.Entry) error {
 		return err
 	}
 	for _, writer := range l.writers {
+
 		_, err := writer.Write(data)
 		if err != nil {
 			continue
@@ -64,6 +65,7 @@ func (l *LogHook) SetFormat(format log.Formatter) {
 			// todo
 		}
 	}
+
 	log.SetFormatter(format)
 	l.format = format
 }

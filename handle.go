@@ -23,11 +23,27 @@ var (
 	lock      sync.Mutex
 )
 
+//M
+/*
+	通过id从插件列表获取插件
+	所有的插件队列都实现了该接口
+*/
 type M interface {
 	get(id string) (interface{}, bool)
 }
 
 type (
+
+	/**
+	     * @Description: 命令冷却的结构体
+		    types: 冷却设置的类型
+		    long: cd的长短，若types为rand则表示随机数的最大值
+	*/
+	coolDown struct {
+		Types string `json:"types"`
+		Long  int    `json:"long"`
+	}
+
 	PretreatmentHandle struct {
 		BaseHandle
 		disableGroup []int
@@ -70,7 +86,10 @@ type (
 		rules        []Rule
 		weight       int
 		block        bool
+		cd           coolDown
+		lastUseTime  int64
 	}
+
 	metaHandle struct {
 		BaseHandle
 		disableGroup []int
@@ -122,51 +141,42 @@ func OnEndWith(str string) *messageHandle {
 	return c
 }
 
+// OnConnect
+/**
+ * @Description: 在bot进行连接使响应
+ * @return *connectHandle
+ * example
+ */
 func OnConnect() *connectHandle {
 	return &connectHandle{}
 }
 
+// OnDisConnect
+/**
+ * @Description: 在bot断开连接时进行响应
+ * @return *disConnectHandle
+ * example
+ */
 func OnDisConnect() *disConnectHandle {
 	return &disConnectHandle{}
 }
 
-func (d *disConnectHandle) SetPluginName(name string) *disConnectHandle {
-	d.Name = name
-	return d
-}
-
-func (d *disConnectHandle) AddHandle(f func(selfId int)) {
-	d.HandleType = "disConnect"
-	lock.Lock()
-	pluginNum++
-	d.ID = strconv.Itoa(pluginNum)
-	lock.Unlock()
-	d.Enable = true
-	d.handle = f
-	if d.Name == "" {
-		d.Name = getFunctionName(f, '/')
-	}
-	DisConnectHandles = append(DisConnectHandles, d)
-
-}
-
+// SetPluginName
+/**
+ * @Description: 设置插件名称
+ * @receiver c
+ * @param name  插件名称
+ * @return *connectHandle
+ * example
+ */
 func (c *connectHandle) SetPluginName(name string) *connectHandle {
 	c.Name = name
 	return c
 }
 
-func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
-	c.HandleType = "connect"
-	lock.Lock()
-	pluginNum++
-	c.ID = strconv.Itoa(pluginNum)
-	lock.Unlock()
-	c.Enable = true
-	c.handle = f
-	if c.Name == "" {
-		c.Name = getFunctionName(f, '/')
-	}
-	ConnectHandles = append(ConnectHandles, c)
+func (d *disConnectHandle) SetPluginName(name string) *disConnectHandle {
+	d.Name = name
+	return d
 }
 
 func (m *metaHandle) SetPluginName(name string) *metaHandle {
@@ -216,6 +226,11 @@ type CommandInt interface {
 	SetWeight(weight int) *commandHandle
 	SetBlock(IsBlock bool) *commandHandle
 	AddHandle(func(event Event, bot *Bot, args []string))
+	SetCD(types string, long int)
+}
+
+func (c *commandHandle) SetCD(types string, long int) {
+	c.cd = coolDown{Types: types, Long: long}
 }
 
 type NoticeInt interface {
@@ -256,31 +271,120 @@ type MetaInt interface {
 // OnCommand
 /**
  * @Description: command触发handle
- * @param command
- * @return commandHandle
- */
+ * @param 该插件响应的命令
+ * @return *commandHandle
+ * example
+	leafBot.OnCommand("天气").
+	SetPluginName("天气插件").
+	AddHandle(
+		func(event LeafBot.Event,bot *leafBot.Bot,args []string){
+
+		})
+*/
 func OnCommand(command string) *commandHandle {
 	return &commandHandle{command: command}
 }
 
+// OnNotice
+/**
+ * @Description: notice触发handle
+ * @param noticeType  notice事件类型
+ * @return *noticeHandle
+ * example
+	响应戳一戳事件的示例
+	leafBot.OnNotice(leafBot.NoticeTypeApi.Notify).
+		SetPluginName("poke").
+		AddRule(
+			func(event leafBot.Event, bot *leafBot.Bot) bool {
+				if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
+					return false
+				}
+				return true
+			}).SetWeight(10).
+		AddHandle(
+			func(event leafBot.Event, bot *leafBot.Bot) {
+
+			})
+*/
 func OnNotice(noticeType string) *noticeHandle {
 	return &noticeHandle{noticeType: noticeType}
 }
 
+// OnMessage
+/**
+ * @Description: message事件触发handle
+ * @param messageType  message事件的子类型
+ * @return *messageHandle
+ * example
+ */
 func OnMessage(messageType string) *messageHandle {
 	return &messageHandle{messageType: messageType}
 }
 
+// OnRequest
+/**
+ * @Description: request事件触发handle
+ * @param requestType  request事件的子类型
+ * @return *requestHandle
+ * example
+ */
 func OnRequest(requestType string) *requestHandle {
 	return &requestHandle{requestType: requestType}
 }
 
+// OnMeta
+/**
+ * @Description: 元事件触发handle
+ * @return *metaHandle
+ * example
+ */
 func OnMeta() *metaHandle {
 	return &metaHandle{}
 }
 
+// OnPretreatment
+/**
+ * @Description: 预处理事件
+ * @return *PretreatmentHandle
+ * example
+ */
 func OnPretreatment() *PretreatmentHandle {
 	return &PretreatmentHandle{}
+}
+
+func (d *disConnectHandle) AddHandle(f func(selfId int)) {
+	d.HandleType = "disConnect"
+	lock.Lock()
+	pluginNum++
+	d.ID = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	d.Enable = true
+	d.handle = f
+	if d.Name == "" {
+		d.Name = getFunctionName(f, '/')
+	}
+	DisConnectHandles = append(DisConnectHandles, d)
+
+}
+
+// AddHandle
+/**
+ * @Description:
+ * @receiver c
+ * @param f
+ */
+func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
+	c.HandleType = "connect"
+	lock.Lock()
+	pluginNum++
+	c.ID = strconv.Itoa(pluginNum)
+	lock.Unlock()
+	c.Enable = true
+	c.handle = f
+	if c.Name == "" {
+		c.Name = getFunctionName(f, '/')
+	}
+	ConnectHandles = append(ConnectHandles, c)
 }
 
 // AddRule

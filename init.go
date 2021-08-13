@@ -60,7 +60,7 @@ func init() {
 	}
 	f := &easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
-		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
+		LogFormat:       "[%time%] [LeafBot] [%lvl%]: %msg% \n",
 	}
 	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
 	hook = utils.NewLogHook(f, levels, w)
@@ -172,7 +172,7 @@ func initConfig(path string, fileType string) error {
 func InitBots() {
 	go eventMain()
 
-	http.HandleFunc("/cqhttp/ws", EventHandle)
+	http.HandleFunc("/cqhttp/ws", eventHandle)
 	for _, bot := range DefaultConfig.Bots {
 		run(bot)
 

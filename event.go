@@ -320,10 +320,25 @@ func getFunctionName(i interface{}, seps ...rune) string {
 	return ""
 }
 
-// processMessageHandle
-/*
-   @Description:
-*/
+func checkCD(handle *commandHandle) bool {
+	if handle.cd.Types == "" || handle.cd.Types == "default" {
+		if int(time.Now().Unix()-handle.lastUseTime) >= handle.cd.Long {
+			return true
+		}
+	} else if handle.cd.Types == "rand" {
+		rand.Seed(time.Now().UnixNano())
+		cd := rand.Intn(handle.cd.Long)
+		if int(time.Now().Unix()-handle.lastUseTime) >= cd {
+			return true
+		}
+	}
+	return false
+}
+
+/**
+ * @Description: 处理message的响应器
+ * example
+ */
 func processMessageHandle() {
 	defer func() {
 		err := recover()
@@ -331,10 +346,13 @@ func processMessageHandle() {
 			log.Infoln(err)
 		}
 	}()
+	// 从队列中取出事件
 	event := <-c
+	// 判断是否触发命令的flag
 	a := 0
 	log.Debugln(len(CommandHandles))
 
+	// 执行连续会话的handle，如果返回true说明该消息被连续对话捕捉
 	if sessionHandle(event) {
 		return
 	}
@@ -371,7 +389,13 @@ func processMessageHandle() {
 			continue
 		}
 		if commands[0] == handle.command {
+
+			// 检查cd是否达到
+			if !checkCD(handle) {
+				continue
+			}
 			a = 1
+			handle.lastUseTime = time.Now().Unix()
 
 			go func(handle2 *commandHandle) {
 				defer func() {
@@ -391,7 +415,13 @@ func processMessageHandle() {
 		}
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
+
+				// 检查cd是否达到
+				if !checkCD(handle) {
+					continue
+				}
 				a = 1
+				handle.lastUseTime = time.Now().Unix()
 				go func(handle2 *commandHandle) {
 					defer func() {
 						err := recover()
@@ -410,6 +440,7 @@ func processMessageHandle() {
 			}
 		}
 	}
+	// 如果出发了command事件则不再触发message事件
 	if a == 1 {
 		return
 	}
