@@ -14,7 +14,7 @@ import (
 	"os"
 	"path"
 	"strconv"
-	"strings" //nolint:gci
+	//nolint:gci
 	"time"
 )
 
@@ -40,6 +40,7 @@ type Config struct {
 			GroupId int    `json:"group_id"`
 			Message string `json:"message"`
 		} `json:"welcome"`
+		GithubToken string `json:"github_token"`
 	} `json:"plugins"`
 }
 
@@ -53,6 +54,12 @@ var (
    @Description:
 */
 func init() {
+	err := initConfig(JSON)
+	if err != nil {
+		log.Infoln("配置文件加载失败或者不存在")
+		log.Infoln("将启用默认配置文件")
+		LoadConfig()
+	}
 	w, err := rotatelogs.New(path.Join("logs", "%Y-%m-%d.log"), rotatelogs.WithRotationTime(time.Hour*24))
 	if err != nil {
 		log.Errorf("rotatelogs init err: %v", err)
@@ -73,31 +80,20 @@ const (
 	YAML  = "yaml"
 )
 
-func LoadConfig(path string, fileType string) {
-	err := initConfig(path, fileType)
-	if err != nil {
-		log.Infoln("配置文件加载失败或者不存在")
-		log.Infoln("将启用默认配置文件")
-	} else {
-		return
-	}
+func LoadConfig() {
+
 	input := ""
-	log.Infoln("请输入机器人账号,多个账号用逗号进行分割：")
-	_, err = fmt.Scanln(&input)
+	log.Infoln("请输入机器人账号")
+	_, err := fmt.Scanln(&input)
 	if err != nil {
 		log.Panicln(err)
 	}
-	selfIds := strings.Split(input, ",")
-	for i, id := range selfIds {
-		b := new(Bot)
-		b.Name = fmt.Sprintf("bot%d", i)
-		b.SelfId, err = strconv.Atoi(id)
-		if err != nil {
-			log.Panicln("输入的账号有错\n" + err.Error())
-		}
-		DefaultConfig.Bots = append(DefaultConfig.Bots, b)
+
+	selfID, err := strconv.Atoi(input)
+	if err != nil {
+		log.Errorln("输入有误")
 	}
-	writeGoConfig(DefaultConfig.Bots[0].SelfId)
+	writeGoConfig(selfID)
 	DefaultConfig.Admin = 0
 	DefaultConfig.Host = "127.0.0.1"
 	DefaultConfig.Port = 8080
@@ -117,6 +113,7 @@ func LoadConfig(path string, fileType string) {
 		log.Infoln("写入配置到文件失败")
 	}
 	log.Infoln("成功写入默认配置到config.json")
+	log.Infoln("程序将在五秒后重启")
 }
 
 // InitConfig
@@ -125,10 +122,10 @@ func LoadConfig(path string, fileType string) {
    @param path string
    @param fileType string
 */
-func initConfig(path string, fileType string) error {
-	file, err := os.OpenFile(path, os.O_RDWR, 0777)
+func initConfig(fileType string) error {
+	file, err := os.OpenFile("config.json", os.O_RDWR, 0777)
 	if err != nil {
-		file, err = os.OpenFile("config.json", os.O_RDWR, 0777)
+		file, err = os.OpenFile("./config/config.json", os.O_RDWR, 0777)
 		if err != nil {
 			return err
 		}
@@ -159,8 +156,8 @@ func initConfig(path string, fileType string) error {
 		return err
 	}
 
-	hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
-	log.Infoln("已加载配置：" + string(data))
+	//hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
+	// log.Infoln("已加载配置：" + string(data))
 	//log.SetLevel(log.DebugLevel)
 	return err
 }

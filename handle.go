@@ -226,11 +226,12 @@ type CommandInt interface {
 	SetWeight(weight int) *commandHandle
 	SetBlock(IsBlock bool) *commandHandle
 	AddHandle(func(event Event, bot *Bot, args []string))
-	SetCD(types string, long int)
+	SetCD(types string, long int) *commandHandle
 }
 
-func (c *commandHandle) SetCD(types string, long int) {
+func (c *commandHandle) SetCD(types string, long int) *commandHandle {
 	c.cd = coolDown{Types: types, Long: long}
+	return c
 }
 
 type NoticeInt interface {

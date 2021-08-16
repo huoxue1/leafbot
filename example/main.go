@@ -7,6 +7,7 @@ import (
 	"github.com/3343780376/leafBot/plugins"
 	"github.com/3343780376/leafBot/plugins/autoReply"
 	"github.com/3343780376/leafBot/plugins/blacklist"
+	"github.com/3343780376/leafBot/plugins/github"
 	"github.com/3343780376/leafBot/plugins/groupWelcome"
 	"github.com/3343780376/leafBot/plugins/manager"
 	_ "github.com/3343780376/leafBot/plugins/poke"
@@ -41,15 +42,14 @@ func init() {
 	plugins.UseFlashImage(0)       // 加载闪照破解插件
 	plugins.UseFlashImageToGroup() //加载闪照破解后发到对应群的插件
 
+	github.PluginInit()
+
 	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
 	_ = autoReply.Load("./config/data.json")
 	//加载自动回复插件
 }
 
 func main() {
-	dir, _ := os.Getwd() // 获取当前路径
-
-	leafBot.LoadConfig(dir+"/config/config.json", leafBot.JSON)
 
 	var port int
 	if len(os.Args) > 1 {
