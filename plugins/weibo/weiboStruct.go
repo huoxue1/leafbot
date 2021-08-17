@@ -1,5 +1,8 @@
 package weibo
 
+// Weibo
+// @Description:
+//
 type Weibo struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

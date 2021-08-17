@@ -7,6 +7,7 @@ import (
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
 	"github.com/fogleman/gg"
+	"github.com/mxschmitt/playwright-go"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
@@ -29,26 +30,64 @@ func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
 		return
 	}
 	if len(args) < 1 {
-		draw(10)
+		draw(50)
+		srcByte, err := ioutil.ReadFile("./plugins/weibo/weibo.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		res := base64.StdEncoding.EncodeToString(srcByte)
+
+		bot.Send(event, message.Image("base64://"+res))
 	} else {
 		limit, err := strconv.Atoi(args[0])
 		if err != nil {
 			return
 		}
-		if limit > 50 {
+		if limit > 50 || limit < 0 {
 			bot.Send(event, []message.MessageSegment{message.Text("非法参数"), message.At(int64(event.UserId))})
 			return
 		}
-		draw(limit)
+		//draw(limit)
+		api, err := getDataAlApi(50)
+		if err != nil {
+			bot.Send(event, message.Text("api获取错误"+err.Error()))
+			return
+		}
+		bot.Send(event, message.Image("base64://"+base64.StdEncoding.EncodeToString(getWeibo(fmt.Sprintf("https://s.weibo.com/weibo?q=%v&Refer=top", api.Data[limit-1].HotWord)))))
 	}
-	srcByte, err := ioutil.ReadFile("./plugins/weibo/weibo.png")
+
+	//getWeibo(0)
+}
+
+func getWeibo(url string) []byte {
+	pw, err := playwright.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("could not start playwright: %v", err)
+	}
+	browser, err := pw.Chromium.Launch()
+	if err != nil {
+		log.Fatalf("could not launch browser: %v", err)
 	}
 
-	res := base64.StdEncoding.EncodeToString(srcByte)
+	page, err := browser.NewPage()
 
-	bot.Send(event, message.Image("base64://"+res))
+	defer func() {
+		page.Close()
+		pw.Stop()
+	}()
+	if err != nil {
+		log.Fatalf("could not create page: %v", err)
+	}
+	if _, err = page.Goto(url); err != nil {
+		log.Fatalf("could not goto: %v", err)
+	}
+	data, err := page.Screenshot(playwright.PageScreenshotOptions{
+		Path:     playwright.String("pla.png"),
+		FullPage: playwright.Bool(true),
+	})
+	return data
+
 }
 
 func draw(limit int) {

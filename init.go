@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"github.com/3343780376/leafBot/utils"
 	"github.com/hjson/hjson-go" //nolint:gci
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	rotates "github.com/lestrrat-go/file-rotatelogs"
 	log "github.com/sirupsen/logrus"
-	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
@@ -60,18 +59,23 @@ func init() {
 		log.Infoln("将启用默认配置文件")
 		LoadConfig()
 	}
-	w, err := rotatelogs.New(path.Join("logs", "%Y-%m-%d.log"), rotatelogs.WithRotationTime(time.Hour*24))
+	w, err := rotates.New(path.Join("logs", "%Y-%m-%d.log"), rotates.WithRotationTime(time.Hour*24))
 	if err != nil {
-		log.Errorf("rotatelogs init err: %v", err)
+		log.Errorf("rotates init err: %v", err)
 		panic(err)
 	}
-	f := &easy.Formatter{
-		TimestampFormat: "2006-01-02 15:04:05",
-		LogFormat:       "[%time%] [LeafBot] [%lvl%]: %msg% \n",
+	f := &utils.LogFormat{
+		TimeStampFormat: "2006-01-02 15:04:05",
+		LogContent:      "[%time%] [LeafBot] [%lvl%]: %msg% \n",
 	}
 	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
 	hook = utils.NewLogHook(f, levels, w)
 	log.AddHook(hook)
+	level, err := log.ParseLevel(DefaultConfig.LogLevel)
+	if err != nil {
+		level = log.DebugLevel
+	}
+	log.SetLevel(level)
 }
 
 const (

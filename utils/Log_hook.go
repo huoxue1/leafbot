@@ -74,18 +74,19 @@ func (l *LogHook) AddWriter(writer ...io.Writer) {
 	l.writers = append(l.writers, writer...)
 }
 
-func (l *LogHook) AddLevel(level ...log.Level) {
-	l.levels = append(l.levels, level...)
-
-}
+//func (l *LogHook) AddLevel(level ...log.Level) {
+//	l.levels = append(l.levels, level...)
+//
+//}
 
 func NewLogHook(formatter log.Formatter, levels []log.Level, writers ...io.Writer) *LogHook {
 	hook := &LogHook{
 		lock:    new(sync.Mutex),
 		LogChan: make(chan string, 10),
+		levels:  levels,
 	}
 	hook.AddWriter(writers...)
-	hook.AddLevel(levels...)
+	// hook.AddLevel(levels...)
 	hook.SetFormat(formatter)
 	return hook
 }

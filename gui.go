@@ -8,6 +8,7 @@ package leafBot
 import ( //nolint:gci
 
 	"embed"
+	"fmt"
 	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -116,7 +117,7 @@ func InitWindow() {
 					event := <-hook.LogChan
 					err = logConn.WriteMessage(websocket.TextMessage, []byte(event))
 					if err != nil {
-						log.Debugln("前端日志消息发送失败" + err.Error())
+						fmt.Println("前端日志消息发送失败" + err.Error())
 						continue
 					}
 				}
@@ -146,7 +147,7 @@ func data(ctx *gin.Context) {
 			for {
 				_, m, err := dataCoon.ReadMessage()
 				if err != nil {
-					log.Debugln("接收消息失败" + err.Error())
+					fmt.Println("接收消息失败" + err.Error())
 					break
 				}
 				if string(m) == "ping" {
@@ -162,7 +163,7 @@ func data(ctx *gin.Context) {
 				log.Debugln("已向前端发送信息")
 				err = dataCoon.WriteJSON(&event)
 				if err != nil {
-					log.Debugln("消息发送失败" + err.Error())
+					fmt.Println("消息发送失败" + err.Error())
 					continue
 				}
 			}

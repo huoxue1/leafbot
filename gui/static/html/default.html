@@ -380,8 +380,8 @@
     ws1.onmessage = function (message) {
         var content = message.data
         content = content.replace(" [LeafBot] "," ")
-        console.log(content.toString().substring(0,29));
-        console.log(content.toString().substring(29))
+        // console.log(content.toString().substring(0,29));
+        // console.log(content.toString().substring(29))
         var mes = "<tr><td class='red'>"+content.toString().substring(0,29)+"</td>"+"<td>"+content.toString().substring(29)+"</td></tr>"
         document.getElementById("log_body").innerHTML += mes
     }
