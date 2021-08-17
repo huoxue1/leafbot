@@ -1,0 +1,8 @@
+dist/
+./config/config.json
+*.log
+*.exe
+*.png
+*.txt
+*.json
+*_test.go
