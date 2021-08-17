@@ -118,6 +118,9 @@ func LoadConfig() {
 	}
 	log.Infoln("成功写入默认配置到config.json")
 	log.Infoln("程序将在五秒后重启")
+	time.Sleep(5000)
+	os.Exit(3)
+	ui.Close()
 }
 
 // InitConfig

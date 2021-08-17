@@ -34,6 +34,7 @@ var upGrader = websocket.Upgrader{
 var (
 	logConn  *websocket.Conn
 	dataCoon *websocket.Conn
+	ui       lorca.UI
 )
 
 func InitWindow() {
@@ -42,7 +43,8 @@ func InitWindow() {
 		log.Infoln(err)
 	}()
 	go func() {
-		ui, err := lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
+		var err error
+		ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
 		go func() {
 			c := make(chan os.Signal)
 			signal.Notify(c) //nolint:govet
