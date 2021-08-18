@@ -6,6 +6,7 @@ import (
 )
 
 func GetPWScreen(url string) ([]byte, error) {
+
 	pw, err := playwright.Run()
 	if err != nil {
 		log.Errorf("could not start playwright: %v", err)
@@ -31,7 +32,6 @@ func GetPWScreen(url string) ([]byte, error) {
 		log.Fatalf("could not goto: %v", err)
 	}
 	data, err := page.Screenshot(playwright.PageScreenshotOptions{
-		Path:     playwright.String("pla.png"),
 		FullPage: playwright.Bool(true),
 	})
 	return data, err

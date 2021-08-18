@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/3343780376/leafBot"
 	"github.com/3343780376/leafBot/message"
+	"github.com/3343780376/leafBot/utils"
 	"github.com/fogleman/gg"
 	"github.com/mxschmitt/playwright-go"
 	log "github.com/sirupsen/logrus"
@@ -54,7 +55,12 @@ func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
 			bot.Send(event, message.Text("api获取错误"+err.Error()))
 			return
 		}
-		bot.Send(event, message.Image("base64://"+base64.StdEncoding.EncodeToString(getWeibo(fmt.Sprintf("https://s.weibo.com/weibo?q=%v&Refer=top", api.Data[limit-1].HotWord)))))
+		data, err := utils.GetPWScreen(fmt.Sprintf("https://s.weibo.com/weibo?q=%v&Refer=top", api.Data[limit-1].HotWord))
+		if err != nil {
+			bot.Send(event, err.Error())
+			return
+		}
+		bot.Send(event, message.Image("base64://"+base64.StdEncoding.EncodeToString(data)))
 	}
 
 	//getWeibo(0)
