@@ -29,7 +29,8 @@ func GetPWScreen(url string) ([]byte, error) {
 		return nil, err
 	}
 	if _, err = page.Goto(url); err != nil {
-		log.Fatalf("could not goto: %v", err)
+		log.Errorf("could not goto: %v", err)
+		return nil, err
 	}
 	data, err := page.Screenshot(playwright.PageScreenshotOptions{
 		FullPage: playwright.Bool(true),
