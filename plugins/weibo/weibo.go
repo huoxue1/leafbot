@@ -55,6 +55,7 @@ func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
 			bot.Send(event, message.Text("api获取错误"+err.Error()))
 			return
 		}
+		bot.Send(event, message.Text("downloading image ......"))
 		data, err := utils.GetPWScreen(fmt.Sprintf("https://s.weibo.com/weibo?q=%v&Refer=top", api.Data[limit-1].HotWord))
 		if err != nil {
 			bot.Send(event, err.Error())

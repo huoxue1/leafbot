@@ -41,7 +41,7 @@ func init() {
 	plugins.UseTranslateHandle()   // 加载翻译插件
 	plugins.UseFlashImage(0)       // 加载闪照破解插件
 	plugins.UseFlashImageToGroup() //加载闪照破解后发到对应群的插件
-
+	plugins.WebSiteScreenInit()
 	github.PluginInit()
 
 	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
