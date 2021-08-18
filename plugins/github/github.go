@@ -62,12 +62,12 @@ func PluginInit() {
 		SetWeight(10).
 		SetBlock(false).
 		SetCD("default", 0).
-		AddHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-			if len(args) < 1 {
+		AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			if len(state.Args) < 1 {
 				bot.Send(event, "请输入你需要解析的仓库，例如\n>github huoxue1/leafBot")
 				return
 			}
-			msg, err := getResponseMsg(strings.Split(args[0], "/")[0], strings.Split(args[0], "/")[1])
+			msg, err := getResponseMsg(strings.Split(state.Args[0], "/")[0], strings.Split(state.Args[0], "/")[1])
 			if err != nil {
 				bot.Send(event, "仓库获取失败"+err.Error())
 			}

@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -405,7 +406,12 @@ func processMessageHandle() {
 						log.Errorln(err)
 					}
 				}()
-				handle2.handle(event, GetBotById(event.SelfId), commands[1:])
+				handle2.handle(event, GetBotById(event.SelfId), State{
+					Args:        commands[1:],
+					Cmd:         handle2.command,
+					Allies:      handle2.allies,
+					RegexResult: nil,
+				})
 			}(handle)
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
@@ -413,6 +419,35 @@ func processMessageHandle() {
 				return
 			}
 		}
+
+		// 处理正则匹配
+		if handle.command == "" && handle.regexMatcher != "" {
+			compile := regexp.MustCompile(handle.regexMatcher)
+			if compile.MatchString(event.Message.CQString()) {
+
+				go func(handle2 *commandHandle) {
+					defer func() {
+						err := recover()
+						if err != nil {
+							log.Errorln(handle2.Name + "发生不可挽回的错误")
+							log.Errorln(err)
+						}
+					}()
+					handle2.handle(event, GetBotById(event.SelfId), State{
+						Args:        commands[1:],
+						Cmd:         handle2.regexMatcher,
+						Allies:      handle2.allies,
+						RegexResult: compile.FindStringSubmatch(event.Message.CQString()),
+					})
+				}(handle)
+				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
+				if handle.block {
+					return
+				}
+			}
+		}
+
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 
@@ -430,7 +465,12 @@ func processMessageHandle() {
 							log.Errorln(err)
 						}
 					}()
-					handle2.handle(event, GetBotById(event.SelfId), commands[1:])
+					handle2.handle(event, GetBotById(event.SelfId), State{
+						Args:        commands[1:],
+						Cmd:         handle2.command,
+						Allies:      handle2.allies,
+						RegexResult: nil,
+					})
 				}(handle)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))

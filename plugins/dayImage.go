@@ -24,15 +24,15 @@ func UseDayImage() {
 		SetBlock(false).
 		AddAllies("一图").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-				if len(args) == 0 {
+			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+				if len(state.Args) == 0 {
 					image, err := getDayImage(0)
 					if err != nil {
 						return
 					}
 					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, []message.MessageSegment{message.Text(image.Bing.Copyright), message.Image(image.Bing.URL)})
 				} else {
-					day, _ := strconv.Atoi(args[0])
+					day, _ := strconv.Atoi(state.Args[0])
 					image, err := getDayImage(day)
 					if err != nil {
 						return

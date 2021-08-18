@@ -25,12 +25,12 @@ func init() {
 		AddHandle(weiBoHandle)
 }
 
-func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
+func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
 	if leafBot.DefaultConfig.Plugins.AlApiToken == "" {
 		bot.Send(event, message.Text("未检测到alapitoken，请联系bot管理员为其配置。\n申请地址https://admin.alapi.cn/api_manager/token_manager"))
 		return
 	}
-	if len(args) < 1 {
+	if len(state.Args) < 1 {
 		draw(50)
 		srcByte, err := ioutil.ReadFile("./plugins/weibo/weibo.png")
 		if err != nil {
@@ -41,7 +41,7 @@ func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, args []string) {
 
 		bot.Send(event, message.Image("base64://"+res))
 	} else {
-		limit, err := strconv.Atoi(args[0])
+		limit, err := strconv.Atoi(state.Args[0])
 		if err != nil {
 			return
 		}

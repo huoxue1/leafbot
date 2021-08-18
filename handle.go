@@ -32,6 +32,16 @@ type M interface {
 	get(id string) (interface{}, bool)
 }
 
+// State
+// @Description: sdk处理消息后将内容传递给plugin
+//
+type State struct {
+	Args        []string
+	Cmd         string
+	Allies      []string
+	RegexResult []string
+}
+
 type (
 
 	/**
@@ -80,7 +90,7 @@ type (
 	commandHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot, args []string)
+		handle       func(event Event, bot *Bot, state State)
 		command      string
 		allies       []string
 		rules        []Rule
@@ -88,6 +98,7 @@ type (
 		block        bool
 		cd           coolDown
 		lastUseTime  int64
+		regexMatcher string
 	}
 
 	metaHandle struct {
@@ -125,6 +136,12 @@ func OnStartWith(str string) *messageHandle {
 		return false
 	})
 	return c
+}
+
+func OnRegex(regex string) *commandHandle {
+
+	return &commandHandle{regexMatcher: regex}
+
 }
 
 func OnEndWith(str string) *messageHandle {
@@ -487,7 +504,7 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  * @receiver c
  * @param f
  */
-func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, args []string)) {
+func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, state State)) {
 	c.HandleType = "command"
 	c.handle = f
 	c.Enable = true

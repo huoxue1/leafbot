@@ -15,7 +15,7 @@ func init() {
 		SetBlock(false).
 		SetCD("default", 0).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
 				bot.Send(event, message.Text("downloading image ......"))
 				screen, err := utils.GetPWScreen("https://huoxue1.github.io/leafBot/Features")
 				if err != nil {

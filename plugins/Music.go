@@ -231,20 +231,20 @@ func UseMusicHandle() {
 		AddAllies("查询歌曲").
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-				switch len(args) {
+			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+				switch len(state.Args) {
 				case 0:
 					{
 						bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId, message.Text("请正确输入参数"))
 					}
 				case 1:
 					{
-						if args[0] == "help" {
+						if state.Args[0] == "help" {
 							bot.SendMsg(event.MetaEventType, event.UserId, event.GroupId,
 								message.Text("歌曲查询命令未：\n/music或者查询歌曲\n\n"+
 									"第一个参数为搜索信息，第二个参数为返回条数"))
 						} else {
-							music, err := searchMusic(args[0], 10, 0)
+							music, err := searchMusic(state.Args[0], 10, 0)
 							if err != nil {
 								bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 								return
@@ -260,8 +260,8 @@ func UseMusicHandle() {
 					}
 				case 2:
 					{
-						limit, _ := strconv.Atoi(args[1])
-						music, err := searchMusic(args[0], limit, 0)
+						limit, _ := strconv.Atoi(state.Args[1])
+						music, err := searchMusic(state.Args[0], limit, 0)
 						if err != nil {
 							bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 							return
@@ -276,9 +276,9 @@ func UseMusicHandle() {
 					}
 				case 3:
 					{
-						limit, _ := strconv.Atoi(args[1])
-						offset, _ := strconv.Atoi(args[2])
-						music, err := searchMusic(args[0], limit, offset)
+						limit, _ := strconv.Atoi(state.Args[1])
+						offset, _ := strconv.Atoi(state.Args[2])
+						music, err := searchMusic(state.Args[0], limit, offset)
 						if err != nil {
 							bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Text("点歌出现错误，\n"+err.Error()))
 							return
@@ -300,20 +300,20 @@ func UseMusicHandle() {
 		AddAllies("点歌").
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, args []string) {
-				if len(args) < 2 {
+			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+				if len(state.Args) < 2 {
 					bot.Send(event, message.Text("请输入正确的参数"))
 					return
 				}
-				if args[0] == "163" {
-					if args[1] == "id" {
-						id, err := strconv.Atoi(args[2])
+				if state.Args[0] == "163" {
+					if state.Args[1] == "id" {
+						id, err := strconv.Atoi(state.Args[2])
 						if err != nil {
 							return
 						}
 						bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Music("163", int64(id)))
 					} else {
-						name := args[1]
+						name := state.Args[1]
 						music, err := searchMusic(name, 1, 0)
 						log.Debugln(music)
 						if err != nil {
@@ -323,16 +323,16 @@ func UseMusicHandle() {
 						bot.Send(event, message.Music("163", int64(music.Result.Songs[0].ID)))
 
 					}
-				} else if args[0] == "qq" {
+				} else if state.Args[0] == "qq" {
 					log.Infoln("已触发qq音乐点歌")
-					if args[1] == "id" {
-						id, err := strconv.Atoi(args[2])
+					if state.Args[1] == "id" {
+						id, err := strconv.Atoi(state.Args[2])
 						if err != nil {
 							return
 						}
 						bot.Send(event, message.Music("qq", int64(id)))
 					} else {
-						name := args[1]
+						name := state.Args[1]
 						music, err := searchMusicByQQ(name, 1, 0)
 						if err != nil {
 							bot.Send(event, message.Text("搜索歌曲错误\n"+err.Error()))

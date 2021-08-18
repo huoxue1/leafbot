@@ -13,7 +13,7 @@ func Ocr() {
 			}
 		}
 		return false
-	}).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, args []string) {
+	}).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
 		images := event.GetImages()
 		if len(images) < 1 {
 			return
