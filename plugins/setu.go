@@ -12,7 +12,7 @@ func UseSetuHandle() {
 		SetBlock(false).
 		SetPluginName("色图").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				if len(state.Args) < 1 {
 					bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.Image("https://acg.toubiec.cn/random.php"))
 				} else if state.Args[0] == "r18" {

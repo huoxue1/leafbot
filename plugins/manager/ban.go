@@ -14,7 +14,7 @@ func InitBanPlugin() {
 		SetWeight(10).
 		SetPluginName("禁言").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				msgs := event.GetMsg()
 				var banIds []int
 				duration := 10

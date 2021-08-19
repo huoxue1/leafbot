@@ -40,6 +40,7 @@ type State struct {
 	Cmd         string
 	Allies      []string
 	RegexResult []string
+	Data        map[string]interface{}
 }
 
 type (
@@ -90,7 +91,7 @@ type (
 	commandHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot, state State)
+		handle       func(event Event, bot *Bot, state *State)
 		command      string
 		allies       []string
 		rules        []Rule
@@ -126,7 +127,7 @@ type (
 
 func OnStartWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot) bool {
+	c.AddRule(func(event Event, bot *Bot, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -146,7 +147,7 @@ func OnRegex(regex string) *commandHandle {
 
 func OnEndWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot) bool {
+	c.AddRule(func(event Event, bot *Bot, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -504,7 +505,7 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  * @receiver c
  * @param f
  */
-func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, state State)) {
+func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, state *State)) {
 	c.HandleType = "command"
 	c.handle = f
 	c.Enable = true

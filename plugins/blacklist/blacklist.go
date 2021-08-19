@@ -65,7 +65,7 @@ func InitBlackList(filePath string) {
 		SetBlock(false).
 		AddAllies("添加黑名单用户").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				datas := strings.Split(state.Args[0], ",")
 				for _, s := range datas {
 					data, _ := strconv.Atoi(s)
@@ -87,7 +87,7 @@ func InitBlackList(filePath string) {
 		SetPluginName("添加黑名单群").
 		AddAllies("添加黑名单群").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				datas := strings.Split(state.Args[0], ",")
 				for _, s := range datas {
 					data, _ := strconv.Atoi(s)
@@ -103,7 +103,7 @@ func InitBlackList(filePath string) {
 
 			})
 
-	leafBot.OnCommand("/get_blackList").SetPluginName("获取黑名单列表").AddRule(leafBot.OnlySuperUser).AddAllies("获取黑名单").SetBlock(false).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+	leafBot.OnCommand("/get_blackList").SetPluginName("获取黑名单列表").AddRule(leafBot.OnlySuperUser).AddAllies("获取黑名单").SetBlock(false).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 		msg := "黑名单：\n用户\n"
 		for _, user := range BlackList.Users {
 			msg += fmt.Sprintf("\t%d\n", user)

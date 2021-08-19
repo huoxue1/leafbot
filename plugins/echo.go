@@ -13,7 +13,7 @@ func UseEchoHandle() {
 		SetWeight(1).
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				bot.SendMsg(event.MessageType, event.UserId, event.GroupId, message.ParseMessageFromString(state.Args[0]))
 			})
 

@@ -3,7 +3,7 @@ package leafBot
 import "strconv"
 
 type (
-	Rule func(Event, *Bot) bool
+	Rule func(Event, *Bot, *State) bool
 )
 
 // OnlyToMe
@@ -14,7 +14,7 @@ type (
  * @return bool  返回是否验证通过该rule
  * example
  */
-func OnlyToMe(event Event, bot *Bot) bool {
+func OnlyToMe(event Event, _ *Bot, _ *State) bool {
 	if event.MessageType == "private" {
 		return true
 	}
@@ -36,7 +36,7 @@ func OnlyToMe(event Event, bot *Bot) bool {
  * @return bool  是否通过该rule验证
  * example
  */
-func OnlySuperUser(event Event, bot *Bot) bool {
+func OnlySuperUser(event Event, bot *Bot, _ *State) bool {
 	if event.UserId == DefaultConfig.Admin {
 		return true
 	}

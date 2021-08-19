@@ -61,7 +61,7 @@ func sessionHandle(event Event) bool {
 	DISUSE := false
 	sessions.Range(func(key, value interface{}) bool {
 		s := value.(session)
-		rule := checkRule(event, s.rules)
+		rule := checkRule(event, s.rules, &State{})
 		if s.rules == nil {
 			rule = true
 		}
@@ -198,7 +198,7 @@ func viewsMessage(event Event) {
 	// 执行所有预处理handle
 	for _, handle := range PretreatmentHandles {
 		bot := GetBotById(event.SelfId)
-		rule := checkRule(event, handle.rules)
+		rule := checkRule(event, handle.rules, &State{})
 		// 执行rule判断
 		if !rule || !handle.Enable {
 			continue
@@ -253,7 +253,7 @@ func processNoticeHandle(event Event) {
 		event.NoticeType, event.GroupId, event.UserId))
 
 	for _, v := range NoticeHandles {
-		rule := checkRule(event, v.rules)
+		rule := checkRule(event, v.rules, &State{})
 		if !rule || !v.Enable {
 			continue
 		}
@@ -282,9 +282,9 @@ func processNoticeHandle(event Event) {
    @param rules []Rule
    @return bool
 */
-func checkRule(event Event, rules []Rule) bool {
+func checkRule(event Event, rules []Rule, state *State) bool {
 	for _, rule := range rules {
-		check := rule(event, GetBotById(event.SelfId))
+		check := rule(event, GetBotById(event.SelfId), state)
 		if !check {
 			return false
 		}
@@ -358,6 +358,7 @@ func processMessageHandle() {
 		return
 	}
 
+	state := new(State)
 	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
 
@@ -373,7 +374,7 @@ func processMessageHandle() {
 		}
 
 		// 检查rules
-		rule := checkRule(event, handle.rules)
+		rule := checkRule(event, handle.rules, state)
 		if handle.rules == nil {
 			rule = true
 		}
@@ -381,9 +382,9 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		if event.Message[0].Type != "text" {
-			continue
-		}
+		//if event.Message[0].Type != "text" {
+		//	continue
+		//}
 
 		commands := strings.Split(event.Message[0].Data["text"], " ")
 		if len(commands) < 1 {
@@ -406,12 +407,11 @@ func processMessageHandle() {
 						log.Errorln(err)
 					}
 				}()
-				handle2.handle(event, GetBotById(event.SelfId), State{
-					Args:        commands[1:],
-					Cmd:         handle2.command,
-					Allies:      handle2.allies,
-					RegexResult: nil,
-				})
+				state.Args = commands[1:]
+				state.Cmd = handle.command
+				state.Allies = handle.allies
+
+				handle2.handle(event, GetBotById(event.SelfId), state)
 			}(handle)
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
@@ -433,12 +433,11 @@ func processMessageHandle() {
 							log.Errorln(err)
 						}
 					}()
-					handle2.handle(event, GetBotById(event.SelfId), State{
-						Args:        commands[1:],
-						Cmd:         handle2.regexMatcher,
-						Allies:      handle2.allies,
-						RegexResult: compile.FindStringSubmatch(event.Message.CQString()),
-					})
+					state.Args = commands[1:]
+					state.Cmd = handle.regexMatcher
+					state.Allies = handle.allies
+					state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
+					handle2.handle(event, GetBotById(event.SelfId), state)
 				}(handle)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
@@ -465,7 +464,7 @@ func processMessageHandle() {
 							log.Errorln(err)
 						}
 					}()
-					handle2.handle(event, GetBotById(event.SelfId), State{
+					handle2.handle(event, GetBotById(event.SelfId), &State{
 						Args:        commands[1:],
 						Cmd:         handle2.command,
 						Allies:      handle2.allies,
@@ -498,7 +497,7 @@ func processMessageHandle() {
 			}
 		}
 
-		rule := checkRule(event, handle.rules)
+		rule := checkRule(event, handle.rules, &State{})
 		if !rule || !handle.Enable {
 			continue
 		}
@@ -535,7 +534,7 @@ func processRequestEventHandle(event Event) {
 			}
 		}
 
-		rule := checkRule(event, handle.rules)
+		rule := checkRule(event, handle.rules, &State{})
 		if handle.rules == nil {
 			rule = true
 		}
@@ -575,7 +574,7 @@ func processMetaEventHandle(event Event) {
 			}
 		}
 
-		rule := checkRule(event, handle.rules)
+		rule := checkRule(event, handle.rules, &State{})
 		if handle.rules == nil {
 			rule = true
 		}

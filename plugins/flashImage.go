@@ -56,7 +56,7 @@ func UseFlashImageToGroup() {
 
 }
 
-func FlashMessageRule(event leafBot.Event, bot *leafBot.Bot) bool {
+func FlashMessageRule(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) bool {
 	for _, msg := range event.GetMsg() {
 		if msg.Type == "image" && msg.Data["type"] == "flash" {
 			return true

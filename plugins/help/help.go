@@ -17,7 +17,7 @@ func init() {
 		SetWeight(12).
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				bot.Send(event, append(message.Message{}, message.Image("base64://"+base64.StdEncoding.EncodeToString(image)), message.At(int64(event.UserId))))
 			})
 }

@@ -70,7 +70,7 @@ func main() {
 	bot: 触发事件的bot指针
 	args ： 命令的参数，为一个数组
 */
-func Weather(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+func Weather(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 	m := map[string]string{"北京": "晴", "山东": "下雨"}
 	// 调用发送消息的api，会根据messageType自动回复
 	bot.SendMsg(event.MessageType, event.UserId, event.GroupId,

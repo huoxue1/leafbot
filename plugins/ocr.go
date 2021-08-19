@@ -6,14 +6,14 @@ import (
 )
 
 func Ocr() {
-	leafBot.OnCommand("/ocr").SetPluginName("图片ocr").SetBlock(false).SetWeight(10).AddRule(func(event leafBot.Event, bot *leafBot.Bot) bool {
+	leafBot.OnCommand("/ocr").SetPluginName("图片ocr").SetBlock(false).SetWeight(10).AddRule(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) bool {
 		for _, mess := range event.Message {
 			if mess.Type == "image" {
 				return true
 			}
 		}
 		return false
-	}).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+	}).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 		images := event.GetImages()
 		if len(images) < 1 {
 			return

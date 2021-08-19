@@ -15,7 +15,7 @@ func UseCreateQrCode() {
 		SetPluginName("二维码生成").
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				switch len(state.Args) {
 				case 0:
 					{

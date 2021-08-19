@@ -25,7 +25,7 @@ func init() {
 		AddHandle(weiBoHandle)
 }
 
-func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+func weiBoHandle(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 	if leafBot.DefaultConfig.Plugins.AlApiToken == "" {
 		bot.Send(event, message.Text("未检测到alapitoken，请联系bot管理员为其配置。\n申请地址https://admin.alapi.cn/api_manager/token_manager"))
 		return

@@ -231,7 +231,7 @@ func UseMusicHandle() {
 		AddAllies("查询歌曲").
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				switch len(state.Args) {
 				case 0:
 					{
@@ -300,7 +300,7 @@ func UseMusicHandle() {
 		AddAllies("点歌").
 		SetBlock(false).
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				if len(state.Args) < 2 {
 					bot.Send(event, message.Text("请输入正确的参数"))
 					return

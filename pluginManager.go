@@ -25,7 +25,7 @@ type BaseHandle struct {
 
 func InitPluginManager() {
 	OnCommand("/ban_plugin").SetPluginName("禁用插件").
-		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state State) {
+		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
 			return
@@ -35,7 +35,7 @@ func InitPluginManager() {
 	})
 
 	OnCommand("/use_plugin").SetPluginName("启用插件").
-		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state State) {
+		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
 			return
@@ -45,7 +45,7 @@ func InitPluginManager() {
 	})
 
 	OnCommand("/get_plugins").SetPluginName("获取插件列表").
-		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state State) {
+		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
 		//	msg += s+"\n"

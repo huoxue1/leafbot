@@ -39,7 +39,7 @@ func Load(filePath string) error {
 
 	leafBot.OnMessage("").
 		SetPluginName("自动回复").
-		AddRule(func(event leafBot.Event, bot *leafBot.Bot) bool {
+		AddRule(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) bool {
 
 			if leafBot.DefaultConfig.Plugins.EnableReplyTome {
 				if event.MessageType == "private" {

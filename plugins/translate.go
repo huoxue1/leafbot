@@ -28,7 +28,7 @@ func UseTranslateHandle() {
 		SetBlock(false).
 		SetPluginName("翻译").
 		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot, state leafBot.State) {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				//if len(args)<1 {
 				//	bot.Send(event,"请输入正确的参数")
 				//	return
@@ -37,7 +37,7 @@ func UseTranslateHandle() {
 				case 0:
 					{
 						bot.Send(event, message.Text("请输入需要翻译的内容"))
-						nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot) bool {
+						nextEvent, err := bot.GetOneEvent(func(event1 leafBot.Event, bot2 *leafBot.Bot, state *leafBot.State) bool {
 							if event1.UserId == event.UserId && event1.GroupId == event.GroupId {
 								return true
 							}

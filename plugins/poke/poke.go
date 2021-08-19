@@ -15,7 +15,7 @@ func init() {
 		AddRule(leafBot.OnlySuperUser).
 		SetPluginName("poke").
 		AddRule(
-			func(event leafBot.Event, bot *leafBot.Bot) bool {
+			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) bool {
 				if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
 					return false
 				}
