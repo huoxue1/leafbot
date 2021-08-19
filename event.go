@@ -97,7 +97,11 @@ func eventMain() {
 		log.Infoln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range CommandHandles {
-		log.Infoln("已加载command响应器：" + handle.command)
+		if handle.command == "" && handle.regexMatcher != "" {
+			log.Infoln("已加载regex响应器：" + handle.command)
+		} else {
+			log.Infoln("已加载command响应器：" + handle.command)
+		}
 	}
 	for _, handle := range MessageHandles {
 		log.Infoln("已加载message响应器：" + getFunctionName(handle.handle, '/'))
@@ -421,31 +425,6 @@ func processMessageHandle() {
 		}
 
 		// 处理正则匹配
-		if handle.command == "" && handle.regexMatcher != "" {
-			compile := regexp.MustCompile(handle.regexMatcher)
-			if compile.MatchString(event.Message.CQString()) {
-
-				go func(handle2 *commandHandle) {
-					defer func() {
-						err := recover()
-						if err != nil {
-							log.Errorln(handle2.Name + "发生不可挽回的错误")
-							log.Errorln(err)
-						}
-					}()
-					state.Args = commands[1:]
-					state.Cmd = handle.regexMatcher
-					state.Allies = handle.allies
-					state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
-					handle2.handle(event, GetBotById(event.SelfId), state)
-				}(handle)
-				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
-				if handle.block {
-					return
-				}
-			}
-		}
 
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
@@ -478,7 +457,34 @@ func processMessageHandle() {
 				}
 			}
 		}
+
+		if handle.command == "" && handle.regexMatcher != "" {
+			compile := regexp.MustCompile(handle.regexMatcher)
+			if compile.MatchString(event.Message.CQString()) {
+
+				go func(handle2 *commandHandle) {
+					defer func() {
+						err := recover()
+						if err != nil {
+							log.Errorln(handle2.Name + "发生不可挽回的错误")
+							log.Errorln(err)
+						}
+					}()
+					state.Args = commands[1:]
+					state.Cmd = handle.regexMatcher
+					state.Allies = handle.allies
+					state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
+					handle2.handle(event, GetBotById(event.SelfId), state)
+				}(handle)
+				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
+				if handle.block {
+					return
+				}
+			}
+		}
 	}
+
 	// 如果出发了command事件则不再触发message事件
 	if a == 1 {
 		return

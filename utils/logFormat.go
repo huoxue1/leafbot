@@ -51,8 +51,8 @@ func (f *LogFormat) Format(entry *log.Entry) ([]byte, error) {
 		}
 	}
 
-	if len(output) > 150 {
-		output = output[0:150]
+	if len(output) > 500 {
+		output = output[0:500] + "..."
 	}
 
 	return []byte(output), nil
