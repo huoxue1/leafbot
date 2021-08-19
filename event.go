@@ -98,7 +98,7 @@ func eventMain() {
 	}
 	for _, handle := range CommandHandles {
 		if handle.command == "" && handle.regexMatcher != "" {
-			log.Infoln("已加载regex响应器：" + handle.command)
+			log.Infoln("已加载regex响应器：" + handle.Name)
 		} else {
 			log.Infoln("已加载command响应器：" + handle.command)
 		}
