@@ -1,0 +1,5 @@
+package parseMessage
+
+func Init() {
+
+}

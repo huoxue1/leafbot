@@ -394,7 +394,7 @@ func processMessageHandle() {
 		if len(commands) < 1 {
 			continue
 		}
-		if commands[0] == handle.command {
+		if commands[0] == handle.command && handle.command != "" {
 
 			// 检查cd是否达到
 			if !checkCD(handle) {
