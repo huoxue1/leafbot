@@ -5,7 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetPWScreen(url string) ([]byte, error) {
+func GetPWScreen(url string, device string) ([]byte, error) {
 
 	pw, err := playwright.Run()
 	if err != nil {
@@ -18,7 +18,14 @@ func GetPWScreen(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	page, err := browser.NewPage()
+	var userAgent string
+	if device == "android" {
+		userAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Mobile Safari/537.36 Edg/92.0.902.67"
+	} else {
+		userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.67"
+	}
+
+	page, err := browser.NewPage(playwright.BrowserNewContextOptions{UserAgent: playwright.String(userAgent)})
 
 	defer func() {
 		page.Close()

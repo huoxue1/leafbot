@@ -42,7 +42,7 @@ func PluginInit() {
 				compile := regexp.MustCompile(`https://github.com/([^\s]*)/([^\s]*)`)
 				return compile.MatchString(event.Message.CQString())
 			}).
-		AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+		AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 			log.Infoln("成功匹配")
 			compile := regexp.MustCompile(`https://github.com/([^\s]*)/([^\s]*)`)
 			datas := compile.FindStringSubmatch(event.Message.ExtractPlainText())

@@ -17,7 +17,7 @@ func init() {
 		AddHandle(
 			func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 				bot.Send(event, message.Text("downloading image ......"))
-				screen, err := utils.GetPWScreen("https://huoxue1.github.io/leafBot/Features")
+				screen, err := utils.GetPWScreen("https://huoxue1.github.io/leafBot/Features", "")
 				if err != nil {
 					bot.Send(event, message.Text("获取帮助文档失败"+err.Error()))
 					return

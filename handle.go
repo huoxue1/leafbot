@@ -65,7 +65,7 @@ type (
 	messageHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot)
+		handle       func(event Event, bot *Bot, state *State)
 		messageType  string
 		rules        []Rule
 		weight       int
@@ -640,7 +640,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
  * @receiver m
  * @param f
  */
-func (m *messageHandle) AddHandle(f func(event Event, bot *Bot)) {
+func (m *messageHandle) AddHandle(f func(event Event, bot *Bot, state *State)) {
 	m.HandleType = "message"
 	m.handle = f
 	m.Enable = true

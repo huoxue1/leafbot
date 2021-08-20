@@ -56,7 +56,7 @@ func Load(filePath string) error {
 			} else {
 				return true
 			}
-		}).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot) {
+		}).SetWeight(10).AddHandle(func(event leafBot.Event, bot *leafBot.Bot, state *leafBot.State) {
 		all := strings.ReplaceAll(event.Message.CQString(), fmt.Sprintf("[CQ:at,qq=%d]", event.SelfId), "")
 		result := content.Get(strings.TrimSpace(all))
 		if result.String() == "" {

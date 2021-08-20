@@ -502,8 +502,8 @@ func processMessageHandle() {
 				return
 			}
 		}
-
-		rule := checkRule(event, handle.rules, &State{})
+		s := new(State)
+		rule := checkRule(event, handle.rules, s)
 		if !rule || !handle.Enable {
 			continue
 		}
@@ -515,7 +515,7 @@ func processMessageHandle() {
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(event, GetBotById(event.SelfId))
+			handle2.handle(event, GetBotById(event.SelfId), s)
 		}(handle)
 	}
 }
