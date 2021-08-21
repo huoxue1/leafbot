@@ -2,8 +2,8 @@ package plugins
 
 import (
 	"fmt" //nolint:gci
-	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
+	"github.com/huoxue1/leafBot"
+	"github.com/huoxue1/leafBot/message"
 )
 
 // UseCreateQrCode 生成二维码的插件

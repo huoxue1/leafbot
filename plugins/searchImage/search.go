@@ -1,9 +1,9 @@
 package searchImage
 
 import (
-	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/huoxue1/leafBot"
+	"github.com/huoxue1/leafBot/message"
 	"net/http"
 )
 

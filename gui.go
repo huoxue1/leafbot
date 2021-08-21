@@ -9,9 +9,9 @@ import ( //nolint:gci
 
 	"embed"
 	"fmt"
-	"github.com/3343780376/leafBot/message"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/huoxue1/leafBot/message"
 	"github.com/huoxue1/lorca"
 	log "github.com/sirupsen/logrus"
 	"io"

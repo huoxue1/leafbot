@@ -1,7 +1,7 @@
 // Package groupWelcome /**
 package groupWelcome
 
-import "github.com/3343780376/leafBot"
+import "github.com/huoxue1/leafBot"
 
 // WelcomeInit
 /**

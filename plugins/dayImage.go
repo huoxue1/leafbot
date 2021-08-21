@@ -2,8 +2,8 @@ package plugins
 
 import (
 	"encoding/json"
-	"github.com/3343780376/leafBot" //nolint:gci
-	"github.com/3343780376/leafBot/message"
+	"github.com/huoxue1/leafBot" //nolint:gci
+	"github.com/huoxue1/leafBot/message"
 	"io"
 	"net/http"
 	"strconv"

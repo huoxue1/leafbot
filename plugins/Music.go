@@ -3,8 +3,8 @@ package plugins
 import (
 	"encoding/json"
 	"errors"
-	"github.com/3343780376/leafBot" //nolint:gci
-	"github.com/3343780376/leafBot/message"
+	"github.com/huoxue1/leafBot" //nolint:gci
+	"github.com/huoxue1/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"

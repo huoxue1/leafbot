@@ -1,8 +1,8 @@
 package manager
 
 import ( //nolint:gci
-	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
+	"github.com/huoxue1/leafBot"
+	"github.com/huoxue1/leafBot/message"
 	"strconv" //nolint:gci
 )
 

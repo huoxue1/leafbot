@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/3343780376/leafBot/message" //nolint:gci
+	"github.com/huoxue1/leafBot/message" //nolint:gci
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"

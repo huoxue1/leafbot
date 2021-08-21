@@ -2,9 +2,9 @@ package plugins
 
 import (
 	"encoding/base64"
-	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
-	"github.com/3343780376/leafBot/utils"
+	"github.com/huoxue1/leafBot"
+	"github.com/huoxue1/leafBot/message"
+	"github.com/huoxue1/leafBot/utils"
 )
 
 func init() {

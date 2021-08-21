@@ -2,17 +2,17 @@ package main
 
 import (
 	"flag" //nolint:gci
-	"github.com/3343780376/leafBot"
-	"github.com/3343780376/leafBot/message"
-	"github.com/3343780376/leafBot/plugins"
-	"github.com/3343780376/leafBot/plugins/autoReply"
-	"github.com/3343780376/leafBot/plugins/blacklist"
-	"github.com/3343780376/leafBot/plugins/github"
-	"github.com/3343780376/leafBot/plugins/groupWelcome"
-	"github.com/3343780376/leafBot/plugins/manager"
-	_ "github.com/3343780376/leafBot/plugins/poke"
-	"github.com/3343780376/leafBot/plugins/searchImage"
-	_ "github.com/3343780376/leafBot/plugins/weibo"
+	"github.com/huoxue1/leafBot"
+	"github.com/huoxue1/leafBot/message"
+	"github.com/huoxue1/leafBot/plugins"
+	"github.com/huoxue1/leafBot/plugins/autoReply"
+	"github.com/huoxue1/leafBot/plugins/blacklist"
+	"github.com/huoxue1/leafBot/plugins/github"
+	"github.com/huoxue1/leafBot/plugins/groupWelcome"
+	"github.com/huoxue1/leafBot/plugins/manager"
+	_ "github.com/huoxue1/leafBot/plugins/poke"
+	"github.com/huoxue1/leafBot/plugins/searchImage"
+	_ "github.com/huoxue1/leafBot/plugins/weibo"
 	"os" //nolint:gci
 	"runtime"
 )

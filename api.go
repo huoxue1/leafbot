@@ -2,7 +2,7 @@ package leafBot
 
 import (
 	"encoding/json" //nolint:gci
-	message2 "github.com/3343780376/leafBot/message"
+	message2 "github.com/huoxue1/leafBot/message"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 )

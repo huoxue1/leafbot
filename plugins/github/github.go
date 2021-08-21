@@ -2,8 +2,8 @@ package github
 
 import (
 	"fmt" //nolint:gci
-	"github.com/3343780376/leafBot"
 	"github.com/google/go-github/v35/github"
+	"github.com/huoxue1/leafBot"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"

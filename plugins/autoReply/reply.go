@@ -3,7 +3,7 @@ package autoReply
 import (
 	_ "embed"
 	"fmt"
-	"github.com/3343780376/leafBot"
+	"github.com/huoxue1/leafBot"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"io"

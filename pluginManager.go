@@ -2,8 +2,8 @@ package leafBot
 
 import (
 	"encoding/base64" //nolint:gci
-	"github.com/3343780376/leafBot/message"
 	"github.com/fogleman/gg"
+	"github.com/huoxue1/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil" //nolint:gci
 	"strconv"
