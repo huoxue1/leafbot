@@ -345,6 +345,7 @@ func checkCD(handle *commandHandle) bool {
  * example
  */
 func processMessageHandle() {
+
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -356,7 +357,7 @@ func processMessageHandle() {
 	// 判断是否触发命令的flag
 	a := 0
 	log.Debugln(len(CommandHandles))
-
+	eventData, _ := json.Marshal(event)
 	// 执行连续会话的handle，如果返回true说明该消息被连续对话捕捉
 	if sessionHandle(event) {
 		return
@@ -418,7 +419,7 @@ func processMessageHandle() {
 				handle2.handle(event, GetBotById(event.SelfId), state)
 			}(handle)
 			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
+				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
 			if handle.block {
 				return
 			}
@@ -451,7 +452,7 @@ func processMessageHandle() {
 					})
 				}(handle)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
 				if handle.block {
 					return
 				}
@@ -477,7 +478,7 @@ func processMessageHandle() {
 					handle2.handle(event, GetBotById(event.SelfId), state)
 				}(handle)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, event.Message, handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.regexMatcher))
 				if handle.block {
 					return
 				}
@@ -491,7 +492,7 @@ func processMessageHandle() {
 	}
 
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
-		event.MessageType, event.GroupId, event.UserId, event.Message))
+		event.MessageType, event.GroupId, event.UserId, eventData))
 	for _, handle := range MessageHandles {
 		if handle.messageType != "" && handle.messageType != event.MessageType {
 			continue
