@@ -134,10 +134,7 @@ func LoadConfig() {
 func initConfig(fileType string) error {
 	file, err := os.OpenFile("./config/config.json", os.O_RDWR, 0777)
 	if err != nil {
-		file, err = os.OpenFile("./config/config.json", os.O_RDWR, 0777)
-		if err != nil {
-			return err
-		}
+		return err
 	}
 	defer func(file *os.File) {
 		err := file.Close()

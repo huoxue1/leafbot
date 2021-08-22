@@ -1,6 +1,7 @@
 package weibo
 
 import (
+	_ "embed"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -16,7 +17,19 @@ import (
 	"strconv"
 )
 
+//go:embed NotoSansBold.ttf
+var fontData []byte
+
 func init() {
+
+	exists, _ := utils.PathExists("./config/NotoSansBold.ttf")
+	if !exists {
+		err := utils.WriteToFile("./config/NotoSansBold.ttf", fontData)
+		if err != nil {
+			log.Infoln("成功写入字体文件NotoSansBold.ttf")
+		}
+	}
+
 	leafBot.OnCommand("/weibo").
 		AddAllies("热搜").
 		SetWeight(10).

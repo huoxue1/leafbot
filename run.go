@@ -17,7 +17,7 @@ func run(bot *Bot) {
 }
 
 func writeGoConfig(selfID int) {
-	err := os.WriteFile("config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
+	err := os.WriteFile(".config/config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
 	if err != nil {
 		return
 	}
