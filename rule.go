@@ -36,7 +36,7 @@ func OnlyToMe(event Event, _ *Bot, _ *State) bool {
  * @return bool  是否通过该rule验证
  * example
  */
-func OnlySuperUser(event Event, bot *Bot, _ *State) bool {
+func OnlySuperUser(event Event, _ *Bot, _ *State) bool {
 	if event.UserId == DefaultConfig.Admin {
 		return true
 	}
@@ -48,7 +48,7 @@ func OnlySuperUser(event Event, bot *Bot, _ *State) bool {
 	return false
 }
 
-func OnlyGroupMessage(event Event, bot *Bot) bool {
+func OnlyGroupMessage(event Event, _ *Bot) bool {
 
 	return event.MessageType == "group"
 }

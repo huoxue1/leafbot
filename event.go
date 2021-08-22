@@ -20,23 +20,18 @@ var (
 	c = make(chan Event, 10)
 )
 
-var ISGUI = true
+var ENABLE = true // 是否启用gui
 
 func init() {
 	if runtime.GOOS != "windows" {
-		ISGUI = false
+		ENABLE = false
 	}
 }
 
-// var
-/**
- * @Description: 通向前端的通道
- * @return unc
- */
 var (
 	MessageChan = make(chan Event, 10)
-	NoticeChan  = make(chan Event, 10)
-	Request     = make(chan Event, 10)
+	//NoticeChan  = make(chan Event, 10)
+	//Request     = make(chan Event, 10)
 )
 
 var (
@@ -92,6 +87,10 @@ func eventMain() {
 	sort.Sort(&RequestHandles)
 	sort.Sort(&NoticeHandles)
 	sort.Sort(&CommandHandles)
+
+	if len(DefaultConfig.CommandStart) == 0 {
+		DefaultConfig.CommandStart = append(DefaultConfig.CommandStart, "")
+	}
 
 	for _, handle := range PretreatmentHandles {
 		log.Infoln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
@@ -224,7 +223,7 @@ func viewsMessage(event Event) {
 	switch event.PostType {
 	case "message":
 		c <- event
-		if ISGUI {
+		if ENABLE {
 			MessageChan <- event
 		}
 		processMessageHandle()
@@ -280,12 +279,14 @@ func processNoticeHandle(event Event) {
 }
 
 // checkRule
-/*
-   @Description:
-   @param event Event
-   @param rules []Rule
-   @return bool
-*/
+/**
+ * @Description:
+ * @param event
+ * @param rules
+ * @param state
+ * @return bool
+ * example
+ */
 func checkRule(event Event, rules []Rule, state *State) bool {
 	for _, rule := range rules {
 		check := rule(event, GetBotById(event.SelfId), state)
@@ -297,12 +298,13 @@ func checkRule(event Event, rules []Rule, state *State) bool {
 }
 
 // getFunctionName
-/*
-   @Description:
-   @param i interface{}
-   @param seps ...rune
-   @return string
-*/
+/**
+ * @Description:
+ * @param i
+ * @param seps
+ * @return string
+ * example
+ */
 func getFunctionName(i interface{}, seps ...rune) string {
 	// 获取函数名称
 	fn := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
@@ -338,6 +340,17 @@ func checkCD(handle *commandHandle) bool {
 		}
 	}
 	return false
+}
+
+func doHandle(handle *commandHandle, event Event, state *State) {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Errorln(handle.Name + "发生不可挽回的错误")
+			log.Errorln(err)
+		}
+	}()
+	handle.handle(event, GetBotById(event.SelfId), state)
 }
 
 /**
@@ -395,38 +408,31 @@ func processMessageHandle() {
 		if len(commands) < 1 {
 			continue
 		}
-		if commands[0] == handle.command && handle.command != "" {
+		for _, start := range DefaultConfig.CommandStart {
+			if commands[0] == start+handle.command && handle.command != "" {
 
-			// 检查cd是否达到
-			if !checkCD(handle) {
-				continue
-			}
-			a = 1
-			handle.lastUseTime = time.Now().Unix()
+				// 检查cd是否达到
+				if !checkCD(handle) {
+					continue
+				}
+				a = 1
+				handle.lastUseTime = time.Now().Unix()
 
-			go func(handle2 *commandHandle) {
-				defer func() {
-					err := recover()
-					if err != nil {
-						log.Errorln(handle2.Name + "发生不可挽回的错误")
-						log.Errorln(err)
-					}
-				}()
 				state.Args = commands[1:]
 				state.Cmd = handle.command
 				state.Allies = handle.allies
 
-				handle2.handle(event, GetBotById(event.SelfId), state)
-			}(handle)
-			log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-				"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
-			if handle.block {
-				return
+				doHandle(handle, event, state)
+
+				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
+				if handle.block {
+					return
+				}
 			}
 		}
 
-		// 处理正则匹配
-
+		// 处理别名匹配
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
 
@@ -436,21 +442,12 @@ func processMessageHandle() {
 				}
 				a = 1
 				handle.lastUseTime = time.Now().Unix()
-				go func(handle2 *commandHandle) {
-					defer func() {
-						err := recover()
-						if err != nil {
-							log.Errorln(handle2.Name + "发生不可挽回的错误")
-							log.Errorln(err)
-						}
-					}()
-					handle2.handle(event, GetBotById(event.SelfId), &State{
-						Args:        commands[1:],
-						Cmd:         handle2.command,
-						Allies:      handle2.allies,
-						RegexResult: nil,
-					})
-				}(handle)
+
+				state.Args = commands[1:]
+				state.Cmd = handle.command
+				state.Allies = handle.allies
+
+				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
 				if handle.block {
@@ -459,24 +456,17 @@ func processMessageHandle() {
 			}
 		}
 
+		// 处理正则匹配
 		if handle.command == "" && handle.regexMatcher != "" {
 			compile := regexp.MustCompile(handle.regexMatcher)
 			if compile.MatchString(event.Message.CQString()) {
 
-				go func(handle2 *commandHandle) {
-					defer func() {
-						err := recover()
-						if err != nil {
-							log.Errorln(handle2.Name + "发生不可挽回的错误")
-							log.Errorln(err)
-						}
-					}()
-					state.Args = commands[1:]
-					state.Cmd = handle.regexMatcher
-					state.Allies = handle.allies
-					state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
-					handle2.handle(event, GetBotById(event.SelfId), state)
-				}(handle)
+				state.Args = commands[1:]
+				state.Cmd = handle.regexMatcher
+				state.Allies = handle.allies
+				state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
+
+				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
 					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.regexMatcher))
 				if handle.block {
@@ -562,10 +552,11 @@ func processRequestEventHandle(event Event) {
 }
 
 // processMetaEventHandle
-/*
-   @Description:
-   @param event Event
-*/
+/**
+ * @Description:
+ * @param event
+ * example
+ */
 func processMetaEventHandle(event Event) {
 	defer func() {
 		err := recover()

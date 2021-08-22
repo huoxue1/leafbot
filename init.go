@@ -25,13 +25,14 @@ type Bot struct {
 }
 
 type Config struct {
-	Bots      []*Bot `json:"bots"`
-	Admin     int    `json:"admin"`
-	Host      string `json:"host"`
-	Port      int    `json:"port"`
-	LogLevel  string `json:"log_level"`
-	SuperUser []int  `json:"super_user"`
-	Plugins   struct {
+	Bots         []*Bot   `json:"bots"`
+	Admin        int      `json:"admin"`
+	Host         string   `json:"host"`
+	Port         int      `json:"port"`
+	LogLevel     string   `json:"log_level"`
+	SuperUser    []int    `json:"super_user"`
+	CommandStart []string `json:"command_start"`
+	Plugins      struct {
 		FlashGroupID    int    `json:"flash_group_id"`
 		AlApiToken      string `json:"al_api_token"`
 		EnableReplyTome bool   `json:"enable_reply_tome"`
@@ -102,12 +103,13 @@ func LoadConfig() {
 	DefaultConfig.Host = "127.0.0.1"
 	DefaultConfig.Port = 8080
 	DefaultConfig.LogLevel = "info"
+	DefaultConfig.CommandStart = []string{"", "/"}
 	config, err := json.MarshalIndent(&DefaultConfig, "", "  ")
 	if err != nil {
 		log.Infoln("json反向序列号失败")
 		return
 	}
-	file, err := os.OpenFile("config.json", os.O_CREATE|os.O_RDWR, 0666)
+	file, err := os.OpenFile("./config/config.json", os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		log.Println("打开config.json文件失败\n" + err.Error())
 		return
@@ -130,7 +132,7 @@ func LoadConfig() {
    @param fileType string
 */
 func initConfig(fileType string) error {
-	file, err := os.OpenFile("config.json", os.O_RDWR, 0777)
+	file, err := os.OpenFile("./config/config.json", os.O_RDWR, 0777)
 	if err != nil {
 		file, err = os.OpenFile("./config/config.json", os.O_RDWR, 0777)
 		if err != nil {

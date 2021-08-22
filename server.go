@@ -115,7 +115,7 @@ func (con *connection) wsClose() {
 
 // eventHandle
 /*
-   @Description: ws的httphandle
+   @Description: ws的Stephane
    @param w http.ResponseWriter
    @param r *http.Request
 */

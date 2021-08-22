@@ -1,8 +1,3 @@
-/**
-2 * @Author :goujiangshan
-3 * @DATA :  16:22
-4 */
-
 package leafBot
 
 import ( //nolint:gci
@@ -47,13 +42,21 @@ func InitWindow() {
 		ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
 		go func() {
 			c := make(chan os.Signal)
-			signal.Notify(c) //nolint:govet
+			signal.Notify(c) //nolint:govt
 			for {
 				log.Infoln(<-c)
-				ui.Close()
+				err := ui.Close()
+				if err != nil {
+					return
+				}
 			}
 		}()
-		defer ui.Close()
+		defer func(ui lorca.UI) {
+			err := ui.Close()
+			if err != nil {
+				fmt.Println("关闭ui失败")
+			}
+		}(ui)
 		if err != nil {
 			log.Panic(err)
 		}
