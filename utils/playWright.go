@@ -35,10 +35,15 @@ func GetPWScreen(url string, device string) ([]byte, error) {
 		log.Errorf("could not create page: %v", err)
 		return nil, err
 	}
-	if _, err = page.Goto(url); err != nil {
+	if _, err = page.Goto(url, playwright.PageGotoOptions{
+		Referer:   nil,
+		Timeout:   playwright.Float(10000),
+		WaitUntil: playwright.WaitUntilStateNetworkidle,
+	}); err != nil {
 		log.Errorf("could not goto: %v", err)
 		return nil, err
 	}
+
 	data, err := page.Screenshot(playwright.PageScreenshotOptions{
 		FullPage: playwright.Bool(true),
 	})

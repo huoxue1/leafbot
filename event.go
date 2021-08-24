@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -353,6 +354,21 @@ func doHandle(handle *commandHandle, event Event, state *State) {
 	handle.handle(event, GetBotById(event.SelfId), state)
 }
 
+func checkOnlyTome(event *Event, state *State) {
+	if event.Message[0].Type == "at" && event.Message[0].Data["qq"] == strconv.Itoa(event.SelfId) {
+		event.Message = event.Message[1:]
+		state.Data["only_tome"] = true
+	}
+	for _, segment := range event.Message {
+		if segment.Type == "at" && segment.Data["qq"] == strconv.Itoa(event.SelfId) {
+			state.Data["only_tome"] = true
+		}
+	}
+	if event.MessageType == "private" {
+		state.Data["only_tome"] = true
+	}
+}
+
 /**
  * @Description: 处理message的响应器
  * example
@@ -377,6 +393,7 @@ func processMessageHandle() {
 	}
 
 	state := new(State)
+	checkOnlyTome(&event, state)
 	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
 
@@ -480,7 +497,8 @@ func processMessageHandle() {
 	if a == 1 {
 		return
 	}
-
+	s := new(State)
+	checkOnlyTome(&event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		event.MessageType, event.GroupId, event.UserId, eventData))
 	for _, handle := range MessageHandles {
@@ -493,7 +511,7 @@ func processMessageHandle() {
 				return
 			}
 		}
-		s := new(State)
+
 		rule := checkRule(event, handle.rules, s)
 		if !rule || !handle.Enable {
 			continue
