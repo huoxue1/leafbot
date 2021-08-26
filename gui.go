@@ -7,6 +7,7 @@ import ( //nolint:gci
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/huoxue1/leafBot/message"
+	"github.com/huoxue1/leafBot/utils"
 	"github.com/huoxue1/lorca"
 	log "github.com/sirupsen/logrus"
 	"io"
@@ -35,7 +36,8 @@ var (
 func InitWindow() {
 	defer func() {
 		err := recover()
-		log.Infoln(err)
+		log.Errorln("初始化gui出现错误")
+		log.Errorln(err)
 	}()
 	go func() {
 		var err error
@@ -46,6 +48,14 @@ func InitWindow() {
 			for {
 				log.Infoln(<-c)
 				err := ui.Close()
+				if err != nil {
+					return
+				}
+				err = utils.PW.Stop()
+				if err != nil {
+					return
+				}
+				err = utils.Browser.Close()
 				if err != nil {
 					return
 				}

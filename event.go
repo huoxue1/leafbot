@@ -195,7 +195,8 @@ func viewsMessage(event Event) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Infoln(err)
+			log.Errorln("消息分类出现不可挽回的错误")
+			log.Errorln(err)
 		}
 	}()
 
@@ -251,7 +252,8 @@ func viewsMessage(event Event) {
 func processNoticeHandle(event Event) {
 	defer func() {
 		err := recover()
-		log.Infoln(err)
+		log.Errorln("notice事件处理器出现错误")
+		log.Errorln(err)
 	}()
 	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 		event.NoticeType, event.GroupId, event.UserId))
@@ -378,7 +380,8 @@ func processMessageHandle() {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Infoln(err)
+			log.Errorln("message事件处理器出现不可挽回的错误")
+			log.Errorln(err)
 		}
 	}()
 	// 从队列中取出事件
@@ -538,7 +541,8 @@ func processRequestEventHandle(event Event) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Infoln(err)
+			log.Errorln(err)
+			log.Errorln("request事件处理器出现不可挽回的错误")
 		}
 	}()
 	for _, handle := range RequestHandles {
@@ -579,7 +583,8 @@ func processMetaEventHandle(event Event) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Infoln(err)
+			log.Errorln("元事件处理器错误")
+			log.Errorln(err)
 		}
 	}()
 	for _, handle := range MetaHandles {
