@@ -441,6 +441,7 @@ func processMessageHandle() {
 				state.Args = commands[1:]
 				state.Cmd = handle.command
 				state.Allies = handle.allies
+				state.Data = make(map[string]interface{})
 
 				doHandle(handle, event, state)
 
@@ -466,6 +467,7 @@ func processMessageHandle() {
 				state.Args = commands[1:]
 				state.Cmd = handle.command
 				state.Allies = handle.allies
+				state.Data = make(map[string]interface{})
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
@@ -485,6 +487,7 @@ func processMessageHandle() {
 				state.Cmd = handle.regexMatcher
 				state.Allies = handle.allies
 				state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
+				state.Data = make(map[string]interface{})
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
@@ -501,6 +504,7 @@ func processMessageHandle() {
 		return
 	}
 	s := new(State)
+	s.Data = make(map[string]interface{})
 	checkOnlyTome(&event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		event.MessageType, event.GroupId, event.UserId, eventData))
