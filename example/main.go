@@ -4,15 +4,6 @@ import (
 	"flag" //nolint:gci
 	"github.com/huoxue1/leafBot"
 	"github.com/huoxue1/leafBot/message"
-	"github.com/huoxue1/leafBot/plugins"
-	"github.com/huoxue1/leafBot/plugins/autoReply"
-	"github.com/huoxue1/leafBot/plugins/blacklist"
-	"github.com/huoxue1/leafBot/plugins/github"
-	"github.com/huoxue1/leafBot/plugins/groupWelcome"
-	"github.com/huoxue1/leafBot/plugins/manager"
-	_ "github.com/huoxue1/leafBot/plugins/poke"
-	"github.com/huoxue1/leafBot/plugins/searchImage"
-	_ "github.com/huoxue1/leafBot/plugins/weibo"
 	"github.com/huoxue1/leafBot/utils"
 	"os" //nolint:gci
 	"runtime"
@@ -25,30 +16,7 @@ func init() {
 	utils.PwInit()
 	//为bot添加weather响应器，命令为 ”/天气“ ,allies为命令别名，
 	//参数格式为一个字符串数组，rule为一个结构体，响应前会先判断所以rules为true，weight为权重，block为是否阻断
-	manager.InitBanPlugin()
-	leafBot.OnCommand("/天气").
-		SetWeight(10).
-		SetPluginName("天气").
-		SetBlock(false).
-		AddHandle(Weather)
-	plugins.Ocr()
-	groupWelcome.WelcomeInit()
-	leafBot.InitPluginManager()
-	searchImage.InitImage()
-	plugins.UseCreateQrCode()      //加载生成二维码插件
-	plugins.UseDayImage()          // 加载每日一图插件
-	plugins.UseEchoHandle()        // 加载echo插件
-	plugins.UseMusicHandle()       // 加载音乐插件
-	plugins.UseSetuHandle()        // 加载涩图插件
-	plugins.UseTranslateHandle()   // 加载翻译插件
-	plugins.UseFlashImage(0)       // 加载闪照破解插件
-	plugins.UseFlashImageToGroup() //加载闪照破解后发到对应群的插件
-	plugins.WebSiteScreenInit()
-	github.PluginInit()
 
-	blacklist.InitBlackList("./config/blackList.json") //加载黑名单插件
-	_ = autoReply.Load("./config/data.json")
-	//加载自动回复插件
 }
 
 func main() {

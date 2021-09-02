@@ -37,42 +37,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     go get github.com/3343780376/leafBot
 ```
 
-## 功能
-
-### 已实现功能
-
-- [x] 戳一戳实现查看服务器状态
-- [x] 微博热搜
-- [x] 自动回复
-- [x] 黑名单管理
-- [x] 每日一图
-- [x] 闪照拦截
-- [x] 二维码生成
-- [x] 翻译插件
-- [x] 点歌插件
-- [x] setu
-- [x] 入群欢迎
-- [x] 插件管理
-
-### 预计实现功能
-
-- [ ] 群管插件，例如禁言，关键词撤回，自动踢人
-
-
-  
-- [ ] 群荣誉提醒
-
-- [ ] p站log实现
-
-- [ ] github自动操作以及搜索
-
-- [ ] bilibili的av号和bv号解析
-
-- [ ] 天气卡片
-
-### 更多功能功能提交issue
-
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/Features.md">详细功能</a>
+## 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
 
 + ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">基础使用</a>
 
@@ -84,9 +49,10 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ### 特别感谢
 
-[wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot)
+[wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot) <借鉴思路>
 
-[Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
+[Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp) <onebot实现>
 
+[nonebot/nonebot2](https://github.com/nonebot/nonebot2) <流程借鉴>
 
 <img src="https://raw.githubusercontent.com/huoxue1/leafBot/master/docs/gui.png" alt="示例">
