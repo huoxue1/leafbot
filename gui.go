@@ -33,63 +33,60 @@ var (
 	ui       lorca.UI
 )
 
+func OpenUi() {
+	var err error
+	ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
+	go func() {
+		c := make(chan os.Signal)
+		signal.Notify(c) //nolint:govt
+		for {
+			log.Infoln(<-c)
+			err := ui.Close()
+			if err != nil {
+				return
+			}
+			err = utils.PW.Stop()
+			if err != nil {
+				return
+			}
+			err = utils.Browser.Close()
+			if err != nil {
+				return
+			}
+		}
+	}()
+	defer func(ui lorca.UI) {
+		err := ui.Close()
+		if err != nil {
+			fmt.Println("关闭ui失败")
+		}
+	}(ui)
+	if err != nil {
+		log.Panic(err)
+	}
+	<-ui.Done()
+	os.Exit(3)
+}
+
 func InitWindow() {
 	defer func() {
 		err := recover()
-		log.Errorln("初始化gui出现错误")
+		log.Errorln("初始化web控制台出现错误")
 		log.Errorln(err)
-	}()
-	go func() {
-		var err error
-		ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
-		go func() {
-			c := make(chan os.Signal)
-			signal.Notify(c) //nolint:govt
-			for {
-				log.Infoln(<-c)
-				err := ui.Close()
-				if err != nil {
-					return
-				}
-				err = utils.PW.Stop()
-				if err != nil {
-					return
-				}
-				err = utils.Browser.Close()
-				if err != nil {
-					return
-				}
-			}
-		}()
-		defer func(ui lorca.UI) {
-			err := ui.Close()
-			if err != nil {
-				fmt.Println("关闭ui失败")
-			}
-		}(ui)
-		if err != nil {
-			log.Panic(err)
-		}
-		<-ui.Done()
-		os.Exit(3)
 	}()
 	if DefaultConfig.LogLevel != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 	}
+	log.Infoln("web页面：http://127.0.0.1:3000")
 	engine := gin.New()
-
 	engine.StaticFS("/static", http.FS(static))
-	//engine.StaticFile("/", "./gui/view/static/html/default.html")
-	//engine.LoadHTMLGlob("./gui/view/html/*.html")
-	//engine.GET("/", func(context *gin.Context) {
-	//	context.HTML(200, "default.html", nil)
-	//})
-
 	engine.POST("/get_config", GetConfig)
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
-
+	engine.GET("/", func(context *gin.Context) {
+		context.Redirect(http.StatusMovedPermanently, "/static/gui/static/html/default.html")
+	})
 	engine.POST("/update_plugin_states", func(context *gin.Context) {
 		id := context.PostForm("id")
 		status, err := strconv.ParseBool(context.PostForm("status"))
@@ -143,7 +140,7 @@ func InitWindow() {
 
 	engine.POST("/send_msg", CallApi)
 	engine.GET("/data", data)
-	if err := engine.Run(":3000"); err != nil {
+	if err := engine.Run("127.0.0.1:3000"); err != nil {
 		log.Debugln(err.Error())
 	}
 
