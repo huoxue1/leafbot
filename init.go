@@ -109,6 +109,14 @@ func LoadConfig() {
 		log.Infoln("json反向序列号失败")
 		return
 	}
+	_, err = os.Stat("./config")
+	if err != nil {
+		err := os.Mkdir("./config", 0666)
+		if err != nil {
+			log.Errorln("创建config文件夹失败")
+			return
+		}
+	}
 	file, err := os.OpenFile("./config/config.json", os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		log.Println("打开config.json文件失败\n" + err.Error())
