@@ -37,5 +37,4 @@ plugins:
     # 配置github_token
     github_token: ""
     # 配置自动同意好友的答案，若配置为空字符串则同意所有请求，可设置多个
-    auto_pass_friend_request:
-        - ""
+    auto_pass_friend_request: []
