@@ -11,6 +11,12 @@ var (
 )
 
 func PwInit() {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Errorln("初始化playwright失败，请查看是否配置playwright")
+		}
+	}()
 	var err error
 	PW, err = playwright.Run()
 	if err != nil {
@@ -24,6 +30,11 @@ func PwInit() {
 
 func GetPWScreen(url string, device string) ([]byte, error) {
 
+	// 判断浏览器是否关闭，若关闭则重新初始化链接
+	connected := Browser.IsConnected()
+	if !connected {
+		PwInit()
+	}
 	var userAgent string
 	if device == "android" {
 		userAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Mobile Safari/537.36 Edg/92.0.902.67"
