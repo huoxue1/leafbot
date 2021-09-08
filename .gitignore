@@ -6,3 +6,4 @@ dist/
 *.txt
 *.json
 *_test.go
+/.idea

@@ -1,6 +1,7 @@
 package leafBot
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"github.com/hjson/hjson-go" //nolint:gci
@@ -17,31 +18,36 @@ import (
 	"time"
 )
 
-type Bot struct {
-	Name string `json:"name"`
+//go:embed config/default_config.yaml
+var defaultConfig []byte
 
-	SelfId int         `json:"self_id"`
-	Client *connection `json:"con"`
+type Bot struct {
+	Name string `json:"name" yaml:"name" hjson:"name"`
+
+	SelfId int         `json:"self_id" yaml:"self_id" hjson:"self_id"`
+	Client *connection `json:"con" yaml:"client" hjson:"client"`
 }
 
 type Config struct {
-	Bots         []*Bot   `json:"bots"`
-	Admin        int      `json:"admin"`
-	Host         string   `json:"host"`
-	Port         int      `json:"port"`
-	LogLevel     string   `json:"log_level"`
-	SuperUser    []int    `json:"super_user"`
-	CommandStart []string `json:"command_start"`
-	Plugins      struct {
-		FlashGroupID    int    `json:"flash_group_id"`
-		AlApiToken      string `json:"al_api_token"`
-		EnableReplyTome bool   `json:"enable_reply_tome"`
+	Bots             []*Bot   `json:"bots" yaml:"bots" hjson:"bots"`
+	Admin            int      `json:"admin" yaml:"admin" hjson:"admin"`
+	Host             string   `json:"host" yaml:"host" hjson:"host"`
+	Port             int      `json:"port" yaml:"port" hjson:"port"`
+	LogLevel         string   `json:"log_level" yaml:"log_level" hjson:"log_level"`
+	SuperUser        []int    `json:"super_user" yaml:"super_user" hjson:"super_user"`
+	CommandStart     []string `json:"command_start" yaml:"command_start" hjson:"command_start"`
+	EnablePlaywright bool     `json:"enable_playwright" yaml:"enable_playwright" hjson:"enable_playwright"`
+	Plugins          struct {
+		FlashGroupID    int    `json:"flash_group_id" yaml:"flash_group_id" hjson:"flash_group_id"`
+		AlApiToken      string `json:"al_api_token" yaml:"al_api_token" hjson:"al_api_token"`
+		EnableReplyTome bool   `json:"enable_reply_tome" yaml:"enable_reply_tome" hjson:"enable_reply_tome"`
 		Welcome         []struct {
-			GroupId int    `json:"group_id"`
-			Message string `json:"message"`
-		} `json:"welcome"`
-		GithubToken string `json:"github_token"`
-	} `json:"plugins"`
+			GroupId int    `json:"group_id" yaml:"group_id" hjson:"group_id"`
+			Message string `json:"message" yaml:"message" hjson:"message"`
+		} `json:"welcome" yaml:"welcome" hjson:"welcome"`
+		GithubToken           string   `json:"github_token" yaml:"github_token" hjson:"github_token"`
+		AutoPassFriendRequest []string `json:"auto_pass_friend_request" yaml:"auto_pass_friend_request" hjson:"auto_pass_friend_request"`
+	} `json:"plugins" yaml:"plugins" hjson:"plugins"`
 }
 
 var (
@@ -54,10 +60,10 @@ var (
    @Description:
 */
 func init() {
-	err := initConfig(JSON)
+	err := initConfig(YAML)
 	if err != nil {
 		log.Infoln("配置文件加载失败或者不存在")
-		log.Infoln("将启用默认配置文件")
+		log.Infoln("将生成默认配置文件")
 		LoadConfig()
 	}
 	w, err := rotates.New(path.Join("logs", "%Y-%m-%d.log"), rotates.WithRotationTime(time.Hour*24))
@@ -99,16 +105,18 @@ func LoadConfig() {
 		log.Errorln("输入有误")
 	}
 	writeGoConfig(selfID)
-	DefaultConfig.Admin = 0
-	DefaultConfig.Host = "127.0.0.1"
-	DefaultConfig.Port = 8080
-	DefaultConfig.LogLevel = "info"
-	DefaultConfig.CommandStart = []string{"", "/"}
-	config, err := json.MarshalIndent(&DefaultConfig, "", "  ")
-	if err != nil {
-		log.Infoln("json反向序列号失败")
-		return
-	}
+	//DefaultConfig.Admin = 0
+	//DefaultConfig.Host = "127.0.0.1"
+	//DefaultConfig.Port = 8080
+	//DefaultConfig.EnablePlaywright = false
+	//DefaultConfig.LogLevel = "info"
+	//DefaultConfig.CommandStart = []string{"", "/"}
+	////config, err := hjson.Marshal(&DefaultConfig)
+	//config,err := yaml.Marshal(&DefaultConfig)
+	//if err != nil {
+	//	log.Infoln("json反向序列号失败")
+	//	return
+	//}
 	_, err = os.Stat("./config")
 	if err != nil {
 		err := os.Mkdir("./config", 0666)
@@ -117,16 +125,16 @@ func LoadConfig() {
 			return
 		}
 	}
-	file, err := os.OpenFile("./config/config.json", os.O_CREATE|os.O_RDWR, 0666)
+	file, err := os.OpenFile("./config/config.yml", os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
-		log.Println("打开config.json文件失败\n" + err.Error())
+		log.Println("打开config.yml文件失败\n" + err.Error())
 		return
 	}
-	_, err = file.WriteString(string(config))
+	_, err = file.Write(defaultConfig)
 	if err != nil {
 		log.Infoln("写入配置到文件失败")
 	}
-	log.Infoln("成功写入默认配置到config.json")
+	log.Infoln("成功写入默认配置到config.yml")
 	log.Infoln("程序将在五秒后重启")
 	time.Sleep(5000)
 	os.Exit(3)
@@ -140,7 +148,7 @@ func LoadConfig() {
    @param fileType string
 */
 func initConfig(fileType string) error {
-	file, err := os.OpenFile("./config/config.json", os.O_RDWR, 0777)
+	file, err := os.OpenFile("./config/config.yml", os.O_RDWR, 0777)
 	if err != nil {
 		return err
 	}
@@ -169,7 +177,7 @@ func initConfig(fileType string) error {
 		log.Errorln(err)
 		return err
 	}
-
+	utils.SetConfig(DefaultConfig.EnablePlaywright)
 	//hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
 	// log.Infoln("已加载配置：" + string(data))
 	//log.SetLevel(log.DebugLevel)
@@ -182,6 +190,9 @@ func initConfig(fileType string) error {
 */
 func InitBots() {
 	go eventMain()
+	if DefaultConfig.EnablePlaywright {
+		go utils.PwInit()
+	}
 
 	http.HandleFunc("/cqhttp/ws", eventHandle)
 	for _, bot := range DefaultConfig.Bots {

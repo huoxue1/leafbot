@@ -1,14 +1,20 @@
 package utils
 
 import (
+	"errors"
 	"github.com/mxschmitt/playwright-go"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	PW      = &playwright.Playwright{}
-	Browser playwright.Browser
+	PW               = &playwright.Playwright{}
+	Browser          playwright.Browser
+	enablePlayWright = false
 )
+
+func SetConfig(enable bool) {
+	enablePlayWright = enable
+}
 
 func PwInit() {
 	defer func() {
@@ -29,6 +35,10 @@ func PwInit() {
 }
 
 func GetPWScreen(url string, device string) ([]byte, error) {
+
+	if !enablePlayWright {
+		return nil, errors.New("未配置playwright")
+	}
 
 	// 判断浏览器是否关闭，若关闭则重新初始化链接
 	connected := Browser.IsConnected()
