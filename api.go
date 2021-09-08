@@ -1084,7 +1084,7 @@ func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
 		Remark  string `json:"remark"`
 	}
 	var d = UseApi{
-		Action: "set_group_add_request",
+		Action: "set_friend_add_request",
 		Params: param{
 			Flag:    flag,
 			Approve: approve,
