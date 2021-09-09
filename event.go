@@ -360,15 +360,29 @@ func checkOnlyTome(event *Event, state *State) {
 	if event.Message[0].Type == "at" && event.Message[0].Data["qq"] == strconv.Itoa(event.SelfId) {
 		event.Message = event.Message[1:]
 		state.Data["only_tome"] = true
+		return
 	}
 	for _, segment := range event.Message {
 		if segment.Type == "at" && segment.Data["qq"] == strconv.Itoa(event.SelfId) {
 			state.Data["only_tome"] = true
+			return
+		}
+	}
+	for _, name := range DefaultConfig.NickName {
+		if event.Message[0].Type == "text" && strings.HasPrefix(event.Message[0].Data["text"], name) {
+			state.Data["only_tome"] = true
+			text := strings.TrimLeft(event.Message[0].Data["text"], name)
+			event.Message[0].Data["text"] = text
+			return
 		}
 	}
 	if event.MessageType == "private" {
 		state.Data["only_tome"] = true
 	}
+	state.Data["only_tome"] = false
+
+	return
+
 }
 
 /**

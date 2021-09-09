@@ -1,7 +1,5 @@
 package leafBot
 
-import "strconv"
-
 type (
 	Rule func(Event, *Bot, *State) bool
 )
@@ -14,15 +12,10 @@ type (
  * @return bool  返回是否验证通过该rule
  * example
  */
-func OnlyToMe(event Event, _ *Bot, _ *State) bool {
-	if event.MessageType == "private" {
+func OnlyToMe(event Event, _ *Bot, state *State) bool {
+	b := state.Data["only_tome"].(bool)
+	if b {
 		return true
-	}
-	msg := event.GetMsg()
-	for _, segment := range msg {
-		if segment.Type == "at" && segment.Data["qq"] == strconv.Itoa(event.SelfId) {
-			return true
-		}
 	}
 
 	return false

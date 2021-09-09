@@ -30,6 +30,7 @@ type Bot struct {
 
 type Config struct {
 	Bots             []*Bot   `json:"bots" yaml:"bots" hjson:"bots"`
+	NickName         []string `json:"nick_name" yaml:"nick_name" hjson:"nick_name"`
 	Admin            int      `json:"admin" yaml:"admin" hjson:"admin"`
 	Host             string   `json:"host" yaml:"host" hjson:"host"`
 	Port             int      `json:"port" yaml:"port" hjson:"port"`
