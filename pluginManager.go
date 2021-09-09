@@ -1,6 +1,7 @@
 package leafBot
 
 import (
+	_ "embed"
 	"encoding/base64" //nolint:gci
 	"github.com/huoxue1/gg"
 	"github.com/huoxue1/leafBot/message"
@@ -8,6 +9,9 @@ import (
 	"io/ioutil" //nolint:gci
 	"strconv"
 )
+
+//go:embed config/NotoSansBold.ttf
+var font []byte
 
 // GetHandleList
 /**
@@ -71,7 +75,7 @@ func draw(data map[string][]BaseHandle) {
 	context.DrawRectangle(0, 0, 900, float64(100*(pluginNum+8)))
 	//weibo, err := getData()
 	context.Fill()
-	if err := context.LoadFontFace("./config/NotoSansBold.ttf", 40); err != nil {
+	if err := context.LoadFontFromBytes(font, 40); err != nil {
 		log.Debugln(err)
 	}
 	context.SetRGB255(0, 0, 0)
