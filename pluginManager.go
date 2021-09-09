@@ -3,15 +3,23 @@ package leafBot
 import (
 	_ "embed"
 	"encoding/base64" //nolint:gci
+	"github.com/guonaihong/gout"
 	"github.com/huoxue1/gg"
 	"github.com/huoxue1/leafBot/message"
+
 	log "github.com/sirupsen/logrus"
 	"io/ioutil" //nolint:gci
 	"strconv"
 )
 
-//go:embed config/NotoSansBold.ttf
 var font []byte
+
+func init() {
+	err := gout.GET("https://specialblog.link/img/202109091139659.ttf").BindBody(&font).Do()
+	if err != nil {
+		return
+	}
+}
 
 // GetHandleList
 /**
