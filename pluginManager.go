@@ -2,7 +2,7 @@ package leafBot
 
 import (
 	"encoding/base64" //nolint:gci
-	"github.com/fogleman/gg"
+	"github.com/huoxue1/gg"
 	"github.com/huoxue1/leafBot/message"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil" //nolint:gci
