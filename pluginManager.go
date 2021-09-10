@@ -19,6 +19,8 @@ func init() {
 	if err != nil {
 		return
 	}
+	InitPluginManager()
+	reloadConfigInit()
 }
 
 // GetHandleList
@@ -33,6 +35,22 @@ type BaseHandle struct {
 	Enable     bool
 	IsAdmin    bool
 	HandleType string
+}
+
+func reloadConfigInit() {
+	OnCommand("/reload").
+		SetPluginName("重载配置").
+		SetWeight(5).
+		SetBlock(true).
+		AddAllies("重载配置").
+		AddRule(OnlySuperUser).
+		AddRule(OnlyToMe).
+		AddHandle(func(event Event, bot *Bot, state *State) {
+			err := initConfig(YAML)
+			if err != nil {
+				bot.Send(event, message.Text("配置文件重载失败"+err.Error()))
+			}
+		})
 }
 
 func InitPluginManager() {
