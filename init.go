@@ -49,6 +49,7 @@ type Config struct {
 		GithubToken           string   `json:"github_token" yaml:"github_token" hjson:"github_token"`
 		AutoPassFriendRequest []string `json:"auto_pass_friend_request" yaml:"auto_pass_friend_request" hjson:"auto_pass_friend_request"`
 	} `json:"plugins" yaml:"plugins" hjson:"plugins"`
+	Datas map[string]interface{} `json:"datas" yaml:"datas" hjson:"datas"`
 }
 
 var (
