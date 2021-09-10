@@ -1,6 +1,8 @@
 package leafBot
 
 import (
+	"github.com/robfig/cron/v3"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 	"sync"
@@ -143,6 +145,17 @@ func OnRegex(regex string) *commandHandle {
 
 	return &commandHandle{regexMatcher: regex}
 
+}
+
+func OnTime(crons string, selfId int, handle func(bot *Bot)) {
+	c2 := cron.New()
+	_, err := c2.AddFunc(crons, func() {
+		handle(GetBotById(selfId))
+	})
+	if err != nil {
+		log.Errorln("运行定时任务出现错误")
+	}
+	c2.Start()
 }
 
 func OnEndWith(str string) *messageHandle {
