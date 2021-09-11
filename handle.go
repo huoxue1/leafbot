@@ -172,6 +172,18 @@ func OnEndWith(str string) *messageHandle {
 	return c
 }
 
+func OnKeyWords(keyword string) *messageHandle {
+	m := &messageHandle{}
+	m.rules = append(m.rules, func(event Event, bot *Bot, state *State) bool {
+		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
+			state.Data["key_word"] = keyword
+			return true
+		}
+		return false
+	})
+	return m
+}
+
 // OnConnect
 /**
  * @Description: 在bot进行连接使响应
