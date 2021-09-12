@@ -2,6 +2,8 @@ package utils
 
 import (
 	log "github.com/sirupsen/logrus"
+	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -37,6 +39,16 @@ func (f *LogFormat) Format(entry *log.Entry) ([]byte, error) {
 
 	level := strings.ToUpper(entry.Level.String())
 	output = strings.Replace(output, "%lvl%", level, 1)
+
+	_, s, _, o := runtime.Caller(8)
+	if o {
+		files := regexp.MustCompile(`plugin(.*?)/`).FindStringSubmatch(s)
+		if len(files) < 1 {
+			output = strings.Replace(output, "%file%", "leafBot", 1)
+		} else {
+			output = strings.Replace(output, "%file%", strings.TrimLeft(files[1], "_"), 1)
+		}
+	}
 
 	for k, val := range entry.Data {
 		switch v := val.(type) {

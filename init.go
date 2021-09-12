@@ -75,7 +75,7 @@ func init() {
 	}
 	f := &utils.LogFormat{
 		TimeStampFormat: "2006-01-02 15:04:05",
-		LogContent:      "[%time%] [LeafBot] [%lvl%]: %msg% \n",
+		LogContent:      "[%time%] [%file%] [%lvl%] : %msg% \n",
 	}
 	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
 	hook = utils.NewLogHook(f, levels, w)
