@@ -8,6 +8,8 @@ import (
 	"sync"
 )
 
+var plugins []*Plugin
+
 type (
 	MessageChain      []*messageHandle
 	RequestChain      []*requestHandle
@@ -19,6 +21,11 @@ type (
 	ConnectChain    []*connectHandle
 	DisConnectChain []*disConnectHandle
 )
+
+type Plugin struct {
+	Name  string
+	Helps []map[string]string
+}
 
 var (
 	pluginNum = 0
@@ -127,6 +134,12 @@ type (
 	}
 )
 
+func NewPlugin(name string) *Plugin {
+	plugin := &Plugin{Name: name}
+	plugins = append(plugins, plugin)
+	return plugin
+}
+
 func OnStartWith(str string) *messageHandle {
 	c := &messageHandle{}
 	c.AddRule(func(event Event, bot *Bot, state *State) bool {
@@ -139,6 +152,95 @@ func OnStartWith(str string) *messageHandle {
 		return false
 	})
 	return c
+}
+
+func (p *Plugin) SetHelp(help map[string]string) {
+	p.Helps = append(p.Helps, help)
+}
+
+func (p *Plugin) OnRegex(regex string) *commandHandle {
+	return &commandHandle{regexMatcher: regex}
+}
+
+func (p *Plugin) OnConnect() *connectHandle {
+	return &connectHandle{}
+}
+
+func (p *Plugin) OnDisConnect() *disConnectHandle {
+	return &disConnectHandle{}
+}
+func (p *Plugin) OnCommand(command string) *commandHandle {
+	return &commandHandle{command: command}
+}
+func (p *Plugin) OnNotice(noticeType string) *noticeHandle {
+	return &noticeHandle{noticeType: noticeType}
+}
+
+func (p *Plugin) OnMessage(messageType string) *messageHandle {
+	return &messageHandle{messageType: messageType}
+}
+
+func (p *Plugin) OnRequest(requestType string) *requestHandle {
+	return &requestHandle{requestType: requestType}
+}
+
+func (p *Plugin) OnMeta() *metaHandle {
+	return &metaHandle{}
+}
+
+func (p *Plugin) OnPretreatment() *PretreatmentHandle {
+	return &PretreatmentHandle{}
+}
+
+func (p *Plugin) OnStartWith(str string) *messageHandle {
+	c := &messageHandle{}
+	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+		if event.Message[0].Type != "text" {
+			return false
+		}
+		if strings.HasPrefix(event.Message[0].Data["text"], str) {
+			return true
+		}
+		return false
+	})
+	return c
+}
+
+func (p *Plugin) OnTime(crons string, selfId int, handle func(bot *Bot)) {
+	c2 := cron.New()
+	_, err := c2.AddFunc(crons, func() {
+		handle(GetBotById(selfId))
+	})
+	if err != nil {
+		log.Errorln("运行定时任务出现错误")
+	}
+	c2.Start()
+}
+
+func (p *Plugin) OnEndWith(str string) *messageHandle {
+	c := &messageHandle{}
+	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+		if event.Message[0].Type != "text" {
+			return false
+		}
+		if strings.HasSuffix(event.Message[0].Data["text"], str) {
+			return true
+		}
+		return false
+	})
+	return c
+}
+
+func (p *Plugin) OnKeyWords(keyword string) *messageHandle {
+	m := &messageHandle{}
+	m.rules = append(m.rules, func(event Event, bot *Bot, state *State) bool {
+		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
+			state.Data["key_word"] = keyword
+			return true
+		}
+		return false
+	})
+	return m
 }
 
 func OnRegex(regex string) *commandHandle {

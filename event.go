@@ -93,27 +93,31 @@ func eventMain() {
 		DefaultConfig.CommandStart = append(DefaultConfig.CommandStart, "")
 	}
 
+	for _, plugin := range plugins {
+		log.Infoln("已加载插件 ==》 " + plugin.Name)
+	}
+
 	for _, handle := range PretreatmentHandles {
-		log.Infoln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
+		log.Debugln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range CommandHandles {
 		if handle.command == "" && handle.regexMatcher != "" {
-			log.Infoln("已加载regex响应器：" + handle.Name)
+			log.Debugln("已加载regex响应器：" + handle.Name)
 		} else {
-			log.Infoln("已加载command响应器：" + handle.command)
+			log.Debugln("已加载command响应器：" + handle.command)
 		}
 	}
 	for _, handle := range MessageHandles {
-		log.Infoln("已加载message响应器：" + getFunctionName(handle.handle, '/'))
+		log.Debugln("已加载message响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range RequestHandles {
-		log.Infoln("已加载request响应器：" + getFunctionName(handle.handle, '/'))
+		log.Debugln("已加载request响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range NoticeHandles {
-		log.Infoln("已加载notice响应器：" + getFunctionName(handle.handle, '/'))
+		log.Debugln("已加载notice响应器：" + getFunctionName(handle.handle, '/'))
 	}
 	for _, handle := range MetaHandles {
-		log.Infoln("已加载meta响应器：" + getFunctionName(handle.handle, '/'))
+		log.Debugln("已加载meta响应器：" + getFunctionName(handle.handle, '/'))
 	}
 
 	go func() {

@@ -38,7 +38,11 @@ type BaseHandle struct {
 }
 
 func reloadConfigInit() {
-	OnCommand("/reload").
+
+	plugin := NewPlugin("配置重载")
+	plugin.SetHelp(map[string]string{"reload": "重载leafBot的配置文件"})
+
+	plugin.OnCommand("reload").
 		SetPluginName("重载配置").
 		SetWeight(5).
 		SetBlock(true).
@@ -54,7 +58,13 @@ func reloadConfigInit() {
 }
 
 func InitPluginManager() {
-	OnCommand("/ban_plugin").SetPluginName("禁用插件").
+	plugin := NewPlugin("插件管理")
+	plugin.SetHelp(map[string]string{
+		"ban_plugin":  "禁用某个插件，参数为插件id",
+		"use_plugin":  "启用某个插件,参数为插件id",
+		"get_plugins": "获取插件列表",
+	})
+	plugin.OnCommand("ban_plugin").SetPluginName("禁用插件").
 		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
@@ -64,7 +74,7 @@ func InitPluginManager() {
 		bot.Send(event, message.Text("禁用插件成功"))
 	})
 
-	OnCommand("/use_plugin").SetPluginName("启用插件").
+	plugin.OnCommand("use_plugin").SetPluginName("启用插件").
 		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
@@ -74,7 +84,7 @@ func InitPluginManager() {
 		bot.Send(event, message.Text("启用插件成功"))
 	})
 
-	OnCommand("/get_plugins").SetPluginName("获取插件列表").
+	plugin.OnCommand("get_plugins").SetPluginName("获取插件列表").
 		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
