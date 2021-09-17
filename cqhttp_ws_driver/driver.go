@@ -39,7 +39,7 @@ var upgrade = websocket.Upgrader{
 	}}
 
 func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 32)
+	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
 	//role := request.Header.Get("X-Client-Role")
 	//host := request.Header.Get("Host")
 	conn, err := upgrade.Upgrade(writer, request, nil)
