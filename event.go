@@ -2,6 +2,7 @@ package leafBot
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/huoxue1/leafBot/message" //nolint:gci
 	log "github.com/sirupsen/logrus"
@@ -220,56 +221,56 @@ func eventMain() {
 
 // GetOneEvent
 /*
-   @Description: 向session队列里面添加一个对象，等待用户的响应，设置超时时间
-   @receiver b
-   @param rules ...Rule
-   @return Event  Event
-   @return error  error
+  @Description: 向session队列里面添加一个对象，等待用户的响应，设置超时时间
+  @receiver b
+  @param rules ...Rule
+  @return Event  Event
+  @return error  error
 */
-//func (b Api) GetOneEvent(rules ...Rule) (Event, error) {
-//	s := session{
-//		id:    int(time.Now().Unix() + rand.Int63n(10000)),
-//		queue: make(chan Event),
-//		rules: rules,
-//	}
-//	sessions.Store(s.id, s)
-//	defer sessions.Delete(s.id)
-//	select {
-//	case event := <-s.queue:
-//		return event, nil
-//	case <-time.After(time.Minute):
-//		return Event{}, errors.New("等待下一条信息超时")
-//	}
-//
-//}
-//
-//// GetMoreEvent
-///*
-//   @Description: 获取一个通道不断从用户获取消息
-//   @receiver b
-//   @param rules ...Rule
-//   @return int  int 对应session在队列中的编号，后面关闭需要该编号
-//   @return chan  Event  事件通道
-//*/
-//func (b Api) GetMoreEvent(rules ...Rule) (int, chan Event) {
-//	s := session{
-//		id:    int(time.Now().Unix() + rand.Int63n(10000)),
-//		queue: make(chan Event),
-//		rules: rules,
-//	}
-//	sessions.Store(s.id, s)
-//	return s.id, s.queue
-//}
-//
-//// CloseMessageChan
-///*
-//   @Description: 关闭session，即从等待队列中删除
-//   @receiver b
-//   @param id int
-//*/
-//func (b Api) CloseMessageChan(id int) {
-//	sessions.Delete(id)
-//}
+func (e Event) GetOneEvent(rules ...Rule) (Event, error) {
+	s := session{
+		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		queue: make(chan Event),
+		rules: rules,
+	}
+	sessions.Store(s.id, s)
+	defer sessions.Delete(s.id)
+	select {
+	case event := <-s.queue:
+		return event, nil
+	case <-time.After(time.Minute):
+		return Event{}, errors.New("等待下一条信息超时")
+	}
+
+}
+
+// GetMoreEvent
+/*
+  @Description: 获取一个通道不断从用户获取消息
+  @receiver b
+  @param rules ...Rule
+  @return int  int 对应session在队列中的编号，后面关闭需要该编号
+  @return chan  Event  事件通道
+*/
+func (e Event) GetMoreEvent(rules ...Rule) (int, chan Event) {
+	s := session{
+		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		queue: make(chan Event),
+		rules: rules,
+	}
+	sessions.Store(s.id, s)
+	return s.id, s.queue
+}
+
+// CloseMessageChan
+/*
+  @Description: 关闭session，即从等待队列中删除
+  @receiver b
+  @param id int
+*/
+func (e Event) CloseMessageChan(id int) {
+	sessions.Delete(id)
+}
 
 // viewsMessage
 /*
