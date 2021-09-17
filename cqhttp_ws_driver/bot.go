@@ -21,6 +21,7 @@ func (b *Bot) GetSelfId() int64 {
 func (b *Bot) Do(i interface{}) {
 	err := b.conn.WriteJSON(i)
 	if err != nil {
+		b.wsClose()
 		return
 	}
 }

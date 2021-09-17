@@ -47,7 +47,9 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 
 	data, _ := b.GetResponse(echo)
 
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return int32(gjson.GetBytes(data, "data.message_id").Int())
 }
 
@@ -83,7 +85,9 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
 
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return int32(gjson.GetBytes(data, "data.message_id").Int())
 }
 
@@ -107,7 +111,9 @@ func (b *Bot) DeleteMsg(messageId int32) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // GetMsg
@@ -131,7 +137,9 @@ func (b *Bot) GetMsg(messageId int32) gjson.Result {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -161,7 +169,9 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 
 }
 
@@ -191,7 +201,9 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SendMsg
@@ -236,7 +248,9 @@ func (b *Bot) SendLike(userId int, times int) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupKick
@@ -265,7 +279,9 @@ func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupAnonymousBan
@@ -294,7 +310,9 @@ func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupWholeBan
@@ -321,7 +339,9 @@ func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
 
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupAdmin
@@ -349,7 +369,9 @@ func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupAnonymous
@@ -374,7 +396,9 @@ func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupName
@@ -399,7 +423,9 @@ func (b *Bot) SetGroupName(groupId int, groupName string) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupLeave
@@ -424,7 +450,9 @@ func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupSpecialTitle
@@ -455,7 +483,9 @@ func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string,
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetFriendAddRequest
@@ -483,7 +513,9 @@ func (b *Bot) SetFriendAddRequest(flag string, approve bool, remark string) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupAddRequest
@@ -514,7 +546,9 @@ func (b *Bot) SetGroupAddRequest(flag string, subType string, approve bool, reas
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // GetLoginInfo
@@ -531,7 +565,9 @@ func (b *Bot) GetLoginInfo() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -559,7 +595,9 @@ func (b *Bot) GetStrangerInfo(userId int, noCache bool) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -577,7 +615,9 @@ func (b *Bot) GetFriendList() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -605,7 +645,9 @@ func (b *Bot) GetGroupInfo(groupId int, noCache bool) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -623,7 +665,9 @@ func (b *Bot) GetGroupList() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -654,7 +698,9 @@ func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) gjson.Re
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -679,7 +725,9 @@ func (b *Bot) GetGroupMemberList(groupId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -707,7 +755,9 @@ func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -732,7 +782,9 @@ func (b *Bot) GetCookies(domain string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -750,7 +802,9 @@ func (b *Bot) GetCsrfToken() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -775,7 +829,9 @@ func (b *Bot) GetCredentials(domain string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -803,7 +859,9 @@ func (b *Bot) GetRecord(file, outFormat string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -828,7 +886,9 @@ func (b *Bot) GetImage(file string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -846,7 +906,9 @@ func (b *Bot) CanSendImage() bool {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data").Bool()
 }
 
@@ -864,7 +926,9 @@ func (b *Bot) CanSendRecord() bool {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data").Bool()
 }
 
@@ -882,7 +946,9 @@ func (b *Bot) GetStatus() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -905,7 +971,9 @@ func (b *Bot) SetRestart(delay int) {
 		Echo: echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // CleanCache
@@ -920,7 +988,9 @@ func (b *Bot) CleanCache() {
 		Echo:   echo}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 //新增
@@ -952,7 +1022,9 @@ func (b *Bot) DownloadFile(url string, threadCount int, headers []string) gjson.
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -980,7 +1052,9 @@ func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1005,7 +1079,9 @@ func (b *Bot) GetOnlineClients(noCache bool) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1030,7 +1106,9 @@ func (b *Bot) GetVipInfoTest(UserId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1057,7 +1135,9 @@ func (b *Bot) SendGroupNotice(groupId int, content string) {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // ReloadEventFilter
@@ -1073,7 +1153,9 @@ func (b *Bot) ReloadEventFilter() {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupNameSpecial
@@ -1099,7 +1181,9 @@ func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // SetGroupPortrait
@@ -1128,7 +1212,9 @@ func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // GetMsgSpecial
@@ -1152,7 +1238,9 @@ func (b *Bot) GetMsgSpecial(messageId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1177,7 +1265,9 @@ func (b *Bot) GetForwardMsg(messageId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1204,7 +1294,9 @@ func (b *Bot) SendGroupForwardMsg(groupId int, messages interface{}) {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 // GetWordSlices
@@ -1228,7 +1320,9 @@ func (b *Bot) GetWordSlices(content string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1253,7 +1347,9 @@ func (b *Bot) OcrImage(image string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1271,7 +1367,9 @@ func (b *Bot) GetGroupSystemMsg() gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1296,7 +1394,9 @@ func (b *Bot) GetGroupFileSystemInfo(groupId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1321,7 +1421,9 @@ func (b *Bot) GetGroupRootFiles(groupId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1349,7 +1451,9 @@ func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1380,7 +1484,9 @@ func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) gjson.Resul
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1405,7 +1511,9 @@ func (b *Bot) GetGroupAtAllRemain(groupId int) gjson.Result {
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 	return gjson.GetBytes(data, "data")
 }
 
@@ -1438,7 +1546,9 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	}
 	b.Do(d)
 	data, _ := b.GetResponse(echo)
-	log.Infoln(fmt.Sprintf("call api <%v>,the params: %v\n\t\t\t\tthe response: %v", d.Action, d.Params, string(data)))
+	log.Infoln("call api ==> " + d.Action)
+	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Infoln("the response ==> " + string(data))
 }
 
 func (b *Bot) CallApi(Action string, param interface{}) interface{} {
