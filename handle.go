@@ -154,6 +154,9 @@ func OnStartWith(str string) *messageHandle {
 	return c
 }
 
+type Options struct {
+}
+
 func (p *Plugin) SetHelp(help map[string]string) {
 	p.Helps = append(p.Helps, help)
 }

@@ -49,6 +49,7 @@
             <li class="layui-nav-item"><a href="#">提醒事件</a></li>
             <li class="layui-nav-item"><a href="#" >插件管理</a></li>
             <li class="layui-nav-item"><a href="#" >日志</a></li>
+            <li class="layui-nav-item"><a href="#" >插件测试</a></li>
 <!--            <li class="layui-nav-item"><a href="#" >配置文件生成</a></li>-->
             <!--            <li class="layui-nav-item">-->
             <!--                <a href="javascript:;">nav groups<span class="layui-nav-more"></span></a>-->
@@ -81,7 +82,6 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">Message<span class="layui-nav-more"></span></a>
-                    <a class="" href="javascript:;">插件测试<span class="layui-nav-more"></span></a>
 
                     <!--                    <dl class="layui-nav-child">-->
                     <!--                        <dd><a href="javascript:;">menu 1</a></dd>-->
@@ -103,6 +103,12 @@
                 <span class="layui-nav-bar"></span></ul>
         </div>
     </div>
+    <div id="test">
+        <iframe src="./test.html" style="border: #00FF00 1px solid" width="100%" height="400px">
+
+        </iframe>
+    </div>
+
     <div id="plugin_manager" class="layui-body" style="display: none">
         <table class="layui-table" >
             <thead>
@@ -391,20 +397,30 @@
         var log  = $("#log")
         var plugin = $("#plugin_manager")
         var message = $("#message")
+        var test = $("#test")
+
         element.on('nav',function (elem) {
             if (elem.context.innerText === "消息"){
                 plugin.css("display","none")
                 log.css("display","none")
                 message.css("display","block")
+                test.css("display","none")
             }else if (elem.context.innerText === "插件管理"){
                 plugin.css("display","block")
                 log.css("display","none")
                 message.css("display","none")
+                test.css("display","none")
             }else if (elem.context.innerText === "日志"){
                 plugin.css("display","none")
                 log.css("display","block")
                 message.css("display","none")
-            }else {
+                test.css("display","none")
+            }else if (elem.context.innerText === "插件测试"){
+                plugin.css("display","none")
+                log.css("display","none")
+                message.css("display","none")
+                test.css("display","block")
+            } else {
                 console.log(elem.context.innerText)
             }
         })

@@ -138,6 +138,8 @@ func InitWindow() {
 		logConn = conn
 	})
 
+	engine.POST("/get_all_config", getAllConfig)
+
 	engine.POST("/send_msg", CallApi)
 	engine.GET("/data", data)
 	if err := engine.Run("127.0.0.1:3000"); err != nil {
@@ -184,6 +186,10 @@ func data(ctx *gin.Context) {
 	}
 	dataCoon = conn
 
+}
+
+func getAllConfig(ctx *gin.Context) {
+	ctx.JSON(200, DefaultConfig)
 }
 
 func GetConfig(ctx *gin.Context) {

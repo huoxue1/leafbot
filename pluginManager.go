@@ -58,13 +58,14 @@ func reloadConfigInit() {
 }
 
 func InitPluginManager() {
-	plugin := NewPlugin("插件管理")
+	plugin := NewPlugin("插件管理管理")
 	plugin.SetHelp(map[string]string{
-		"ban_plugin":  "禁用某个插件，参数为插件id",
-		"use_plugin":  "启用某个插件,参数为插件id",
-		"get_plugins": "获取插件列表",
+		"ban_handle":  "禁用某个插件，参数为插件id",
+		"use_handle":  "启用某个插件,参数为插件id",
+		"get_handles": "获取插件列表",
 	})
-	plugin.OnCommand("ban_plugin").SetPluginName("禁用插件").
+
+	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
 		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
@@ -74,7 +75,7 @@ func InitPluginManager() {
 		bot.Send(event, message.Text("禁用插件成功"))
 	})
 
-	plugin.OnCommand("use_plugin").SetPluginName("启用插件").
+	plugin.OnCommand("use_handle").SetPluginName("启用插件").
 		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		if len(state.Args) < 0 {
 			bot.Send(event, message.Text("参数不够"))
@@ -84,7 +85,7 @@ func InitPluginManager() {
 		bot.Send(event, message.Text("启用插件成功"))
 	})
 
-	plugin.OnCommand("get_plugins").SetPluginName("获取插件列表").
+	plugin.OnCommand("get_handles").SetPluginName("获取插件列表").
 		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
@@ -107,7 +108,7 @@ func InitPluginManager() {
 
 func draw(data map[string][]BaseHandle) {
 	context := gg.NewContext(900, 100*(8+pluginNum))
-	context.SetRGB255(255, 255, 0)
+	context.SetRGB255(123, 104, 238)
 	context.DrawRectangle(0, 0, 900, float64(100*(pluginNum+8)))
 	//weibo, err := getData()
 	context.Fill()
@@ -120,9 +121,9 @@ func draw(data map[string][]BaseHandle) {
 	//	fmt.Println(weibo.Data[i].Name)
 	//	context.DrawString(strconv.Itoa(i+1)+"："+weibo.Data[i].Name, 0, float64(100*(i+1)))
 	//}
-	context.DrawString("插件Id", 100, 100)
-	context.DrawString("插件名", 400, 100)
-	context.DrawString("是否启用", 700, 100)
+	context.DrawString("handleId", 100, 100)
+	context.DrawString("handleName", 400, 100)
+	context.DrawString("enable", 700, 100)
 	n := 2
 	for s, handles := range data {
 		context.SetRGB255(255, 0, 0)
