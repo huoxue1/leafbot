@@ -14,7 +14,6 @@ import ( //nolint:gci
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"
-	"sort"
 	"strconv"
 )
 
@@ -87,34 +86,34 @@ func InitWindow() {
 	engine.GET("/", func(context *gin.Context) {
 		context.Redirect(http.StatusMovedPermanently, "/static/gui/static/html/default.html")
 	})
-	engine.POST("/update_plugin_states", func(context *gin.Context) {
-		id := context.PostForm("id")
-		status, err := strconv.ParseBool(context.PostForm("status"))
-		if err != nil {
-			log.Errorln("改变插件状态出错" + err.Error())
-		}
-		if status {
-			StartPluginByID(id)
-		} else {
-			BanPluginByID(id)
-		}
-		context.JSON(200, nil)
-	})
-
-	engine.POST("/get_plugins", func(context *gin.Context) {
-		list := GetHandleList()
-		var pluginList []BaseHandle
-
-		for _, handles := range list {
-			pluginList = append(pluginList, handles...)
-		}
-		sort.SliceStable(pluginList, func(i, j int) bool {
-			id1, _ := strconv.Atoi(pluginList[i].ID)
-			id2, _ := strconv.Atoi(pluginList[j].ID)
-			return id1 < id2
-		})
-		context.JSON(200, pluginList)
-	})
+	//engine.POST("/update_plugin_states", func(context *gin.Context) {
+	//	id := context.PostForm("id")
+	//	status, err := strconv.ParseBool(context.PostForm("status"))
+	//	if err != nil {
+	//		log.Errorln("改变插件状态出错" + err.Error())
+	//	}
+	//	if status {
+	//		StartPluginByID(id)
+	//	} else {
+	//		BanPluginByID(id)
+	//	}
+	//	context.JSON(200, nil)
+	//})
+	//
+	//engine.POST("/get_plugins", func(context *gin.Context) {
+	//	list := GetHandleList()
+	//	var pluginList []BaseHandle
+	//
+	//	for _, handles := range list {
+	//		pluginList = append(pluginList, handles...)
+	//	}
+	//	sort.SliceStable(pluginList, func(i, j int) bool {
+	//		id1, _ := strconv.Atoi(pluginList[i].ID)
+	//		id2, _ := strconv.Atoi(pluginList[j].ID)
+	//		return id1 < id2
+	//	})
+	//	context.JSON(200, pluginList)
+	//})
 
 	engine.GET("/get_log", func(context *gin.Context) {
 		conn, err := upGrader.Upgrade(context.Writer, context.Request, nil)
@@ -193,9 +192,9 @@ func getAllConfig(ctx *gin.Context) {
 }
 
 func GetConfig(ctx *gin.Context) {
-	var bots []int
-	for _, bot := range DefaultConfig.Bots {
-		bots = append(bots, bot.SelfId)
+	var bots []int64
+	for i, _ := range driver.GetBots() {
+		bots = append(bots, i)
 	}
 	ctx.JSON(200, bots)
 }

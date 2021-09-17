@@ -3,6 +3,7 @@ module github.com/huoxue1/leafBot
 go 1.16
 
 require (
+	github.com/DaRealFreak/colored-nested-formatter v1.0.0 // indirect
 	github.com/PuerkitoBio/goquery v1.7.0
 	github.com/fogleman/gg v1.3.0
 	github.com/gin-gonic/gin v1.7.1

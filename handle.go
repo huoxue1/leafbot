@@ -67,14 +67,14 @@ type (
 	PretreatmentHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot) bool
+		handle       func(event Event, bot Api) bool
 		rules        []Rule
 		weight       int
 	}
 	messageHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot, state *State)
+		handle       func(event Event, bot Api, state *State)
 		messageType  string
 		rules        []Rule
 		weight       int
@@ -83,7 +83,7 @@ type (
 	requestHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot)
+		handle       func(event Event, bot Api)
 		requestType  string
 		rules        []Rule
 		weight       int
@@ -92,7 +92,7 @@ type (
 	noticeHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot)
+		handle       func(event Event, bot Api)
 		noticeType   string
 		rules        []Rule
 		weight       int
@@ -100,7 +100,7 @@ type (
 	commandHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot, state *State)
+		handle       func(event Event, bot Api, state *State)
 		command      string
 		allies       []string
 		rules        []Rule
@@ -114,13 +114,13 @@ type (
 	metaHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot *Bot)
+		handle       func(event Event, bot Api)
 		rules        []Rule
 		weight       int
 	}
 	connectHandle struct {
 		BaseHandle
-		handle func(connect Connect, bot *Bot)
+		handle func(connect Connect, bot Api)
 	}
 	disConnectHandle struct {
 		BaseHandle
@@ -142,7 +142,7 @@ func NewPlugin(name string) *Plugin {
 
 func OnStartWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -197,7 +197,7 @@ func (p *Plugin) OnPretreatment() *PretreatmentHandle {
 
 func (p *Plugin) OnStartWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -209,7 +209,7 @@ func (p *Plugin) OnStartWith(str string) *messageHandle {
 	return c
 }
 
-func (p *Plugin) OnTime(crons string, selfId int, handle func(bot *Bot)) {
+func (p *Plugin) OnTime(crons string, selfId int, handle func(bot Api)) {
 	c2 := cron.New()
 	_, err := c2.AddFunc(crons, func() {
 		handle(GetBotById(selfId))
@@ -222,7 +222,7 @@ func (p *Plugin) OnTime(crons string, selfId int, handle func(bot *Bot)) {
 
 func (p *Plugin) OnEndWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -236,7 +236,7 @@ func (p *Plugin) OnEndWith(str string) *messageHandle {
 
 func (p *Plugin) OnKeyWords(keyword string) *messageHandle {
 	m := &messageHandle{}
-	m.rules = append(m.rules, func(event Event, bot *Bot, state *State) bool {
+	m.rules = append(m.rules, func(event Event, bot Api, state *State) bool {
 		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
 			state.Data["key_word"] = keyword
 			return true
@@ -252,7 +252,7 @@ func OnRegex(regex string) *commandHandle {
 
 }
 
-func OnTime(crons string, selfId int, handle func(bot *Bot)) {
+func OnTime(crons string, selfId int, handle func(bot Api)) {
 	c2 := cron.New()
 	_, err := c2.AddFunc(crons, func() {
 		handle(GetBotById(selfId))
@@ -265,7 +265,7 @@ func OnTime(crons string, selfId int, handle func(bot *Bot)) {
 
 func OnEndWith(str string) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot *Bot, state *State) bool {
+	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
 		}
@@ -279,7 +279,7 @@ func OnEndWith(str string) *messageHandle {
 
 func OnKeyWords(keyword string) *messageHandle {
 	m := &messageHandle{}
-	m.rules = append(m.rules, func(event Event, bot *Bot, state *State) bool {
+	m.rules = append(m.rules, func(event Event, bot Api, state *State) bool {
 		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
 			state.Data["key_word"] = keyword
 			return true
@@ -359,7 +359,7 @@ func (p *PretreatmentHandle) SetPluginName(name string) *PretreatmentHandle {
 
 type ConnectInt interface {
 	SetPluginName(name string) *connectHandle
-	AddHandle(func(connect Connect, bot *Bot))
+	AddHandle(func(connect Connect, bot Api))
 }
 
 type DisConnectInt interface {
@@ -373,7 +373,7 @@ type CommandInt interface {
 	AddRule(rule Rule) *commandHandle
 	SetWeight(weight int) *commandHandle
 	SetBlock(IsBlock bool) *commandHandle
-	AddHandle(func(event Event, bot *Bot, args []string))
+	AddHandle(func(event Event, bot Api, args []string))
 	SetCD(types string, long int) *commandHandle
 }
 
@@ -386,35 +386,35 @@ type NoticeInt interface {
 	SetPluginName(name string) *noticeHandle
 	AddRule(rule Rule) *noticeHandle
 	SetWeight(weight int) *noticeHandle
-	AddHandle(func(event Event, bot *Bot))
+	AddHandle(func(event Event, bot Api))
 }
 
 type RequestInt interface {
 	SetPluginName(name string) *requestHandle
 	AddRule(rule Rule) *requestHandle
 	SetWeight(weight int) *requestHandle
-	AddHandle(func(event Event, bot *Bot))
+	AddHandle(func(event Event, bot Api))
 }
 
 type MessageInt interface {
 	SetPluginName(name string) *messageHandle
 	AddRule(rule Rule) *messageHandle
 	SetWeight(weight int) *messageHandle
-	AddHandle(func(event Event, bot *Bot))
+	AddHandle(func(event Event, bot Api))
 }
 
 type PretreatmentInt interface {
 	SetPluginName(name string) *PretreatmentHandle
 	AddRule(rule Rule) *PretreatmentHandle
 	SetWeight(weight int) *PretreatmentHandle
-	AddHandle(func(event Event, bot *Bot) bool)
+	AddHandle(func(event Event, bot Api) bool)
 }
 
 type MetaInt interface {
 	SetPluginName(name string) *metaHandle
 	AddRule(rule Rule) *metaHandle
 	SetWeight(weight int) *metaHandle
-	AddHandle(func(event Event, bot *Bot))
+	AddHandle(func(event Event, bot Api))
 }
 
 // OnCommand
@@ -522,7 +522,7 @@ func (d *disConnectHandle) AddHandle(f func(selfId int)) {
  * @receiver c
  * @param f
  */
-func (c *connectHandle) AddHandle(f func(connect Connect, bot *Bot)) {
+func (c *connectHandle) AddHandle(f func(connect Connect, bot Api)) {
 	c.HandleType = "connect"
 	lock.Lock()
 	pluginNum++
@@ -566,7 +566,7 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
  * @receiver m
  * @param f
  */
-func (m *metaHandle) AddHandle(f func(event Event, bot *Bot)) {
+func (m *metaHandle) AddHandle(f func(event Event, bot Api)) {
 	m.HandleType = "meta"
 	m.handle = f
 	m.Enable = true
@@ -635,7 +635,7 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  * @receiver c
  * @param f
  */
-func (c *commandHandle) AddHandle(f func(event Event, bot *Bot, state *State)) {
+func (c *commandHandle) AddHandle(f func(event Event, bot Api, state *State)) {
 	c.HandleType = "command"
 	c.handle = f
 	c.Enable = true
@@ -680,7 +680,7 @@ func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
  * @receiver n
  * @param f
  */
-func (n *noticeHandle) AddHandle(f func(event Event, bot *Bot)) {
+func (n *noticeHandle) AddHandle(f func(event Event, bot Api)) {
 	n.HandleType = "notice"
 	n.handle = f
 	n.Enable = true
@@ -725,7 +725,7 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
  * @receiver r
  * @param f
  */
-func (r *requestHandle) AddHandle(f func(event Event, bot *Bot)) {
+func (r *requestHandle) AddHandle(f func(event Event, bot Api)) {
 	r.HandleType = "request"
 	r.handle = f
 	r.Enable = true
@@ -770,7 +770,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
  * @receiver m
  * @param f
  */
-func (m *messageHandle) AddHandle(f func(event Event, bot *Bot, state *State)) {
+func (m *messageHandle) AddHandle(f func(event Event, bot Api, state *State)) {
 	m.HandleType = "message"
 	m.handle = f
 	m.Enable = true
@@ -815,7 +815,7 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
  * @receiver p
  * @param f
  */
-func (p *PretreatmentHandle) AddHandle(f func(event Event, bot *Bot) bool) {
+func (p *PretreatmentHandle) AddHandle(f func(event Event, bot Api) bool) {
 	p.HandleType = "Pretreatment"
 	p.handle = f
 	p.Enable = true

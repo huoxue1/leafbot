@@ -10,7 +10,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 	"io"
-	"net/http"
 	"os"
 	"path"
 	"strconv"
@@ -21,15 +20,7 @@ import (
 //go:embed config/default_config.yaml
 var defaultConfig []byte
 
-type Bot struct {
-	Name string `json:"name" yaml:"name" hjson:"name"`
-
-	SelfId int         `json:"self_id" yaml:"self_id" hjson:"self_id"`
-	Client *connection `json:"con" yaml:"client" hjson:"client"`
-}
-
 type Config struct {
-	Bots             []*Bot   `json:"bots" yaml:"bots" hjson:"bots"`
 	NickName         []string `json:"nick_name" yaml:"nick_name" hjson:"nick_name"`
 	Admin            int      `json:"admin" yaml:"admin" hjson:"admin"`
 	Host             string   `json:"host" yaml:"host" hjson:"host"`
@@ -77,6 +68,7 @@ func init() {
 		TimeStampFormat: "2006-01-02 15:04:05",
 		LogContent:      "[%time%] [%file%] [%lvl%] : %msg% \n",
 	}
+
 	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
 	hook = utils.NewLogHook(f, levels, w)
 	log.AddHook(hook)
@@ -140,7 +132,7 @@ func LoadConfig() {
 	log.Infoln("程序将在五秒后重启")
 	time.Sleep(5000)
 	os.Exit(3)
-	ui.Close()
+	//ui.Close()
 }
 
 // InitConfig
@@ -191,19 +183,10 @@ func initConfig(fileType string) error {
    @Description:
 */
 func InitBots() {
+	go InitWindow()
 	go eventMain()
 	if DefaultConfig.EnablePlaywright {
 		go utils.PwInit()
-	}
-
-	http.HandleFunc("/cqhttp/ws", eventHandle)
-	for _, bot := range DefaultConfig.Bots {
-		run(bot)
-
-	}
-	log.Infoln("listening in " + DefaultConfig.Host + "  " + strconv.Itoa(DefaultConfig.Port))
-	if err := http.ListenAndServe(DefaultConfig.Host+":"+strconv.Itoa(DefaultConfig.Port), nil); err != nil {
-		log.Panicln("监听端口失败，端口可能被占用")
 	}
 }
 

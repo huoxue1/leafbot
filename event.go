@@ -2,7 +2,6 @@ package leafBot
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/huoxue1/leafBot/message" //nolint:gci
 	log "github.com/sirupsen/logrus"
@@ -19,6 +18,87 @@ import (
 
 var (
 	c = make(chan Event, 10)
+)
+
+type (
+	anonymous struct {
+		Id   int    `json:"id"`
+		Name string `json:"name"`
+		Flag string `json:"flag"`
+	}
+
+	Files struct {
+		Id      string `json:"id"`
+		Name    string `json:"name"`
+		Size    int64  `json:"size"`
+		Busid   int64  `json:"busid"`
+		FileUrl string `json:"url"`
+	}
+
+	Status struct {
+		AppEnabled     bool        `json:"app_enabled"`
+		AppGood        bool        `json:"app_good"`
+		AppInitialized bool        `json:"app_initialized"`
+		Good           bool        `json:"good"`
+		Online         bool        `json:"online"`
+		PluginsGood    interface{} `json:"plugins_good"`
+		Stat           struct {
+			PacketReceived  int `json:"packet_received"`
+			PacketSent      int `json:"packet_sent"`
+			PacketLost      int `json:"packet_lost"`
+			MessageReceived int `json:"message_received"`
+			MessageSent     int `json:"message_sent"`
+			DisconnectTimes int `json:"disconnect_times"`
+			LostTimes       int `json:"lost_times"`
+			LastMessageTime int `json:"last_message_time"`
+		} `json:"stat"`
+	}
+
+	MessageIds struct {
+		MessageID int32 `json:"message_id"`
+	}
+
+	Senders struct {
+		Age      int    `json:"age"`
+		Area     string `json:"area"`
+		Card     string `json:"card"`
+		Level    string `json:"level"`
+		NickName string `json:"nickname"`
+		Role     string `json:"role"`
+		Sex      string `json:"sex"`
+		Title    string `json:"title"`
+		UserId   int    `json:"user_id"`
+	}
+
+	Event struct {
+		Anonymous     anonymous       `json:"anonymous"`
+		Font          int             `json:"font"`
+		GroupId       int             `json:"group_id"`
+		Message       message.Message `json:"message"`
+		MessageType   string          `json:"message_type"`
+		PostType      string          `json:"post_type"`
+		RawMessage    string          `json:"raw_message"`
+		SelfId        int             `json:"self_id"`
+		Sender        Senders         `json:"sender"`
+		SubType       string          `json:"sub_type"`
+		UserId        int             `json:"user_id"`
+		Time          int             `json:"time"`
+		NoticeType    string          `json:"notice_type"`
+		RequestType   string          `json:"request_type"`
+		Comment       string          `json:"comment"`
+		Flag          string          `json:"flag"`
+		OperatorId    int             `json:"operator_id"`
+		File          Files           `json:"file"`
+		Duration      int64           `json:"duration"`
+		TargetId      int64           `json:"target_id"` //运气王id
+		HonorType     string          `json:"honor_type"`
+		MetaEventType string          `json:"meta_event_type"`
+		Status        Status          `json:"status"`
+		Interval      int             `json:"interval"`
+		CardNew       string          `json:"card_new"` //新名片
+		CardOld       string          `json:"card_old"` //旧名片
+		MessageIds
+	}
 )
 
 var ENABLE = true // 是否启用gui
@@ -119,10 +199,11 @@ func eventMain() {
 	for _, handle := range MetaHandles {
 		log.Debugln("已加载meta响应器：" + getFunctionName(handle.handle, '/'))
 	}
+	e := driver.GetEvent()
 
 	go func() {
 		for {
-			data, ok := <-eventChan
+			data, ok := <-e
 			if !ok {
 				continue
 			}
@@ -145,50 +226,50 @@ func eventMain() {
    @return Event  Event
    @return error  error
 */
-func (b *Bot) GetOneEvent(rules ...Rule) (Event, error) {
-	s := session{
-		id:    int(time.Now().Unix() + rand.Int63n(10000)),
-		queue: make(chan Event),
-		rules: rules,
-	}
-	sessions.Store(s.id, s)
-	defer sessions.Delete(s.id)
-	select {
-	case event := <-s.queue:
-		return event, nil
-	case <-time.After(time.Minute):
-		return Event{}, errors.New("等待下一条信息超时")
-	}
-
-}
-
-// GetMoreEvent
-/*
-   @Description: 获取一个通道不断从用户获取消息
-   @receiver b
-   @param rules ...Rule
-   @return int  int 对应session在队列中的编号，后面关闭需要该编号
-   @return chan  Event  事件通道
-*/
-func (b *Bot) GetMoreEvent(rules ...Rule) (int, chan Event) {
-	s := session{
-		id:    int(time.Now().Unix() + rand.Int63n(10000)),
-		queue: make(chan Event),
-		rules: rules,
-	}
-	sessions.Store(s.id, s)
-	return s.id, s.queue
-}
-
-// CloseMessageChan
-/*
-   @Description: 关闭session，即从等待队列中删除
-   @receiver b
-   @param id int
-*/
-func (b *Bot) CloseMessageChan(id int) {
-	sessions.Delete(id)
-}
+//func (b Api) GetOneEvent(rules ...Rule) (Event, error) {
+//	s := session{
+//		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+//		queue: make(chan Event),
+//		rules: rules,
+//	}
+//	sessions.Store(s.id, s)
+//	defer sessions.Delete(s.id)
+//	select {
+//	case event := <-s.queue:
+//		return event, nil
+//	case <-time.After(time.Minute):
+//		return Event{}, errors.New("等待下一条信息超时")
+//	}
+//
+//}
+//
+//// GetMoreEvent
+///*
+//   @Description: 获取一个通道不断从用户获取消息
+//   @receiver b
+//   @param rules ...Rule
+//   @return int  int 对应session在队列中的编号，后面关闭需要该编号
+//   @return chan  Event  事件通道
+//*/
+//func (b Api) GetMoreEvent(rules ...Rule) (int, chan Event) {
+//	s := session{
+//		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+//		queue: make(chan Event),
+//		rules: rules,
+//	}
+//	sessions.Store(s.id, s)
+//	return s.id, s.queue
+//}
+//
+//// CloseMessageChan
+///*
+//   @Description: 关闭session，即从等待队列中删除
+//   @receiver b
+//   @param id int
+//*/
+//func (b Api) CloseMessageChan(id int) {
+//	sessions.Delete(id)
+//}
 
 // viewsMessage
 /*
@@ -225,7 +306,8 @@ func viewsMessage(event Event) {
 			return
 		}
 	}
-	log.Debugln("预处理执行完毕" + event.Message.CQString())
+	log.Debugln("预处理执行完毕")
+	//log.Infoln(event)
 	switch event.PostType {
 	case "message":
 		c <- event
@@ -640,15 +722,11 @@ func processMetaEventHandle(event Event) {
 /*
    @Description:
    @param id int
-   @return *Bot
+   @return Api
 */
-func GetBotById(id int) *Bot {
-	for _, bot := range DefaultConfig.Bots {
-		if bot.SelfId == id {
-			return bot
-		}
-	}
-	return nil
+func GetBotById(id int) Api {
+	bots := driver.GetBot(int64(id))
+	return bots.(Api)
 }
 
 // GetMsg

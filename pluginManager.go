@@ -25,8 +25,8 @@ func init() {
 
 // GetHandleList
 /**
- * @Description: 获取所有的未被禁用handle
- * @return map[string][]string
+* @Description: 获取所有的未被禁用handle
+* @return map[string][]string
  */
 
 type BaseHandle struct {
@@ -49,10 +49,10 @@ func reloadConfigInit() {
 		AddAllies("重载配置").
 		AddRule(OnlySuperUser).
 		AddRule(OnlyToMe).
-		AddHandle(func(event Event, bot *Bot, state *State) {
+		AddHandle(func(event Event, bot Api, state *State) {
 			err := initConfig(YAML)
 			if err != nil {
-				bot.Send(event, message.Text("配置文件重载失败"+err.Error()))
+				event.Send(message.Text("配置文件重载失败" + err.Error()))
 			}
 		})
 }
@@ -66,27 +66,27 @@ func InitPluginManager() {
 	})
 
 	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
-		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
+		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
 		if len(state.Args) < 0 {
-			bot.Send(event, message.Text("参数不够"))
+			event.Send(message.Text("参数不够"))
 			return
 		}
 		BanPluginByID(state.Args[0])
-		bot.Send(event, message.Text("禁用插件成功"))
+		event.Send(message.Text("禁用插件成功"))
 	})
 
 	plugin.OnCommand("use_handle").SetPluginName("启用插件").
-		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
+		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
 		if len(state.Args) < 0 {
-			bot.Send(event, message.Text("参数不够"))
+			event.Send(message.Text("参数不够"))
 			return
 		}
 		StartPluginByID(state.Args[0])
-		bot.Send(event, message.Text("启用插件成功"))
+		event.Send(message.Text("启用插件成功"))
 	})
 
 	plugin.OnCommand("get_handles").SetPluginName("获取插件列表").
-		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot *Bot, state *State) {
+		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
 		//	msg += s+"\n"
@@ -102,7 +102,7 @@ func InitPluginManager() {
 
 		res := base64.StdEncoding.EncodeToString(srcByte)
 
-		bot.Send(event, message.Image("base64://"+res))
+		event.Send(message.Image("base64://" + res))
 	})
 }
 
@@ -230,8 +230,8 @@ func GetHandleList() map[string][]BaseHandle {
 
 // BanPluginByID
 /**
- * @Description: 根据id禁用插件
- * @param id
+* @Description: 根据id禁用插件
+* @param id
  */
 func BanPluginByID(id string) {
 	handle, ok := CommandHandles.get(id)
@@ -274,9 +274,9 @@ func BanPluginByID(id string) {
 
 // BanPluginByName
 /**
- * @Description: 禁用某个插件
- * @param name  插件名
- * @return int  禁用的插件个数
+* @Description: 禁用某个插件
+* @param name  插件名
+* @return int  禁用的插件个数
  */
 func BanPluginByName(name string) int {
 	num := 0
@@ -359,9 +359,9 @@ func StartPluginByID(id string) {
 
 // StartPlugin
 /**
- * @Description: 启用某个插件
- * @param name	插件名
- * @return int  启用插件个数
+* @Description: 启用某个插件
+* @param name	插件名
+* @return int  启用插件个数
  */
 func StartPlugin(name string) int {
 	num := 0

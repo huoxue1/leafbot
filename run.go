@@ -6,16 +6,6 @@ import (
 	"os" //nolint:gci
 )
 
-// run
-/*
-   @Description:
-   @param bot *Bot
-*/
-func run(bot *Bot) {
-	log.Infoln("已加载bot：" + bot.Name)
-
-}
-
 func writeGoConfig(selfID int) {
 	err := os.WriteFile(".config/gocq_config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
 	if err != nil {

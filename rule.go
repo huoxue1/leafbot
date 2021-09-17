@@ -1,7 +1,7 @@
 package leafBot
 
 type (
-	Rule func(Event, *Bot, *State) bool
+	Rule func(Event, Api, *State) bool
 )
 
 // OnlyToMe
@@ -12,7 +12,7 @@ type (
  * @return bool  返回是否验证通过该rule
  * example
  */
-func OnlyToMe(event Event, _ *Bot, state *State) bool {
+func OnlyToMe(event Event, _ Api, state *State) bool {
 	b := state.Data["only_tome"].(bool)
 	if b {
 		return true
@@ -29,7 +29,7 @@ func OnlyToMe(event Event, _ *Bot, state *State) bool {
  * @return bool  是否通过该rule验证
  * example
  */
-func OnlySuperUser(event Event, _ *Bot, _ *State) bool {
+func OnlySuperUser(event Event, _ Api, _ *State) bool {
 	if event.UserId == DefaultConfig.Admin {
 		return true
 	}
@@ -41,7 +41,7 @@ func OnlySuperUser(event Event, _ *Bot, _ *State) bool {
 	return false
 }
 
-func OnlyGroupMessage(event Event, _ *Bot) bool {
+func OnlyGroupMessage(event Event, _ Api) bool {
 
 	return event.MessageType == "group"
 }
