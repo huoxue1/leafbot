@@ -34,7 +34,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 ### 安装
 
 ```
-    go get github.com/3343780376/leafBot
+    go get github.com/huoxue1/leafBot
 ```
 
 ## 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
