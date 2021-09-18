@@ -7,10 +7,6 @@ import (
 	//nolint:gci
 )
 
-func init() {
-
-}
-
 func main() {
 	// 创建一个驱动
 	driver := cqhttp_ws_driver.NewDriver()

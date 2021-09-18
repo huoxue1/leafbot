@@ -11,11 +11,21 @@ import (
 )
 
 type Driver struct {
-	Name      string
-	address   string
-	port      int
-	bots      sync.Map
-	eventChan chan []byte
+	Name             string
+	address          string
+	port             int
+	bots             sync.Map
+	eventChan        chan []byte
+	connectHandle    func(selfId int64, host string, clientRole string)
+	disConnectHandle func(selfId int64)
+}
+
+func (d *Driver) OnConnect(f func(selfId int64, host string, clientRole string)) {
+	d.connectHandle = f
+}
+
+func (d *Driver) OnDisConnect(f func(selfId int64)) {
+	d.disConnectHandle = f
 }
 
 func (d *Driver) GetBots() map[int64]interface{} {
@@ -40,8 +50,8 @@ var upgrade = websocket.Upgrader{
 
 func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
-	//role := request.Header.Get("X-Client-Role")
-	//host := request.Header.Get("Host")
+	role := request.Header.Get("X-Client-Role")
+	host := request.Header.Get("Host")
 	conn, err := upgrade.Upgrade(writer, request, nil)
 	if err != nil {
 		return
@@ -56,8 +66,10 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	} else {
 		d.bots.Store(selfId, b)
 	}
+	b.disConnectHandle = d.disConnectHandle
 	log.Infoln(fmt.Sprintf("the bot %v is connected", selfId))
-
+	// 执行链接回调
+	go d.connectHandle(selfId, host, role)
 	go func() {
 		for {
 			_, data, err := conn.ReadMessage()
@@ -88,10 +100,6 @@ func (d *Driver) Run() {
 
 func (d *Driver) GetEvent() chan []byte {
 	return d.eventChan
-}
-
-func (d *Driver) AddContentHandle() {
-	panic("implement me")
 }
 
 func (d *Driver) GetBot(i int64) interface{} {

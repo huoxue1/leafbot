@@ -83,7 +83,7 @@ type (
 	}
 	disConnectHandle struct {
 		BaseHandle
-		handle func(selfId int)
+		handle func(selfId int64)
 	}
 )
 
@@ -130,7 +130,7 @@ type (
 
 	DisConnectInt interface {
 		SetPluginName(name string) *disConnectHandle
-		AddHandle(func(selfId int))
+		AddHandle(func(selfId int64))
 	}
 
 	CommandInt interface {
@@ -141,6 +141,17 @@ type (
 		SetBlock(IsBlock bool) *commandHandle
 		AddHandle(f func(event Event, bot Api, state *State))
 		SetCD(types string, long int) *commandHandle
+	}
+)
+
+type (
+	Option struct {
+		PluginName string
+		Weight     int
+		Block      bool
+		Allies     []string
+		Rules      []Rule
+		CD         coolDown
 	}
 )
 
@@ -187,30 +198,23 @@ type (
 	}
 
 	Connect struct {
-		SelfID     int
+		SelfID     int64
 		Host       string
 		ClientRole string
 	}
 )
 
+// NewPlugin
+/**
+ * @Description:
+ * @param name
+ * @return *Plugin
+ * example
+ */
 func NewPlugin(name string) *Plugin {
 	plugin := &Plugin{Name: name}
 	plugins = append(plugins, plugin)
 	return plugin
-}
-
-func OnStartWith(str string) *messageHandle {
-	c := &messageHandle{}
-	c.AddRule(func(event Event, bot Api, state *State) bool {
-		if event.Message[0].Type != "text" {
-			return false
-		}
-		if strings.HasPrefix(event.Message[0].Data["text"], str) {
-			return true
-		}
-		return false
-	})
-	return c
 }
 
 type Options struct {
@@ -220,8 +224,20 @@ func (p *Plugin) SetHelp(help map[string]string) {
 	p.Helps = append(p.Helps, help)
 }
 
-func (p *Plugin) OnRegex(regex string) *commandHandle {
-	return &commandHandle{regexMatcher: regex}
+func (p *Plugin) OnRegex(regex string, options ...Option) *commandHandle {
+	if len(options) > 0 {
+		return &commandHandle{
+			regexMatcher: regex,
+			allies:       options[0].Allies,
+			weight:       options[0].Weight,
+			block:        options[0].Block,
+			rules:        options[0].Rules,
+			cd:           options[0].CD,
+		}
+	}
+	return &commandHandle{
+		regexMatcher: regex,
+	}
 }
 
 func (p *Plugin) OnConnect() *connectHandle {
@@ -231,18 +247,48 @@ func (p *Plugin) OnConnect() *connectHandle {
 func (p *Plugin) OnDisConnect() *disConnectHandle {
 	return &disConnectHandle{}
 }
-func (p *Plugin) OnCommand(command string) *commandHandle {
+func (p *Plugin) OnCommand(command string, options ...Option) *commandHandle {
+	if len(options) > 0 {
+		return &commandHandle{
+			command: command,
+			allies:  options[0].Allies,
+			weight:  options[0].Weight,
+			block:   options[0].Block,
+			rules:   options[0].Rules,
+			cd:      options[0].CD,
+		}
+	}
 	return &commandHandle{command: command}
 }
-func (p *Plugin) OnNotice(noticeType string) *noticeHandle {
+func (p *Plugin) OnNotice(noticeType string, options ...Option) *noticeHandle {
+	if len(options) > 0 {
+		return &noticeHandle{
+			weight: options[0].Weight,
+			rules:  options[0].Rules,
+		}
+	}
 	return &noticeHandle{noticeType: noticeType}
 }
 
-func (p *Plugin) OnMessage(messageType string) *messageHandle {
+func (p *Plugin) OnMessage(messageType string, options ...Option) *messageHandle {
+	if len(options) > 0 {
+		return &messageHandle{
+			weight:      options[0].Weight,
+			rules:       options[0].Rules,
+			messageType: messageType,
+		}
+	}
 	return &messageHandle{messageType: messageType}
 }
 
-func (p *Plugin) OnRequest(requestType string) *requestHandle {
+func (p *Plugin) OnRequest(requestType string, options ...Option) *requestHandle {
+	if len(options) > 0 {
+		return &requestHandle{
+			weight:      options[0].Weight,
+			rules:       options[0].Rules,
+			requestType: requestType,
+		}
+	}
 	return &requestHandle{requestType: requestType}
 }
 
@@ -254,8 +300,14 @@ func (p *Plugin) OnPretreatment() *PretreatmentHandle {
 	return &PretreatmentHandle{}
 }
 
-func (p *Plugin) OnStartWith(str string) *messageHandle {
+func (p *Plugin) OnStartWith(str string, options ...Option) *messageHandle {
 	c := &messageHandle{}
+	if len(options) > 0 {
+		c = &messageHandle{
+			weight: options[0].Weight,
+			rules:  options[0].Rules,
+		}
+	}
 	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
@@ -279,73 +331,14 @@ func (p *Plugin) OnTime(crons string, selfId int, handle func(bot Api)) {
 	c2.Start()
 }
 
-func (p *Plugin) OnEndWith(str string) *messageHandle {
+func (p *Plugin) OnEndWith(str string, options ...Option) *messageHandle {
 	c := &messageHandle{}
-	c.AddRule(func(event Event, bot Api, state *State) bool {
-		if event.Message[0].Type != "text" {
-			return false
+	if len(options) > 0 {
+		c = &messageHandle{
+			weight: options[0].Weight,
+			rules:  options[0].Rules,
 		}
-		if strings.HasSuffix(event.Message[0].Data["text"], str) {
-			return true
-		}
-		return false
-	})
-	return c
-}
-
-func (p *Plugin) OnKeyWords(keyword string) *messageHandle {
-	m := &messageHandle{}
-	m.rules = append(m.rules, func(event Event, bot Api, state *State) bool {
-		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
-			state.Data["key_word"] = keyword
-			return true
-		}
-		return false
-	})
-	return m
-}
-
-// OnRegex
-/**
- * @Description:
- * @param regex
- * @return *commandHandle
- * example
- */
-func OnRegex(regex string) *commandHandle {
-
-	return &commandHandle{regexMatcher: regex}
-
-}
-
-// OnTime
-/**
- * @Description:
- * @param crons
- * @param selfId
- * @param handle
- * example
- */
-func OnTime(crons string, selfId int, handle func(bot Api)) {
-	c2 := cron.New()
-	_, err := c2.AddFunc(crons, func() {
-		handle(GetBotById(selfId))
-	})
-	if err != nil {
-		log.Errorln("运行定时任务出现错误")
 	}
-	c2.Start()
-}
-
-// OnEndWith
-/**
- * @Description:
- * @param str
- * @return *messageHandle
- * example
- */
-func OnEndWith(str string) *messageHandle {
-	c := &messageHandle{}
 	c.AddRule(func(event Event, bot Api, state *State) bool {
 		if event.Message[0].Type != "text" {
 			return false
@@ -358,8 +351,14 @@ func OnEndWith(str string) *messageHandle {
 	return c
 }
 
-func OnKeyWords(keyword string) *messageHandle {
+func (p *Plugin) OnKeyWords(keyword string, options ...Option) *messageHandle {
 	m := &messageHandle{}
+	if len(options) > 0 {
+		m = &messageHandle{
+			weight: options[0].Weight,
+			rules:  options[0].Rules,
+		}
+	}
 	m.rules = append(m.rules, func(event Event, bot Api, state *State) bool {
 		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
 			state.Data["key_word"] = keyword
@@ -368,112 +367,6 @@ func OnKeyWords(keyword string) *messageHandle {
 		return false
 	})
 	return m
-}
-
-// OnConnect
-/**
- * @Description: 在bot进行连接使响应
- * @return *connectHandle
- * example
- */
-func OnConnect() *connectHandle {
-	return &connectHandle{}
-}
-
-// OnDisConnect
-/**
- * @Description: 在bot断开连接时进行响应
- * @return *disConnectHandle
- * example
- */
-func OnDisConnect() *disConnectHandle {
-	return &disConnectHandle{}
-}
-
-// OnCommand
-/**
- * @Description: command触发handle
- * @param 该插件响应的命令
- * @return *commandHandle
- * example
-
-		leafBot.OnCommand("天气").
-		SetPluginName("天气插件").
-		AddHandle(
-			func(event LeafBot.Event,bot *leafBot.Bot,args []string){
-
-			})
-*/
-func OnCommand(command string) *commandHandle {
-	return &commandHandle{command: command}
-}
-
-// OnNotice
-/**
- * @Description: notice触发handle
- * @param noticeType  notice事件类型
- * @return *noticeHandle
- * example
-	响应戳一戳事件的示例
-
-		leafBot.OnNotice(leafBot.NoticeTypeApi.Notify).
-			SetPluginName("poke").
-			AddRule(
-				func(event leafBot.Event, bot *leafBot.Bot) bool {
-					if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
-						return false
-					}
-					return true
-				}).SetWeight(10).
-			AddHandle(
-				func(event leafBot.Event, bot *leafBot.Bot) {
-
-				})
-*/
-func OnNotice(noticeType string) *noticeHandle {
-	return &noticeHandle{noticeType: noticeType}
-}
-
-// OnMessage
-/**
- * @Description: message事件触发handle
- * @param messageType  message事件的子类型
- * @return *messageHandle
- * example
- */
-func OnMessage(messageType string) *messageHandle {
-	return &messageHandle{messageType: messageType}
-}
-
-// OnRequest
-/**
- * @Description: request事件触发handle
- * @param requestType  request事件的子类型
- * @return *requestHandle
- * example
- */
-func OnRequest(requestType string) *requestHandle {
-	return &requestHandle{requestType: requestType}
-}
-
-// OnMeta
-/**
- * @Description: 元事件触发handle
- * @return *metaHandle
- * example
- */
-func OnMeta() *metaHandle {
-	return &metaHandle{}
-}
-
-// OnPretreatment
-/**
- * @Description: 预处理事件
- * @return *PretreatmentHandle
- * example
- */
-func OnPretreatment() *PretreatmentHandle {
-	return &PretreatmentHandle{}
 }
 
 // SetPluginName
@@ -529,7 +422,7 @@ func (c *commandHandle) SetCD(types string, long int) *commandHandle {
 	return c
 }
 
-func (d *disConnectHandle) AddHandle(f func(selfId int)) {
+func (d *disConnectHandle) AddHandle(f func(selfId int64)) {
 	d.HandleType = "disConnect"
 	lock.Lock()
 	pluginNum++

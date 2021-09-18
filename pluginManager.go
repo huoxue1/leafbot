@@ -58,11 +58,56 @@ func reloadConfigInit() {
 }
 
 func InitPluginManager() {
-	plugin := NewPlugin("插件管理管理")
+	plugin := NewPlugin("管理管理")
 	plugin.SetHelp(map[string]string{
-		"ban_handle":  "禁用某个插件，参数为插件id",
-		"use_handle":  "启用某个插件,参数为插件id",
-		"get_handles": "获取插件列表",
+		"ban_handle":  "禁用事件处理，参数为id",
+		"use_handle":  "启用事件处理,参数为id",
+		"get_handles": "获取事件处理列表",
+		"get_plugins": "获取插件列表",
+		"help":        "获取插件帮助",
+	})
+
+	plugin.OnCommand("get_plugins", Option{
+		PluginName: "插件列表",
+		Weight:     0,
+		Block:      false,
+		Allies:     []string{"插件列表"},
+		Rules:      []Rule{OnlySuperUser, OnlyToMe},
+		CD:         coolDown{"default", 0},
+	}).AddHandle(func(event Event, bot Api, state *State) {
+		mess := ""
+		for _, p := range plugins {
+			mess += p.Name + "\n"
+		}
+		mess += "发送help加插件名即可获取插件帮助"
+		event.Send(message.Text(mess))
+	})
+	plugin.OnCommand("help", Option{
+		PluginName: "插件帮助",
+		Weight:     1,
+		Block:      false,
+		Allies:     []string{"插件帮助"},
+		Rules:      nil,
+		CD:         coolDown{"default", 0},
+	}).AddHandle(func(event Event, bot Api, state *State) {
+		if len(state.Args) < 1 {
+			event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
+			return
+		}
+		for _, p := range plugins {
+			if p.Name == state.Args[0] {
+				mess := "插件名：" + p.Name + "\n帮助列表：\n"
+				for _, help := range p.Helps {
+					for s, s2 := range help {
+						mess += s + "\t" + s2 + "\t"
+					}
+				}
+				event.Send(message.Text(mess))
+				return
+			}
+		}
+		event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
+
 	})
 
 	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
@@ -85,8 +130,8 @@ func InitPluginManager() {
 		event.Send(message.Text("启用插件成功"))
 	})
 
-	plugin.OnCommand("get_handles").SetPluginName("获取插件列表").
-		AddAllies("插件列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
+	plugin.OnCommand("get_handles").SetPluginName("获取事件处理列表").
+		AddAllies("事件处理列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
 		//	msg += s+"\n"

@@ -1,6 +1,9 @@
 package leafBot
 
-import "fmt"
+import (
+	"fmt"
+	log "github.com/sirupsen/logrus"
+)
 
 // Driver
 // @Description: 实现了该接口即可注册为leafBot的driver
@@ -15,10 +18,10 @@ type Driver interface {
 	// @return chan
 	//
 	GetEvent() chan []byte
-	// AddContentHandle
-	// @Description: 为驱动注册链接事件
-	//
-	AddContentHandle()
+
+	OnConnect(func(selfId int64, host string, clientRole string))
+	OnDisConnect(func(selfId int64))
+
 	// GetBot
 	// @Description: 获取一个实现了APi接口的bot
 	// @param int64 bot的id
@@ -67,5 +70,33 @@ var driver Driver
  */
 func LoadDriver(driver2 Driver) {
 	driver2.SetAddress(fmt.Sprintf(":%v", DefaultConfig.Port))
+	driver2.OnConnect(func(selfId int64, host string, clientRole string) {
+		defer func() {
+			err := recover()
+			if err != nil {
+				log.Errorln("执行连接回调出现不可预料的错误")
+				log.Errorln(err)
+			}
+		}()
+		for _, handle := range ConnectHandles {
+			go handle.handle(Connect{
+				SelfID:     selfId,
+				Host:       host,
+				ClientRole: clientRole,
+			}, driver2.GetBot(selfId).(Api))
+		}
+	})
+	driver.OnDisConnect(func(selfId int64) {
+		defer func() {
+			err := recover()
+			if err != nil {
+				log.Errorln("执行连接断开回调出现不可预料的错误")
+				log.Errorln(err)
+			}
+		}()
+		for _, handle := range DisConnectHandles {
+			go handle.handle(selfId)
+		}
+	})
 	driver = driver2
 }

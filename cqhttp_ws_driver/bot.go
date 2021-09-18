@@ -8,10 +8,11 @@ import (
 )
 
 type Bot struct {
-	selfId    int64
-	conn      *websocket.Conn
-	responses sync.Map
-	lock      sync.Mutex
+	selfId           int64
+	conn             *websocket.Conn
+	responses        sync.Map
+	lock             sync.Mutex
+	disConnectHandle func(selfId int64)
 }
 
 func (b *Bot) GetSelfId() int64 {
@@ -45,6 +46,7 @@ func (b *Bot) GetResponse(echo string) ([]byte, error) {
 func (b *Bot) wsClose() {
 	_ = b.conn.Close()
 	b.lock.Lock()
+	b.disConnectHandle(b.selfId)
 	defer b.lock.Unlock()
 
 }
