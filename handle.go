@@ -22,48 +22,7 @@ type (
 	DisConnectChain []*disConnectHandle
 )
 
-type Plugin struct {
-	Name  string
-	Helps []map[string]string
-}
-
-var (
-	pluginNum = 0
-	lock      sync.Mutex
-)
-
-//M
-/*
-	通过id从插件列表获取插件
-	所有的插件队列都实现了该接口
-*/
-type M interface {
-	get(id string) (interface{}, bool)
-}
-
-// State
-// @Description: sdk处理消息后将内容传递给plugin
-//
-type State struct {
-	Args        []string
-	Cmd         string
-	Allies      []string
-	RegexResult []string
-	Data        map[string]interface{}
-}
-
 type (
-
-	/**
-	     * @Description: 命令冷却的结构体
-		    types: 冷却设置的类型
-		    long: cd的长短，若types为rand则表示随机数的最大值
-	*/
-	coolDown struct {
-		Types string `json:"types"`
-		Long  int    `json:"long"`
-	}
-
 	PretreatmentHandle struct {
 		BaseHandle
 		disableGroup []int
@@ -125,6 +84,106 @@ type (
 	disConnectHandle struct {
 		BaseHandle
 		handle func(selfId int)
+	}
+)
+
+type (
+	NoticeInt interface {
+		SetPluginName(name string) *noticeHandle
+		AddRule(rule Rule) *noticeHandle
+		SetWeight(weight int) *noticeHandle
+		AddHandle(func(event Event, bot Api))
+	}
+
+	RequestInt interface {
+		SetPluginName(name string) *requestHandle
+		AddRule(rule Rule) *requestHandle
+		SetWeight(weight int) *requestHandle
+		AddHandle(func(event Event, bot Api))
+	}
+
+	MessageInt interface {
+		SetPluginName(name string) *messageHandle
+		AddRule(rule Rule) *messageHandle
+		SetWeight(weight int) *messageHandle
+		AddHandle(func(event Event, bot Api, state *State))
+	}
+
+	PretreatmentInt interface {
+		SetPluginName(name string) *PretreatmentHandle
+		AddRule(rule Rule) *PretreatmentHandle
+		SetWeight(weight int) *PretreatmentHandle
+		AddHandle(func(event Event, bot Api) bool)
+	}
+
+	MetaInt interface {
+		SetPluginName(name string) *metaHandle
+		AddRule(rule Rule) *metaHandle
+		SetWeight(weight int) *metaHandle
+		AddHandle(func(event Event, bot Api))
+	}
+
+	ConnectInt interface {
+		SetPluginName(name string) *connectHandle
+		AddHandle(func(connect Connect, bot Api))
+	}
+
+	DisConnectInt interface {
+		SetPluginName(name string) *disConnectHandle
+		AddHandle(func(selfId int))
+	}
+
+	CommandInt interface {
+		SetPluginName(name string) *commandHandle
+		AddAllies(allies string) *commandHandle
+		AddRule(rule Rule) *commandHandle
+		SetWeight(weight int) *commandHandle
+		SetBlock(IsBlock bool) *commandHandle
+		AddHandle(f func(event Event, bot Api, state *State))
+		SetCD(types string, long int) *commandHandle
+	}
+)
+
+type Plugin struct {
+	Name  string
+	Helps []map[string]string
+}
+
+var (
+	pluginNum = 0
+	lock      sync.Mutex
+)
+
+//M
+/*
+	通过id从插件列表获取插件
+	所有的插件队列都实现了该接口
+*/
+type M interface {
+	get(id string) (interface{}, bool)
+}
+
+type (
+
+	// State
+	// @Description: sdk处理消息后将内容传递给plugin
+	//
+	State struct {
+		Args        []string
+		Cmd         string
+		Allies      []string
+		RegexResult []string
+		Data        map[string]interface{}
+	}
+
+	/**
+	     * @Description: 命令冷却的结构体
+		    types: 冷却设置的类型
+		    long: cd的长短，若types为rand则表示随机数的最大值
+	*/
+	coolDown struct {
+		Types string `json:"types"`
+		Long  int    `json:"long"`
 	}
 
 	Connect struct {
@@ -246,12 +305,27 @@ func (p *Plugin) OnKeyWords(keyword string) *messageHandle {
 	return m
 }
 
+// OnRegex
+/**
+ * @Description:
+ * @param regex
+ * @return *commandHandle
+ * example
+ */
 func OnRegex(regex string) *commandHandle {
 
 	return &commandHandle{regexMatcher: regex}
 
 }
 
+// OnTime
+/**
+ * @Description:
+ * @param crons
+ * @param selfId
+ * @param handle
+ * example
+ */
 func OnTime(crons string, selfId int, handle func(bot Api)) {
 	c2 := cron.New()
 	_, err := c2.AddFunc(crons, func() {
@@ -263,6 +337,13 @@ func OnTime(crons string, selfId int, handle func(bot Api)) {
 	c2.Start()
 }
 
+// OnEndWith
+/**
+ * @Description:
+ * @param str
+ * @return *messageHandle
+ * example
+ */
 func OnEndWith(str string) *messageHandle {
 	c := &messageHandle{}
 	c.AddRule(func(event Event, bot Api, state *State) bool {
@@ -307,6 +388,92 @@ func OnConnect() *connectHandle {
  */
 func OnDisConnect() *disConnectHandle {
 	return &disConnectHandle{}
+}
+
+// OnCommand
+/**
+ * @Description: command触发handle
+ * @param 该插件响应的命令
+ * @return *commandHandle
+ * example
+
+		leafBot.OnCommand("天气").
+		SetPluginName("天气插件").
+		AddHandle(
+			func(event LeafBot.Event,bot *leafBot.Bot,args []string){
+
+			})
+*/
+func OnCommand(command string) *commandHandle {
+	return &commandHandle{command: command}
+}
+
+// OnNotice
+/**
+ * @Description: notice触发handle
+ * @param noticeType  notice事件类型
+ * @return *noticeHandle
+ * example
+	响应戳一戳事件的示例
+
+		leafBot.OnNotice(leafBot.NoticeTypeApi.Notify).
+			SetPluginName("poke").
+			AddRule(
+				func(event leafBot.Event, bot *leafBot.Bot) bool {
+					if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
+						return false
+					}
+					return true
+				}).SetWeight(10).
+			AddHandle(
+				func(event leafBot.Event, bot *leafBot.Bot) {
+
+				})
+*/
+func OnNotice(noticeType string) *noticeHandle {
+	return &noticeHandle{noticeType: noticeType}
+}
+
+// OnMessage
+/**
+ * @Description: message事件触发handle
+ * @param messageType  message事件的子类型
+ * @return *messageHandle
+ * example
+ */
+func OnMessage(messageType string) *messageHandle {
+	return &messageHandle{messageType: messageType}
+}
+
+// OnRequest
+/**
+ * @Description: request事件触发handle
+ * @param requestType  request事件的子类型
+ * @return *requestHandle
+ * example
+ */
+func OnRequest(requestType string) *requestHandle {
+	return &requestHandle{requestType: requestType}
+}
+
+// OnMeta
+/**
+ * @Description: 元事件触发handle
+ * @return *metaHandle
+ * example
+ */
+func OnMeta() *metaHandle {
+	return &metaHandle{}
+}
+
+// OnPretreatment
+/**
+ * @Description: 预处理事件
+ * @return *PretreatmentHandle
+ * example
+ */
+func OnPretreatment() *PretreatmentHandle {
+	return &PretreatmentHandle{}
 }
 
 // SetPluginName
@@ -357,148 +524,9 @@ func (p *PretreatmentHandle) SetPluginName(name string) *PretreatmentHandle {
 	return p
 }
 
-type ConnectInt interface {
-	SetPluginName(name string) *connectHandle
-	AddHandle(func(connect Connect, bot Api))
-}
-
-type DisConnectInt interface {
-	SetPluginName(name string) *disConnectHandle
-	AddHandle(func(selfId int))
-}
-
-type CommandInt interface {
-	SetPluginName(name string) *commandHandle
-	AddAllies(allies string) *commandHandle
-	AddRule(rule Rule) *commandHandle
-	SetWeight(weight int) *commandHandle
-	SetBlock(IsBlock bool) *commandHandle
-	AddHandle(func(event Event, bot Api, args []string))
-	SetCD(types string, long int) *commandHandle
-}
-
 func (c *commandHandle) SetCD(types string, long int) *commandHandle {
 	c.cd = coolDown{Types: types, Long: long}
 	return c
-}
-
-type NoticeInt interface {
-	SetPluginName(name string) *noticeHandle
-	AddRule(rule Rule) *noticeHandle
-	SetWeight(weight int) *noticeHandle
-	AddHandle(func(event Event, bot Api))
-}
-
-type RequestInt interface {
-	SetPluginName(name string) *requestHandle
-	AddRule(rule Rule) *requestHandle
-	SetWeight(weight int) *requestHandle
-	AddHandle(func(event Event, bot Api))
-}
-
-type MessageInt interface {
-	SetPluginName(name string) *messageHandle
-	AddRule(rule Rule) *messageHandle
-	SetWeight(weight int) *messageHandle
-	AddHandle(func(event Event, bot Api))
-}
-
-type PretreatmentInt interface {
-	SetPluginName(name string) *PretreatmentHandle
-	AddRule(rule Rule) *PretreatmentHandle
-	SetWeight(weight int) *PretreatmentHandle
-	AddHandle(func(event Event, bot Api) bool)
-}
-
-type MetaInt interface {
-	SetPluginName(name string) *metaHandle
-	AddRule(rule Rule) *metaHandle
-	SetWeight(weight int) *metaHandle
-	AddHandle(func(event Event, bot Api))
-}
-
-// OnCommand
-/**
- * @Description: command触发handle
- * @param 该插件响应的命令
- * @return *commandHandle
- * example
-	leafBot.OnCommand("天气").
-	SetPluginName("天气插件").
-	AddHandle(
-		func(event LeafBot.Event,bot *leafBot.Bot,args []string){
-
-		})
-*/
-func OnCommand(command string) *commandHandle {
-	return &commandHandle{command: command}
-}
-
-// OnNotice
-/**
- * @Description: notice触发handle
- * @param noticeType  notice事件类型
- * @return *noticeHandle
- * example
-	响应戳一戳事件的示例
-	leafBot.OnNotice(leafBot.NoticeTypeApi.Notify).
-		SetPluginName("poke").
-		AddRule(
-			func(event leafBot.Event, bot *leafBot.Bot) bool {
-				if event.SubType != "poke" || event.UserId == event.SelfId || int(event.TargetId) != event.SelfId {
-					return false
-				}
-				return true
-			}).SetWeight(10).
-		AddHandle(
-			func(event leafBot.Event, bot *leafBot.Bot) {
-
-			})
-*/
-func OnNotice(noticeType string) *noticeHandle {
-	return &noticeHandle{noticeType: noticeType}
-}
-
-// OnMessage
-/**
- * @Description: message事件触发handle
- * @param messageType  message事件的子类型
- * @return *messageHandle
- * example
- */
-func OnMessage(messageType string) *messageHandle {
-	return &messageHandle{messageType: messageType}
-}
-
-// OnRequest
-/**
- * @Description: request事件触发handle
- * @param requestType  request事件的子类型
- * @return *requestHandle
- * example
- */
-func OnRequest(requestType string) *requestHandle {
-	return &requestHandle{requestType: requestType}
-}
-
-// OnMeta
-/**
- * @Description: 元事件触发handle
- * @return *metaHandle
- * example
- */
-func OnMeta() *metaHandle {
-	return &metaHandle{}
-}
-
-// OnPretreatment
-/**
- * @Description: 预处理事件
- * @return *PretreatmentHandle
- * example
- */
-func OnPretreatment() *PretreatmentHandle {
-	return &PretreatmentHandle{}
 }
 
 func (d *disConnectHandle) AddHandle(f func(selfId int)) {
