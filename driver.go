@@ -86,7 +86,7 @@ func LoadDriver(driver2 Driver) {
 			}, driver2.GetBot(selfId).(Api))
 		}
 	})
-	driver.OnDisConnect(func(selfId int64) {
+	driver2.OnDisConnect(func(selfId int64) {
 		defer func() {
 			err := recover()
 			if err != nil {
