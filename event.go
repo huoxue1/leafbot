@@ -102,13 +102,7 @@ type (
 	}
 )
 
-var ENABLE = true // 是否启用gui
-
-func init() {
-	if runtime.GOOS != "windows" {
-		ENABLE = false
-	}
-}
+var ENABLE = false // 是否启用gui
 
 var (
 	MessageChan = make(chan Event, 10)

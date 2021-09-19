@@ -3,16 +3,16 @@ package utils
 import (
 	log "github.com/sirupsen/logrus"
 	"io"
-	"runtime"
 	"sync"
 )
 
 type LogHook struct {
-	lock    *sync.Mutex
-	levels  []log.Level
-	format  log.Formatter
-	writers []io.Writer
-	LogChan chan string
+	EnableLogChan bool
+	lock          *sync.Mutex
+	levels        []log.Level
+	format        log.Formatter
+	writers       []io.Writer
+	LogChan       chan string
 }
 
 func (l *LogHook) Levels() []log.Level {
@@ -29,7 +29,7 @@ func (l *LogHook) Fire(entry *log.Entry) error {
 
 	data, err := l.format.Format(entry)
 
-	if runtime.GOOS == "windows" {
+	if l.EnableLogChan {
 		go func() {
 			l.LogChan <- string(data)
 		}()
@@ -81,9 +81,10 @@ func (l *LogHook) AddWriter(writer ...io.Writer) {
 
 func NewLogHook(formatter log.Formatter, levels []log.Level, writers ...io.Writer) *LogHook {
 	hook := &LogHook{
-		lock:    new(sync.Mutex),
-		LogChan: make(chan string, 10),
-		levels:  levels,
+		EnableLogChan: false,
+		lock:          new(sync.Mutex),
+		LogChan:       make(chan string, 10),
+		levels:        levels,
 	}
 	hook.AddWriter(writers...)
 	// hook.AddLevel(levels...)

@@ -123,13 +123,15 @@ func InitWindow() {
 		}
 		if logConn == nil {
 			logConn = conn
+			hook.EnableLogChan = true
 			go func() {
 				for {
 					event := <-hook.LogChan
 					err = logConn.WriteMessage(websocket.TextMessage, []byte(event))
 					if err != nil {
 						fmt.Println("前端日志消息发送失败" + err.Error())
-						continue
+						hook.EnableLogChan = false
+						break
 					}
 				}
 			}()
@@ -156,19 +158,7 @@ func data(ctx *gin.Context) {
 
 	if dataCoon == nil {
 		dataCoon = conn
-		go func() {
-			for {
-				_, m, err := dataCoon.ReadMessage()
-				if err != nil {
-					fmt.Println("接收消息失败" + err.Error())
-					break
-				}
-				if string(m) == "ping" {
-					m = []byte("pong")
-				}
-				//写入ws数据
-			}
-		}()
+		ENABLE = true
 
 		go func() {
 			for {
@@ -177,7 +167,8 @@ func data(ctx *gin.Context) {
 				err = dataCoon.WriteJSON(&event)
 				if err != nil {
 					fmt.Println("消息发送失败" + err.Error())
-					continue
+					ENABLE = false
+					break
 				}
 			}
 
