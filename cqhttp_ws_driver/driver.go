@@ -71,6 +71,14 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	// 执行链接回调
 	go d.connectHandle(selfId, host, role)
 	go func() {
+		defer func() {
+			err := recover()
+			if err != nil {
+				b.wsClose()
+				log.Errorln("ws链接读取出现错误")
+				log.Errorln(err)
+			}
+		}()
 		for {
 			_, data, err := conn.ReadMessage()
 			if err != nil {
