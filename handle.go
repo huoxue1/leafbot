@@ -156,8 +156,9 @@ type (
 )
 
 type Plugin struct {
-	Name  string
-	Helps []map[string]string
+	Name    string
+	Helps   []map[string]string
+	handles []BaseHandle
 }
 
 var (

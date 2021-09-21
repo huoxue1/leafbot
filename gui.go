@@ -2,23 +2,22 @@ package leafBot
 
 import ( //nolint:gci
 
-	"embed"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/huoxue1/leafBot/message"
 	"github.com/huoxue1/leafBot/utils"
 	"github.com/huoxue1/lorca"
+	"github.com/huoxue1/test3"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"
+	"sort"
 	"strconv"
 )
-
-//go:embed gui/static
-var static embed.FS
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -79,41 +78,42 @@ func InitWindow() {
 	}
 	log.Infoln("web页面：http://127.0.0.1:3000")
 	engine := gin.New()
-	engine.StaticFS("/static", http.FS(static))
+	engine.Use(Cors())
+	engine.StaticFS("/dist", http.FS(test3.Dist))
 	engine.POST("/get_config", GetConfig)
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
 	engine.GET("/", func(context *gin.Context) {
-		context.Redirect(http.StatusMovedPermanently, "/static/gui/static/html/default.html")
+		context.Redirect(http.StatusMovedPermanently, "/dist/dist/default.html")
 	})
-	//engine.POST("/update_plugin_states", func(context *gin.Context) {
-	//	id := context.PostForm("id")
-	//	status, err := strconv.ParseBool(context.PostForm("status"))
-	//	if err != nil {
-	//		log.Errorln("改变插件状态出错" + err.Error())
-	//	}
-	//	if status {
-	//		StartPluginByID(id)
-	//	} else {
-	//		BanPluginByID(id)
-	//	}
-	//	context.JSON(200, nil)
-	//})
-	//
-	//engine.POST("/get_plugins", func(context *gin.Context) {
-	//	list := GetHandleList()
-	//	var pluginList []BaseHandle
-	//
-	//	for _, handles := range list {
-	//		pluginList = append(pluginList, handles...)
-	//	}
-	//	sort.SliceStable(pluginList, func(i, j int) bool {
-	//		id1, _ := strconv.Atoi(pluginList[i].ID)
-	//		id2, _ := strconv.Atoi(pluginList[j].ID)
-	//		return id1 < id2
-	//	})
-	//	context.JSON(200, pluginList)
-	//})
+	engine.POST("/update_plugin_states", func(context *gin.Context) {
+		id := context.PostForm("id")
+		status, err := strconv.ParseBool(context.PostForm("status"))
+		if err != nil {
+			log.Errorln("改变插件状态出错" + err.Error())
+		}
+		if status {
+			StartPluginByID(id)
+		} else {
+			BanPluginByID(id)
+		}
+		context.JSON(200, nil)
+	})
+
+	engine.POST("/get_plugins", func(context *gin.Context) {
+		list := GetHandleList()
+		var pluginList []BaseHandle
+
+		for _, handles := range list {
+			pluginList = append(pluginList, handles...)
+		}
+		sort.SliceStable(pluginList, func(i, j int) bool {
+			id1, _ := strconv.Atoi(pluginList[i].ID)
+			id2, _ := strconv.Atoi(pluginList[j].ID)
+			return id1 < id2
+		})
+		context.JSON(200, pluginList)
+	})
 
 	engine.GET("/get_log", func(context *gin.Context) {
 		conn, err := upGrader.Upgrade(context.Writer, context.Request, nil)
@@ -193,21 +193,48 @@ func GetConfig(ctx *gin.Context) {
 func GetGroupList(ctx *gin.Context) {
 	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
-		return
+
+		var data map[string]interface{}
+		err := ctx.BindJSON(&data)
+		if err != nil {
+			log.Errorln(err.Error())
+			return
+		}
+		selfID = int(data["self_id"].(float64))
 	}
+
 	bot := GetBotById(selfID)
-	list := bot.GetGroupList()
-	ctx.JSON(200, list)
+	var resp []interface{}
+	list := bot.GetGroupList().String()
+	err = json.Unmarshal([]byte(list), &resp)
+	if err != nil {
+		log.Errorln(err.Error())
+	}
+	ctx.JSON(200, resp)
 }
 
 func GetFriendList(ctx *gin.Context) {
 	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
-		return
+		log.Errorln(err.Error())
+		var data map[string]interface{}
+		err := ctx.BindJSON(&data)
+		if err != nil {
+			log.Errorln(err.Error())
+			log.Errorln("绑定错误")
+			return
+		}
+		selfID = int(data["self_id"].(float64))
 	}
 	bot := GetBotById(selfID)
-	list := bot.GetFriendList()
-	ctx.JSON(200, list)
+	var resp []interface{}
+	list := bot.GetFriendList().String()
+	err = json.Unmarshal([]byte(list), &resp)
+	if err != nil {
+		log.Errorln(err.Error())
+		log.Errorln("解析json错误")
+	}
+	ctx.JSON(200, resp)
 }
 
 func CallApi(ctx *gin.Context) {
@@ -221,4 +248,38 @@ func CallApi(ctx *gin.Context) {
 	bot := GetBotById(selfID)
 	msgID := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
+}
+
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
+		origin := c.Request.Header.Get("Origin") //请求头部
+		if origin != "" {
+			//接收客户端发送的origin （重要！）
+			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
+			//服务器支持的所有跨域请求的方法
+			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE,UPDATE")
+			//允许跨域设置可以返回其他子段，可以自定义字段
+			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Token,session, Content-Type")
+			// 允许浏览器（客户端）可以解析的头部 （重要）
+			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers")
+			//设置缓存时间
+			c.Header("Access-Control-Max-Age", "172800")
+			//允许客户端传递校验信息比如 cookie (重要)
+			c.Header("Access-Control-Allow-Credentials", "true")
+		}
+
+		//允许类型校验
+		if method == "OPTIONS" {
+			c.JSON(http.StatusOK, "ok!")
+		}
+
+		defer func() {
+			if err := recover(); err != nil {
+				log.Printf("Panic info is: %v", err)
+			}
+		}()
+
+		c.Next()
+	}
 }

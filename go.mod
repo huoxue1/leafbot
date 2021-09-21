@@ -14,6 +14,7 @@ require (
 	github.com/hjson/hjson-go v3.1.0+incompatible
 	github.com/huoxue1/gg v1.3.1-0.20210909022355-795dba57682a
 	github.com/huoxue1/lorca v0.1.11
+	github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/json-iterator/go v1.1.10
 	github.com/kr/pretty v0.1.0 // indirect
