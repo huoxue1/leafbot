@@ -241,6 +241,40 @@ func (p *Plugin) OnRegex(regex string, options ...Option) *commandHandle {
 	}
 }
 
+func (p *Plugin) OnFullMatch(match string, options ...Option) *messageHandle {
+	rule := func(event Event, bot Api, state *State) bool {
+		if event.RawMessage == match {
+			return true
+		}
+		return false
+	}
+	if len(options) > 0 {
+		return &messageHandle{
+			weight: options[0].Weight,
+			rules:  append(options[0].Rules, rule),
+		}
+	}
+	return &messageHandle{rules: []Rule{rule}}
+}
+
+func (p *Plugin) OnFullMatchGroup(matchs []string, options ...Option) *messageHandle {
+	rule := func(event Event, bot Api, state *State) bool {
+		for _, match := range matchs {
+			if event.RawMessage == match {
+				return true
+			}
+		}
+		return false
+	}
+	if len(options) > 0 {
+		return &messageHandle{
+			weight: options[0].Weight,
+			rules:  append(options[0].Rules, rule),
+		}
+	}
+	return &messageHandle{rules: []Rule{rule}}
+}
+
 func (p *Plugin) OnConnect() *connectHandle {
 	return &connectHandle{}
 }
