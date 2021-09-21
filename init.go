@@ -15,11 +15,15 @@ import (
 	"time"
 )
 
+//go:embed config/label.txt
+var label string
+
 // init
 /*
    @Description:
 */
 func init() {
+
 	err := initConfig(YAML)
 	if err != nil {
 		log.Infoln("配置文件加载失败或者不存在")
@@ -44,6 +48,7 @@ func init() {
 		level = log.DebugLevel
 	}
 	log.SetLevel(level)
+	log.Infoln("\n" + label)
 }
 
 const (
