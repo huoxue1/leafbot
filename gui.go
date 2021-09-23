@@ -80,7 +80,7 @@ func InitWindow() {
 	engine := gin.New()
 	engine.Use(Cors())
 	engine.StaticFS("/dist", http.FS(test3.Dist))
-	engine.POST("/get_config", GetConfig)
+	engine.POST("/get_bots", GetConfig)
 	engine.POST("/get_group_list", GetGroupList)
 	engine.POST("/get_friend_list", GetFriendList)
 	engine.GET("/", func(context *gin.Context) {
@@ -238,15 +238,25 @@ func GetFriendList(ctx *gin.Context) {
 }
 
 func CallApi(ctx *gin.Context) {
-	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
-	id, err := strconv.Atoi(ctx.PostForm("id"))
+	selfID, err := strconv.ParseInt(ctx.PostForm("self_id"), 10, 64)
+	id, err := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	message1 := ctx.PostForm("message")
 	messageType := ctx.PostForm("message_type")
 	if err != nil {
-		ctx.JSON(404, nil)
+		var data map[string]interface{}
+		err := ctx.BindJSON(&data)
+		if err != nil {
+			ctx.JSON(404, nil)
+			return
+		}
+		selfID = data["self_id"].(int64)
+		id = data["id"].(int64)
+		message1 = data["message"].(string)
+		messageType = data["message_type"].(string)
+
 	}
-	bot := GetBotById(selfID)
-	msgID := bot.SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
+	bot := GetBotById(int(selfID))
+	msgID := bot.SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }
 

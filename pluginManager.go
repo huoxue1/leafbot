@@ -15,7 +15,7 @@ import (
 var font []byte
 
 func init() {
-	err := gout.GET("https://specialblog.link/img/202109091139659.ttf").BindBody(&font).Do()
+	err := gout.GET("https://codechina.csdn.net/m15082717021/image/-/raw/main/202109091139659.ttf").BindBody(&font).Do()
 	if err != nil {
 		return
 	}
