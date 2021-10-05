@@ -1,4 +1,4 @@
-package leafbot
+package leafBot
 
 import ( //nolint:gci
 

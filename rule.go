@@ -1,4 +1,4 @@
-package leafbot
+package leafBot
 
 type (
 	Rule func(Event, Api, *State) bool
