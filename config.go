@@ -1,24 +1,30 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"
 	"fmt"
-	"github.com/huoxue1/leafBot/utils"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+
+	"github.com/huoxue1/leafBot/utils"
 )
 
 //go:embed config/default_config.yaml
 var defaultConfig []byte
 
+// Config
+// @Description:
+//
 type Config struct {
 	NickName         []string `json:"nick_name" yaml:"nick_name" hjson:"nick_name"`
 	Admin            int      `json:"admin" yaml:"admin" hjson:"admin"`
 	Host             string   `json:"host" yaml:"host" hjson:"host"`
 	Port             int      `json:"port" yaml:"port" hjson:"port"`
 	LogLevel         string   `json:"log_level" yaml:"log_level" hjson:"log_level"`
+	LogTruncate      bool     `json:"log_truncate" yaml:"log_truncate" hjson:"log_truncate"`
 	SuperUser        []int    `json:"super_user" yaml:"super_user" hjson:"super_user"`
 	CommandStart     []string `json:"command_start" yaml:"command_start" hjson:"command_start"`
 	EnablePlaywright bool     `json:"enable_playwright" yaml:"enable_playwright" hjson:"enable_playwright"`
@@ -42,7 +48,6 @@ var (
 )
 
 func LoadConfig() {
-
 	input := ""
 	log.Infoln("请输入机器人账号")
 	_, err := fmt.Scanln(&input)

@@ -1,15 +1,18 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"
 	"encoding/base64" //nolint:gci
+
 	"github.com/guonaihong/gout"
 	"github.com/huoxue1/gg"
+
 	"github.com/huoxue1/leafBot/message"
 
-	log "github.com/sirupsen/logrus"
 	"io/ioutil" //nolint:gci
 	"strconv"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var font []byte
@@ -38,7 +41,6 @@ type BaseHandle struct {
 }
 
 func reloadConfigInit() {
-
 	plugin := NewPlugin("配置重载")
 	plugin.SetHelp(map[string]string{"reload": "重载leafBot的配置文件"})
 
@@ -107,7 +109,6 @@ func InitPluginManager() {
 			}
 		}
 		event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
-
 	})
 
 	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
@@ -200,7 +201,6 @@ func GetHandleList() map[string][]BaseHandle {
 	)
 
 	for _, handle := range PretreatmentHandles {
-
 		preList = append(preList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -212,7 +212,6 @@ func GetHandleList() map[string][]BaseHandle {
 	list["预处理响应器"] = preList
 
 	for _, handle := range CommandHandles {
-
 		cmdList = append(cmdList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -224,7 +223,6 @@ func GetHandleList() map[string][]BaseHandle {
 	list["command响应器"] = cmdList
 
 	for _, handle := range MessageHandles {
-
 		msgList = append(msgList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -236,7 +234,6 @@ func GetHandleList() map[string][]BaseHandle {
 	list["message响应器"] = msgList
 
 	for _, handle := range RequestHandles {
-
 		reqList = append(reqList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -248,7 +245,6 @@ func GetHandleList() map[string][]BaseHandle {
 	list["request响应器"] = reqList
 
 	for _, handle := range NoticeHandles {
-
 		notList = append(notList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -260,7 +256,6 @@ func GetHandleList() map[string][]BaseHandle {
 	list["notice响应器"] = notList
 
 	for _, handle := range MetaHandles {
-
 		metaList = append(metaList, BaseHandle{
 			ID:         handle.ID,
 			Name:       handle.Name,
@@ -314,7 +309,6 @@ func BanPluginByID(id string) {
 		handle.(*disConnectHandle).Enable = false
 		log.Infoln(handle.(*disConnectHandle).Name + "插件已被禁用")
 	}
-
 }
 
 // BanPluginByName
@@ -447,5 +441,4 @@ func StartPlugin(name string) int {
 		}
 	}
 	return num
-
 }

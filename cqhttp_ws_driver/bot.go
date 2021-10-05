@@ -2,11 +2,15 @@ package cqhttp_ws_driver
 
 import (
 	"errors"
-	"github.com/gorilla/websocket"
 	"sync"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
+// Bot
+// @Description:
+//
 type Bot struct {
 	selfId           int64
 	conn             *websocket.Conn
@@ -15,10 +19,24 @@ type Bot struct {
 	disConnectHandle func(selfId int64)
 }
 
+// GetSelfId
+/**
+ * @Description:
+ * @receiver b
+ * @return int64
+ * example
+ */
 func (b *Bot) GetSelfId() int64 {
 	return b.selfId
 }
 
+// Do
+/**
+ * @Description:
+ * @receiver b
+ * @param i
+ * example
+ */
 func (b *Bot) Do(i interface{}) {
 	err := b.conn.WriteJSON(i)
 	if err != nil {
@@ -48,5 +66,4 @@ func (b *Bot) wsClose() {
 	b.lock.Lock()
 	b.disConnectHandle(b.selfId)
 	defer b.lock.Unlock()
-
 }

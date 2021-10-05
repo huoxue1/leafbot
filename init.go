@@ -1,18 +1,21 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/hjson/hjson-go" //nolint:gci
-	"github.com/huoxue1/leafBot/utils"
-	rotates "github.com/lestrrat-go/file-rotatelogs"
-	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v3"
 	"io"
 	"os"
 	"path"
+
 	//nolint:gci
 	"time"
+
+	"github.com/hjson/hjson-go" //nolint:gci
+	rotates "github.com/lestrrat-go/file-rotatelogs"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v3"
+
+	"github.com/huoxue1/leafBot/utils"
 )
 
 //go:embed config/label.txt
@@ -23,7 +26,6 @@ var label string
    @Description:
 */
 func init() {
-
 	err := initConfig(YAML)
 	if err != nil {
 		log.Infoln("配置文件加载失败或者不存在")
@@ -38,6 +40,7 @@ func init() {
 	f := &utils.LogFormat{
 		TimeStampFormat: "2006-01-02 15:04:05",
 		LogContent:      "[%time%] [%file%] [%lvl%] : %msg% \n",
+		LogTruncate:     DefaultConfig.LogTruncate,
 	}
 
 	levels := utils.GetLogLevel(DefaultConfig.LogLevel)

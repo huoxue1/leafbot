@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 type (
 	Rule func(Event, Api, *State) bool
@@ -42,6 +42,5 @@ func OnlySuperUser(event Event, _ Api, _ *State) bool {
 }
 
 func OnlyGroupMessage(event Event, _ Api) bool {
-
 	return event.MessageType == "group"
 }

@@ -1,11 +1,17 @@
+// Package utils
+// @Description:
 package utils
 
 import (
-	log "github.com/sirupsen/logrus"
 	"io"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 )
 
+// LogHook
+// @Description:
+//
 type LogHook struct {
 	EnableLogChan bool
 	lock          *sync.Mutex
@@ -15,6 +21,13 @@ type LogHook struct {
 	LogChan       chan string
 }
 
+// Levels
+/**
+ * @Description:
+ * @receiver l
+ * @return []log.Level
+ * example
+ */
 func (l *LogHook) Levels() []log.Level {
 	if len(l.levels) == 0 {
 		return log.AllLevels
@@ -23,6 +36,14 @@ func (l *LogHook) Levels() []log.Level {
 	}
 }
 
+// Fire
+/**
+ * @Description:
+ * @receiver l
+ * @param entry
+ * @return error
+ * example
+ */
 func (l *LogHook) Fire(entry *log.Entry) error {
 	l.lock.Lock()
 	defer l.lock.Unlock()
@@ -39,7 +60,6 @@ func (l *LogHook) Fire(entry *log.Entry) error {
 		return err
 	}
 	for _, writer := range l.writers {
-
 		_, err := writer.Write(data)
 		if err != nil {
 			continue
@@ -49,6 +69,13 @@ func (l *LogHook) Fire(entry *log.Entry) error {
 	return err
 }
 
+// SetFormat
+/**
+ * @Description:
+ * @receiver l
+ * @param format
+ * example
+ */
 func (l *LogHook) SetFormat(format log.Formatter) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
@@ -70,15 +97,26 @@ func (l *LogHook) SetFormat(format log.Formatter) {
 	l.format = format
 }
 
+// AddWriter
+/**
+ * @Description:
+ * @receiver l
+ * @param writer
+ * example
+ */
 func (l *LogHook) AddWriter(writer ...io.Writer) {
 	l.writers = append(l.writers, writer...)
 }
 
-//func (l *LogHook) AddLevel(level ...log.Level) {
-//	l.levels = append(l.levels, level...)
-//
-//}
-
+// NewLogHook
+/**
+ * @Description:
+ * @param formatter
+ * @param levels
+ * @param writers
+ * @return *LogHook
+ * example
+ */
 func NewLogHook(formatter log.Formatter, levels []log.Level, writers ...io.Writer) *LogHook {
 	hook := &LogHook{
 		EnableLogChan: false,

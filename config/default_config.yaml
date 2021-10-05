@@ -20,6 +20,10 @@ command_start:
     - /
 # 是否启用playwright。热搜插件以及网页截图插件会依赖于该配置
 enable_playwright: false
+
+# 日志是否截断,默认截断
+log_truncate: true
+
 # 插件相关的一些配置
 plugins:
     flash_group_id: 0

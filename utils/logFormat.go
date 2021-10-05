@@ -1,12 +1,13 @@
 package utils
 
 import (
-	log "github.com/sirupsen/logrus"
 	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -19,10 +20,20 @@ type LogFormat struct {
 	TimeStampFormat string `json:"time_stamp_format"`
 
 	LogContent string `json:"log_content"`
+
+	LogTruncate bool `json:"log_truncate"`
 }
 
+// Format
+/**
+ * @Description:
+ * @receiver f
+ * @param entry
+ * @return []byte
+ * @return error
+ * example
+ */
 func (f *LogFormat) Format(entry *log.Entry) ([]byte, error) {
-
 	output := f.LogContent
 	if output == "" {
 		output = defaultLogFormat
@@ -63,10 +74,9 @@ func (f *LogFormat) Format(entry *log.Entry) ([]byte, error) {
 		}
 	}
 
-	if len(output) > 500 {
+	if len(output) > 500 && f.LogTruncate {
 		output = output[0:500] + "..."
 	}
 
 	return []byte(output), nil
-
 }

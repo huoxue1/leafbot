@@ -3,10 +3,12 @@ package cqhttp_ws_driver
 import (
 	"encoding/json" //nolint:gci
 	"fmt"
-	message2 "github.com/huoxue1/leafBot/message"
+
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+
+	message2 "github.com/huoxue1/leafBot/message"
 )
 
 type UseApi struct {
@@ -172,7 +174,6 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 	log.Infoln("call api ==> " + d.Action)
 	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
 	log.Infoln("the response ==> " + string(data))
-
 }
 
 // SetGroupCard
@@ -602,11 +603,12 @@ func (b *Bot) GetStrangerInfo(userId int, noCache bool) gjson.Result {
 }
 
 // GetFriendList
-/*
-   @Description:
-   @receiver b
-   @return []FriendList
-*/
+/**
+ * @Description:
+ * @receiver b
+ * @return gjson.Result
+ * example
+ */
 func (b *Bot) GetFriendList() gjson.Result {
 	echo := uuid.NewV4().String()
 	var d = UseApi{
@@ -622,13 +624,14 @@ func (b *Bot) GetFriendList() gjson.Result {
 }
 
 // GetGroupInfo
-/*
-   @Description:
-   @receiver b
-   @param groupId int
-   @param noCache bool
-   @return GroupInfo
-*/
+/**
+ * @Description:
+ * @receiver b
+ * @param groupId
+ * @param noCache
+ * @return gjson.Result
+ * example
+ */
 func (b *Bot) GetGroupInfo(groupId int, noCache bool) gjson.Result {
 	echo := uuid.NewV4().String()
 	type param struct {
@@ -977,10 +980,11 @@ func (b *Bot) SetRestart(delay int) {
 }
 
 // CleanCache
-/*
-   @Description:
-   @receiver b
-*/
+/**
+ * @Description:
+ * @receiver b
+ * example
+ */
 func (b *Bot) CleanCache() {
 	echo := uuid.NewV4().String()
 	var d = UseApi{
@@ -1059,12 +1063,13 @@ func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) gjson.Result {
 }
 
 // GetOnlineClients
-/*
-   @Description:
-   @receiver b
-   @param noCache bool
-   @return Clients
-*/
+/**
+ * @Description:
+ * @receiver b
+ * @param noCache
+ * @return gjson.Result
+ * example
+ */
 func (b *Bot) GetOnlineClients(noCache bool) gjson.Result {
 	echo := uuid.NewV4().String()
 	type param struct {
@@ -1565,18 +1570,18 @@ func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	return content
 }
 
-func (b *Bot) SetEssenceMsg(messageId int) {
-	panic("implement me")
-}
-
-func (b *Bot) DeleteEssenceMsg(messageId int) {
-	panic("implement me")
-}
-
-func (b *Bot) GetEssenceMsgList(groupId int) {
-	panic("implement me")
-}
-
-func (b *Bot) CheckUrlSafely(url string) int {
-	panic("implement me")
-}
+//func (b *Bot) SetEssenceMsg(messageId int) {
+//	panic("implement me")
+//}
+//
+//func (b *Bot) DeleteEssenceMsg(messageId int) {
+//	panic("implement me")
+//}
+//
+//func (b *Bot) GetEssenceMsgList(groupId int) {
+//	panic("implement me")
+//}
+//
+//func (b *Bot) CheckUrlSafely(url string) int {
+//	panic("implement me")
+//}

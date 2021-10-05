@@ -1,11 +1,9 @@
-package leafBot
+package leafbot
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/huoxue1/leafBot/message" //nolint:gci
-	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"reflect"
 	"regexp"
@@ -15,6 +13,10 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+
+	"github.com/huoxue1/leafBot/message" //nolint:gci
 )
 
 var (
@@ -235,7 +237,6 @@ func (e Event) GetOneEvent(rules ...Rule) (Event, error) {
 	case <-time.After(time.Minute):
 		return Event{}, errors.New("等待下一条信息超时")
 	}
-
 }
 
 // GetMoreEvent
@@ -463,7 +464,6 @@ func checkOnlyTome(event *Event, state *State) {
 	state.Data["only_tome"] = false
 
 	return
-
 }
 
 /**
@@ -471,7 +471,6 @@ func checkOnlyTome(event *Event, state *State) {
  * example
  */
 func processMessageHandle() {
-
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -495,7 +494,6 @@ func processMessageHandle() {
 	checkOnlyTome(&event, state)
 	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
-
 		// 判断该cmd在该群是否被禁用
 		disable := true
 		for _, group := range handle.disableGroup {
@@ -526,7 +524,6 @@ func processMessageHandle() {
 		}
 		for _, start := range DefaultConfig.CommandStart {
 			if commands[0] == start+handle.command && handle.command != "" {
-
 				// 检查cd是否达到
 				if !checkCD(handle) {
 					continue
@@ -551,7 +548,6 @@ func processMessageHandle() {
 		// 处理别名匹配
 		for _, ally := range handle.allies {
 			if ally == commands[0] {
-
 				// 检查cd是否达到
 				if !checkCD(handle) {
 					continue
@@ -576,7 +572,6 @@ func processMessageHandle() {
 		if handle.command == "" && handle.regexMatcher != "" {
 			compile := regexp.MustCompile(handle.regexMatcher)
 			if compile.MatchString(event.Message.CQString()) {
-
 				state.Args = commands[1:]
 				state.Cmd = handle.regexMatcher
 				state.Allies = handle.allies
@@ -643,7 +638,6 @@ func processRequestEventHandle(event Event) {
 		}
 	}()
 	for _, handle := range RequestHandles {
-
 		for _, group := range handle.disableGroup {
 			if event.GroupId == group {
 				return
@@ -685,7 +679,6 @@ func processMetaEventHandle(event Event) {
 		}
 	}()
 	for _, handle := range MetaHandles {
-
 		for _, group := range handle.disableGroup {
 			if event.GroupId == group {
 				return
@@ -709,7 +702,6 @@ func processMetaEventHandle(event Event) {
 			}()
 			handle2.handle(event, GetBotById(event.SelfId))
 		}(handle)
-
 	}
 }
 

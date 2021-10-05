@@ -2,14 +2,18 @@ package cqhttp_ws_driver
 
 import (
 	"fmt"
-	"github.com/gorilla/websocket"
-	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	"net/http"
 	"strconv"
 	"sync"
+
+	"github.com/gorilla/websocket"
+	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 )
 
+// Driver
+// @Description:
+//
 type Driver struct {
 	Name             string
 	address          string
@@ -20,14 +24,35 @@ type Driver struct {
 	disConnectHandle func(selfId int64)
 }
 
+// OnConnect
+/**
+ * @Description:
+ * @receiver d
+ * @param f
+ * example
+ */
 func (d *Driver) OnConnect(f func(selfId int64, host string, clientRole string)) {
 	d.connectHandle = f
 }
 
+// OnDisConnect
+/**
+ * @Description:
+ * @receiver d
+ * @param f
+ * example
+ */
 func (d *Driver) OnDisConnect(f func(selfId int64)) {
 	d.disConnectHandle = f
 }
 
+// GetBots
+/**
+ * @Description:
+ * @receiver d
+ * @return map[int64]interface{}
+ * example
+ */
 func (d *Driver) GetBots() map[int64]interface{} {
 	m := make(map[int64]interface{})
 	d.bots.Range(func(key, value interface{}) bool {
@@ -38,6 +63,13 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return m
 }
 
+// SetAddress
+/**
+ * @Description:
+ * @receiver d
+ * @param string2
+ * example
+ */
 func (d *Driver) SetAddress(string2 string) {
 	d.address = string2
 }
@@ -48,6 +80,14 @@ var upgrade = websocket.Upgrader{
 		return true
 	}}
 
+// ServeHTTP
+/**
+ * @Description:
+ * @receiver d
+ * @param writer
+ * @param request
+ * example
+ */
 func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
 	role := request.Header.Get("X-Client-Role")
@@ -86,7 +126,6 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 			}
 			echo := gjson.GetBytes(data, "echo")
 			if echo.Exists() {
-
 				value, o := b.responses.Load(echo.String())
 				if o {
 					value.(chan []byte) <- data
@@ -96,7 +135,6 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 			}
 		}
 	}()
-
 }
 
 func (d *Driver) Run() {

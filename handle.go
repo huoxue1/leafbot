@@ -1,11 +1,12 @@
-package leafBot
+package leafbot
 
 import (
-	"github.com/robfig/cron/v3"
-	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/robfig/cron/v3"
+	log "github.com/sirupsen/logrus"
 )
 
 var plugins []*Plugin
@@ -469,7 +470,6 @@ func (d *disConnectHandle) AddHandle(f func(selfId int64)) {
 		d.Name = getFunctionName(f, '/')
 	}
 	DisConnectHandles = append(DisConnectHandles, d)
-
 }
 
 // AddHandle

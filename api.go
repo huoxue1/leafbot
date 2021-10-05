@@ -1,9 +1,12 @@
-package leafBot
+package leafbot
 
 import (
 	"github.com/tidwall/gjson"
 )
 
+// Api
+// @Description:
+//
 type Api interface {
 	SendGroupMsg(groupId int, message interface{}) int32
 	SendPrivateMsg(userId int, message interface{}) int32

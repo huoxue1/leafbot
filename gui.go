@@ -1,22 +1,24 @@
-package leafBot
+package leafbot
 
 import ( //nolint:gci
 
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-	"github.com/huoxue1/leafBot/message"
-	"github.com/huoxue1/leafBot/utils"
-	"github.com/huoxue1/lorca"
-	"github.com/huoxue1/test3"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"
 	"sort"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"github.com/huoxue1/lorca"
+	"github.com/huoxue1/test3"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/huoxue1/leafBot/message"
+	"github.com/huoxue1/leafBot/utils"
 )
 
 var upGrader = websocket.Upgrader{
@@ -66,6 +68,11 @@ func OpenUi() {
 	os.Exit(3)
 }
 
+// InitWindow
+/**
+ * @Description:
+ * example
+ */
 func InitWindow() {
 	defer func() {
 		err := recover()
@@ -146,7 +153,6 @@ func InitWindow() {
 	if err := engine.Run("127.0.0.1:3000"); err != nil {
 		log.Debugln(err.Error())
 	}
-
 }
 
 func data(ctx *gin.Context) {
@@ -171,11 +177,9 @@ func data(ctx *gin.Context) {
 					break
 				}
 			}
-
 		}()
 	}
 	dataCoon = conn
-
 }
 
 func getAllConfig(ctx *gin.Context) {
@@ -184,7 +188,7 @@ func getAllConfig(ctx *gin.Context) {
 
 func GetConfig(ctx *gin.Context) {
 	var bots []int64
-	for i, _ := range driver.GetBots() {
+	for i := range driver.GetBots() {
 		bots = append(bots, i)
 	}
 	ctx.JSON(200, bots)
@@ -193,7 +197,6 @@ func GetConfig(ctx *gin.Context) {
 func GetGroupList(ctx *gin.Context) {
 	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
-
 		var data map[string]interface{}
 		err := ctx.BindJSON(&data)
 		if err != nil {
@@ -253,7 +256,6 @@ func CallApi(ctx *gin.Context) {
 		id = data["id"].(int64)
 		message1 = data["message"].(string)
 		messageType = data["message_type"].(string)
-
 	}
 	bot := GetBotById(int(selfID))
 	msgID := bot.SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
@@ -265,17 +267,17 @@ func Cors() gin.HandlerFunc {
 		method := c.Request.Method
 		origin := c.Request.Header.Get("Origin") //请求头部
 		if origin != "" {
-			//接收客户端发送的origin （重要！）
+			// 接收客户端发送的origin （重要！）
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-			//服务器支持的所有跨域请求的方法
+			// 服务器支持的所有跨域请求的方法
 			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE,UPDATE")
-			//允许跨域设置可以返回其他子段，可以自定义字段
+			// 允许跨域设置可以返回其他子段，可以自定义字段
 			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Token,session, Content-Type")
 			// 允许浏览器（客户端）可以解析的头部 （重要）
 			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers")
-			//设置缓存时间
+			// 设置缓存时间
 			c.Header("Access-Control-Max-Age", "172800")
-			//允许客户端传递校验信息比如 cookie (重要)
+			// 允许客户端传递校验信息比如 cookie (重要)
 			c.Header("Access-Control-Allow-Credentials", "true")
 		}
 

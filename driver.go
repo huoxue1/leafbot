@@ -1,12 +1,13 @@
-package leafBot
+package leafbot
 
 import (
 	"fmt"
+
 	log "github.com/sirupsen/logrus"
 )
 
 // Driver
-// @Description: 实现了该接口即可注册为leafBot的driver
+// @Description:
 //
 type Driver interface {
 	// Run

@@ -1,10 +1,21 @@
+// Package utils
+// @Description:
 package utils
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	"net/http"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
+// SearchImage
+/**
+ * @Description:
+ * @param ketWord
+ * @return []string
+ * @return error
+ * example
+ */
 func SearchImage(ketWord string) ([]string, error) {
 	resp, err := http.Get("https://pixiv.kurocore.com/illust?keyword=" + ketWord)
 	if err != nil {

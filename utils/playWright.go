@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/mxschmitt/playwright-go"
 	log "github.com/sirupsen/logrus"
 )
@@ -35,7 +36,6 @@ func PwInit() {
 }
 
 func GetPWScreen(url string, device string) ([]byte, error) {
-
 	if !enablePlayWright {
 		return nil, errors.New("未配置playwright")
 	}
@@ -74,5 +74,4 @@ func GetPWScreen(url string, device string) ([]byte, error) {
 		FullPage: playwright.Bool(true),
 	})
 	return data, err
-
 }
