@@ -3,14 +3,13 @@ package leafBot
 import (
 	_ "embed"
 	"encoding/base64" //nolint:gci
+	"io/ioutil"       //nolint:gci
+	"strconv"
 
 	"github.com/guonaihong/gout"
 	"github.com/huoxue1/gg"
 
 	"github.com/huoxue1/leafBot/message"
-
-	"io/ioutil" //nolint:gci
-	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,6 +23,16 @@ func init() {
 	}
 	InitPluginManager()
 	reloadConfigInit()
+}
+
+// GetFont
+/**
+ * @Description: 向外导出思源黑体字体文件
+ * @return []byte
+ * example
+ */
+func GetFont() []byte {
+	return font
 }
 
 // GetHandleList

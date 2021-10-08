@@ -3,6 +3,7 @@ package leafBot
 import ( //nolint:gci
 
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http" //nolint:gci
@@ -31,7 +32,22 @@ var (
 	logConn  *websocket.Conn
 	dataCoon *websocket.Conn
 	ui       lorca.UI
+	engine   *gin.Engine
 )
+
+// GetEngine
+/**
+ * @Description: 获取web的引擎
+ * @return *gin.Engine
+ * @return error
+ * example
+ */
+func GetEngine() (*gin.Engine, error) {
+	if engine == nil {
+		return nil, errors.New("engine not init")
+	}
+	return engine, nil
+}
 
 func OpenUi() {
 	var err error
@@ -84,7 +100,7 @@ func InitWindow() {
 		gin.DefaultWriter = io.Discard
 	}
 	log.Infoln("web页面：http://127.0.0.1:3000")
-	engine := gin.New()
+	engine = gin.New()
 	engine.Use(Cors())
 	engine.StaticFS("/dist", http.FS(test3.Dist))
 	engine.POST("/get_bots", GetConfig)
