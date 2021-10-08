@@ -27,8 +27,7 @@ type UseApi struct {
  */
 func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
-	switch message.(type) {
-	case string:
+	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
@@ -50,7 +49,7 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 	data, _ := b.GetResponse(echo)
 
 	log.Infoln("call api ==> " + d.Action)
-	log.Infoln(fmt.Sprintf("the params ==> %v", d.Params))
+	log.Debugln(fmt.Sprintf("the params ==> %v", d.Params))
 	log.Infoln("the response ==> " + string(data))
 	return int32(gjson.GetBytes(data, "data.message_id").Int())
 }

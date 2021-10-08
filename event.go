@@ -15,6 +15,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 
 	"github.com/huoxue1/leafBot/message" //nolint:gci
 )
@@ -538,7 +539,7 @@ func processMessageHandle() {
 				doHandle(handle, event, state)
 
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.command))
 				if handle.block {
 					return
 				}
@@ -561,7 +562,7 @@ func processMessageHandle() {
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.command))
 				if handle.block {
 					return
 				}
@@ -579,7 +580,7 @@ func processMessageHandle() {
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.regexMatcher))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.regexMatcher))
 				if handle.block {
 					return
 				}
@@ -595,7 +596,7 @@ func processMessageHandle() {
 	s.Data = make(map[string]interface{})
 	checkOnlyTome(&event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
-		event.MessageType, event.GroupId, event.UserId, eventData))
+		event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty")))
 	for _, handle := range MessageHandles {
 		if handle.messageType != "" && handle.messageType != event.MessageType {
 			continue

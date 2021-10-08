@@ -9,7 +9,7 @@ import (
 )
 
 // Bot
-// @Description:
+// @Description: bot实例对象
 //
 type Bot struct {
 	selfId           int64
@@ -21,7 +21,7 @@ type Bot struct {
 
 // GetSelfId
 /**
- * @Description:
+ * @Description: 获取bot的账号
  * @receiver b
  * @return int64
  * example
@@ -32,7 +32,7 @@ func (b *Bot) GetSelfId() int64 {
 
 // Do
 /**
- * @Description:
+ * @Description: 执行一个api的调用
  * @receiver b
  * @param i
  * example
@@ -45,6 +45,15 @@ func (b *Bot) Do(i interface{}) {
 	}
 }
 
+// GetResponse
+/**
+ * @Description: 获取一个api调用的响应
+ * @receiver b
+ * @param echo api调用的唯一标识
+ * @return []byte
+ * @return error
+ * example
+ */
 func (b *Bot) GetResponse(echo string) ([]byte, error) {
 	defer func() {
 		b.responses.Delete(echo)
