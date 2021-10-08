@@ -1570,18 +1570,18 @@ func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	return content
 }
 
-//func (b *Bot) SetEssenceMsg(messageId int) {
-//	panic("implement me")
-//}
-//
-//func (b *Bot) DeleteEssenceMsg(messageId int) {
-//	panic("implement me")
-//}
-//
-//func (b *Bot) GetEssenceMsgList(groupId int) {
-//	panic("implement me")
-//}
-//
-//func (b *Bot) CheckUrlSafely(url string) int {
-//	panic("implement me")
-//}
+func (b *Bot) SetEssenceMsg(messageId int) {
+	panic("implement me")
+}
+
+func (b *Bot) DeleteEssenceMsg(messageId int) {
+	panic("implement me")
+}
+
+func (b *Bot) GetEssenceMsgList(groupId int) {
+	panic("implement me")
+}
+
+func (b *Bot) CheckUrlSafely(url string) int {
+	panic("implement me")
+}
