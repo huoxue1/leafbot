@@ -1,9 +1,10 @@
 package message
 
 import (
-	"github.com/tidwall/gjson"
 	"reflect"
 	"unsafe"
+
+	"github.com/tidwall/gjson"
 )
 
 // Modified from https://github.com/catsworld/qq-bot-api

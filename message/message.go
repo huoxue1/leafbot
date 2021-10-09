@@ -1,6 +1,7 @@
 package message
 
 import (
+	"encoding/base64"
 	"fmt"
 	"strconv"
 	"strings"
@@ -93,6 +94,43 @@ func Face(id int) MessageSegment {
 		Data: map[string]string{
 			"id": strconv.Itoa(id),
 		},
+	}
+}
+
+// ImageC 普通图片
+// https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%9B%BE%E7%89%87
+func ImageC(file interface{}) MessageSegment {
+	switch file.(type) {
+	case string:
+		if strings.HasPrefix(file.(string), "http://") || strings.HasPrefix(file.(string), "https://") {
+			return MessageSegment{
+				Type: "image",
+				Data: map[string]string{
+					"file": file.(string),
+				},
+			}
+		} else {
+			return MessageSegment{
+				Type: "image",
+				Data: map[string]string{
+					"file": "file:///" + file.(string),
+				},
+			}
+		}
+	case []byte:
+		return MessageSegment{
+			Type: "image",
+			Data: map[string]string{
+				"file": base64.StdEncoding.EncodeToString(file.([]byte)),
+			},
+		}
+	default:
+		return MessageSegment{
+			Type: "image",
+			Data: map[string]string{
+				"file": file.(string),
+			},
+		}
 	}
 }
 
