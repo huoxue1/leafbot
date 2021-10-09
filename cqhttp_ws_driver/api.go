@@ -1289,7 +1289,7 @@ func (b *Bot) SendGroupForwardMsg(groupId int, messages interface{}) {
 		Messages interface{} `json:"messages"`
 	}
 	var d = UseApi{
-		Action: "Do()_group_forward_msg",
+		Action: "send_group_forward_msg",
 		Params: param{
 			GroupId:  groupId,
 			Messages: messages,
