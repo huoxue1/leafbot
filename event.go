@@ -439,7 +439,7 @@ func processMessageHandle() {
 		//	continue
 		//}
 
-		commands := strings.Split(event.Message[0].Data["text"], " ")
+		commands := strings.Split(event.GetPlainText(), " ")
 		if len(commands) < 1 {
 			continue
 		}
