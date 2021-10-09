@@ -1,8 +1,38 @@
+// Package leafBot
+// @Description:
 package leafBot
 
-type (
-	Rule func(Event, Api, *State) bool
-)
+import "strconv"
+
+// Rule
+/*
+	rule类型
+*/
+type Rule func(Event, Api, *State) bool
+
+// MustReply
+/**
+ * @Description:
+ * @param event
+ * @param api
+ * @param state
+ * @return bool
+ * example
+ */
+func MustReply(event Event, api Api, state *State) bool {
+	for _, segment := range event.Message {
+		if segment.Type == "reply" {
+			state.Data["reply_id"] = segment.Data["id"]
+			id, err := strconv.Atoi(segment.Data["id"])
+			if err != nil {
+				return false
+			}
+			state.Data["reply_msg"] = api.GetMsg(int32(id))
+			return true
+		}
+	}
+	return false
+}
 
 // OnlyToMe
 /**
@@ -14,11 +44,8 @@ type (
  */
 func OnlyToMe(event Event, _ Api, state *State) bool {
 	b := state.Data["only_tome"].(bool)
-	if b {
-		return true
-	}
 
-	return false
+	return b
 }
 
 // OnlySuperUser
@@ -41,6 +68,14 @@ func OnlySuperUser(event Event, _ Api, _ *State) bool {
 	return false
 }
 
+// OnlyGroupMessage
+/**
+ * @Description:
+ * @param event
+ * @param _
+ * @return bool
+ * example
+ */
 func OnlyGroupMessage(event Event, _ Api) bool {
 	return event.MessageType == "group"
 }
