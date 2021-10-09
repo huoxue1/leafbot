@@ -17,12 +17,16 @@ import (
 var font []byte
 
 func init() {
+	go getFont()
+	InitPluginManager()
+	reloadConfigInit()
+}
+
+func getFont() {
 	err := gout.GET("https://codechina.csdn.net/m15082717021/image/-/raw/main/202109091139659.ttf").BindBody(&font).Do()
 	if err != nil {
 		return
 	}
-	InitPluginManager()
-	reloadConfigInit()
 }
 
 // GetFont
