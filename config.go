@@ -85,7 +85,7 @@ func LoadConfig() {
 }
 
 func writeGoConfig(selfID int) {
-	err := os.WriteFile(".config/gocq_config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
+	err := os.WriteFile("./config/gocq_config.yml", []byte(fmt.Sprintf(gocqConfig, selfID)), 0666)
 	if err != nil {
 		return
 	}
