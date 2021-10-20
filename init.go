@@ -52,6 +52,8 @@ func init() {
 	}
 	log.SetLevel(level)
 	log.Infoln("\n" + label)
+
+	go InitWindow()
 }
 
 const (
@@ -108,7 +110,6 @@ func initConfig(fileType string) error {
    @Description:
 */
 func InitBots() {
-	go InitWindow()
 	go eventMain()
 	if DefaultConfig.EnablePlaywright {
 		go utils.PwInit()
