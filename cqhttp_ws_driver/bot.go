@@ -59,15 +59,15 @@ func (b *Bot) GetResponse(echo string) ([]byte, error) {
 		b.responses.Delete(echo)
 	}()
 
-	c := make(chan []byte, 1)
-	b.responses.Store(echo, c)
-	after := time.After(60 * 100000)
-	select {
-	case data := <-c:
-		return data, nil
-	case <-after:
-		return nil, errors.New("")
+	for i := 0; i < 120; i++ {
+		value, ok := b.responses.LoadAndDelete(echo)
+		if ok {
+			return value.([]byte), nil
+		}
+		time.Sleep(500)
 	}
+
+	return nil, errors.New("get response time out")
 }
 
 func (b *Bot) wsClose() {

@@ -124,12 +124,10 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 			if err != nil {
 				b.wsClose()
 			}
+
 			echo := gjson.GetBytes(data, "echo")
 			if echo.Exists() {
-				value, o := b.responses.Load(echo.String())
-				if o {
-					value.(chan []byte) <- data
-				}
+				b.responses.Store(echo.String(), data)
 			} else {
 				d.eventChan <- data
 			}

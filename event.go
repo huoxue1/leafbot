@@ -17,7 +17,6 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	//nolint:gci
 )
 
@@ -435,7 +434,7 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		//if event.Message[0].Type != "text" {
+		// if event.Message[0].Type != "text" {
 		//	continue
 		//}
 
@@ -459,7 +458,7 @@ func processMessageHandle() {
 				doHandle(handle, event, state)
 
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
 				if handle.block {
 					return
 				}
@@ -482,7 +481,7 @@ func processMessageHandle() {
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.command))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
 				if handle.block {
 					return
 				}
@@ -500,7 +499,7 @@ func processMessageHandle() {
 
 				doHandle(handle, event, state)
 				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty"), handle.regexMatcher))
+					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.regexMatcher))
 				if handle.block {
 					return
 				}
@@ -516,7 +515,7 @@ func processMessageHandle() {
 	s.Data = make(map[string]interface{})
 	checkOnlyTome(&event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
-		event.MessageType, event.GroupId, event.UserId, gjson.GetBytes(eventData, "@this|@pretty")))
+		event.MessageType, event.GroupId, event.UserId, eventData))
 	for _, handle := range MessageHandles {
 		if handle.messageType != "" && handle.messageType != event.MessageType {
 			continue
