@@ -1,4 +1,4 @@
-package cqhttp_ws_driver
+package cqhttp_positive_ws_driver
 
 import (
 	"encoding/json" //nolint:gci

@@ -1,8 +1,6 @@
 package leafBot
 
 import (
-	"fmt"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -39,6 +37,8 @@ type Driver interface {
 	// @param string2
 	//
 	SetAddress(string2 string)
+
+	SetPort(port int)
 }
 
 // Conn
@@ -70,7 +70,8 @@ var driver Driver
  * example
  */
 func LoadDriver(driver2 Driver) {
-	driver2.SetAddress(fmt.Sprintf(":%v", DefaultConfig.Port))
+	driver2.SetAddress(DefaultConfig.Host)
+	driver2.SetPort(DefaultConfig.Port)
 	driver2.OnConnect(func(selfId int64, host string, clientRole string) {
 		defer func() {
 			err := recover()

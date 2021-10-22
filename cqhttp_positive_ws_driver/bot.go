@@ -1,4 +1,4 @@
-package cqhttp_ws_driver
+package cqhttp_positive_ws_driver
 
 import (
 	"errors"
@@ -8,9 +8,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Bot
-// @Description: bot实例对象
-//
 type Bot struct {
 	selfId           int64
 	conn             *websocket.Conn

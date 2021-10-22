@@ -1,4 +1,4 @@
-package cqhttp_ws_driver
+package cqhttp_reverse_ws_driver
 
 import (
 	"fmt"
@@ -137,7 +137,7 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 
 func (d *Driver) Run() {
 	http.Handle("/"+d.Name+"/ws", d)
-	if err := http.ListenAndServe(d.address, nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.address, d.port), nil); err != nil {
 		log.Panicln(err.Error())
 	}
 }
@@ -153,6 +153,10 @@ func (d *Driver) GetBot(i int64) interface{} {
 	}
 
 	return nil
+}
+
+func (d *Driver) SetPort(port int) {
+	d.port = port
 }
 
 func NewDriver() *Driver {
