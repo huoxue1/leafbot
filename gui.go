@@ -54,7 +54,7 @@ func OpenUi() {
 	ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
 	go func() {
 		c := make(chan os.Signal)
-		signal.Notify(c) //nolint:govt
+		signal.Notify(c)
 		for {
 			log.Infoln(<-c)
 			err := ui.Close()
@@ -258,6 +258,9 @@ func GetFriendList(ctx *gin.Context) {
 
 func CallApi(ctx *gin.Context) {
 	selfID, err := strconv.ParseInt(ctx.PostForm("self_id"), 10, 64)
+	if err != nil {
+		return
+	}
 	id, err := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	message1 := ctx.PostForm("message")
 	messageType := ctx.PostForm("message_type")

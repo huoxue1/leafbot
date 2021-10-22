@@ -28,8 +28,8 @@ var ENABLE = false // 是否启用gui
 
 var (
 	MessageChan = make(chan Event, 10)
-	//NoticeChan  = make(chan Event, 10)
-	//Request     = make(chan Event, 10)
+	// NoticeChan  = make(chan Event, 10)
+	// Request     = make(chan Event, 10)
 )
 
 var (
@@ -381,9 +381,6 @@ func checkOnlyTome(event *Event, state *State) {
 	if event.MessageType == "private" {
 		state.Data["only_tome"] = true
 	}
-	state.Data["only_tome"] = false
-
-	return
 }
 
 /**

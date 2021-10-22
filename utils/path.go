@@ -1,6 +1,8 @@
 package utils
 
-import "os"
+import (
+	"os"
+)
 
 // PathExists
 /**
@@ -31,9 +33,11 @@ func WriteToFile(name string, data []byte) error {
 		return err
 	}
 	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-
+		err1 := file.Close()
+		if err1 != nil {
+			if err1 != nil {
+				err = err1
+			}
 		}
 	}(file)
 	_, err = file.Write(data)

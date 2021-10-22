@@ -4,13 +4,13 @@ package leafBot
 
 import "strconv"
 
-// Rule
+//Rule
 /*
 	rule类型
 */
 type Rule func(Event, Api, *State) bool
 
-// MustReply
+//MustReply
 /**
  * @Description:
  * @param event
@@ -34,7 +34,7 @@ func MustReply(event Event, api Api, state *State) bool {
 	return false
 }
 
-// OnlyToMe
+//OnlyToMe
 /**
  * @Description: 添加了该rule的插件需要在群里艾特或者私聊才会进行响应
  * @param event  leafBot event
@@ -68,7 +68,7 @@ func OnlySuperUser(event Event, _ Api, _ *State) bool {
 	return false
 }
 
-// OnlyGroupMessage
+//OnlyGroupMessage
 /**
  * @Description:
  * @param event

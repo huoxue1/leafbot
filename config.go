@@ -81,7 +81,7 @@ func LoadConfig() {
 	log.Infoln("程序将在五秒后重启")
 	time.Sleep(5000)
 	os.Exit(3)
-	//ui.Close()
+	// ui.Close()
 }
 
 func writeGoConfig(selfID int) {

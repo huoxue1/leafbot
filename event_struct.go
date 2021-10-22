@@ -83,7 +83,7 @@ type (
 	}
 )
 
-// GetMsg
+//GetMsg
 /**
  * @Description:
  * @receiver e

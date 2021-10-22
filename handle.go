@@ -244,10 +244,7 @@ func (p *Plugin) OnRegex(regex string, options ...Option) *commandHandle {
 
 func (p *Plugin) OnFullMatch(match string, options ...Option) *messageHandle {
 	rule := func(event Event, bot Api, state *State) bool {
-		if event.RawMessage == match {
-			return true
-		}
-		return false
+		return event.RawMessage == match
 	}
 	if len(options) > 0 {
 		return &messageHandle{

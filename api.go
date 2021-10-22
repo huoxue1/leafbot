@@ -84,7 +84,7 @@ func (e Event) Send(message interface{}) int32 {
 	return 0
 }
 
-//type (
+// type (
 //	FileUrl struct {
 //		Url string `json:"url"`
 //	}

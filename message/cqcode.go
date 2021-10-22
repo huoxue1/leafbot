@@ -1,3 +1,5 @@
+// Package message
+// @Description: 用于message转换和封装的一个包
 package message
 
 import (

@@ -65,8 +65,7 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 */
 func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
-	switch message.(type) {
-	case string:
+	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
