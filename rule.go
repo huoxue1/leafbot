@@ -43,9 +43,11 @@ func MustReply(event Event, api Api, state *State) bool {
  * example
  */
 func OnlyToMe(event Event, _ Api, state *State) bool {
-	b := state.Data["only_tome"].(bool)
+	if b, ok := state.Data["only_tome"]; ok {
+		return b.(bool)
+	}
 
-	return b
+	return false
 }
 
 // OnlySuperUser
