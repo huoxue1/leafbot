@@ -421,12 +421,13 @@ func processMessageHandle() {
 		if !disable {
 			continue
 		}
-
 		// 检查rules
 		rule := checkRule(event, handle.rules, state)
+
 		if handle.rules == nil {
 			rule = true
 		}
+
 		// 判断rules和插件是否被禁用
 		if !rule || !handle.Enable {
 			continue
@@ -439,6 +440,7 @@ func processMessageHandle() {
 		if len(commands) < 1 {
 			continue
 		}
+
 		for _, start := range DefaultConfig.CommandStart {
 			if commands[0] == start+handle.command && handle.command != "" {
 				// 检查cd是否达到

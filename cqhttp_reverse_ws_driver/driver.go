@@ -63,17 +63,6 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return m
 }
 
-// SetAddress
-/**
- * @Description:
- * @receiver d
- * @param string2
- * example
- */
-func (d *Driver) SetAddress(string2 string) {
-	d.address = string2
-}
-
 // ws协议
 var upgrade = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -155,8 +144,17 @@ func (d *Driver) GetBot(i int64) interface{} {
 	return nil
 }
 
-func (d *Driver) SetPort(port int) {
-	d.port = port
+func (d *Driver) SetConfig(config map[string]interface{}) {
+	if host, ok := config["host"]; ok {
+		d.address = host.(string)
+	}
+	if port, ok := config["port"]; ok {
+		d.port = port.(int)
+	}
+}
+
+func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
+
 }
 
 func NewDriver() *Driver {

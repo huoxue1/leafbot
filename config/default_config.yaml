@@ -24,6 +24,20 @@ enable_playwright: false
 # 日志是否截断,默认截断
 log_truncate: true
 
+# cqhttp_http_driver监听地址
+listen_host: 127.0.0.1
+
+# cqhttp_http_driver监听断开
+listen_port: 8081
+
+# cqhttp_http_driver一个bot实例，即onebot端所监听的api地址以及账号
+web_hook:
+    -
+        post_host: 127.0.0.1
+        post_port: 5700
+        self_id: 1603214019
+
+
 # 插件相关的一些配置
 plugins:
     flash_group_id: 0

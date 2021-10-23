@@ -1,78 +1,55 @@
-package cqhttp_positive_ws_driver
+package cqhttp_http_driver
 
 import (
 	"fmt"
-	"net/url"
-	"strconv"
+	"io"
+	"net/http"
 	"sync"
 
-	"github.com/gorilla/websocket"
+	"github.com/guonaihong/gout"
 	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 )
 
 type Driver struct {
-	Name             string
-	address          string
-	port             int
+	Name    string
+	webHook []struct {
+		postHost string
+		postPort int
+		selfID   int64
+	}
+	listenHost       string
+	listenPort       int
 	bots             sync.Map
 	eventChan        chan []byte
 	connectHandle    func(selfId int64, host string, clientRole string)
 	disConnectHandle func(selfId int64)
 }
 
+func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	data, err := io.ReadAll(request.Body)
+	if err != nil {
+		return
+	}
+
+	d.eventChan <- data
+	writer.WriteHeader(200)
+}
+
 func (d *Driver) Run() {
-	u := url.URL{Scheme: "ws", Host: d.address + ":" + strconv.Itoa(d.port)}
-	conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
-	if err != nil {
-		return
-	}
-	_, data, err := conn.ReadMessage()
-	if err != nil {
-		return
-	}
-	selfId := gjson.GetBytes(data, "self_id").Int()
-	role := ""
-	host := d.address
-
-	b := new(Bot)
-	b.conn = conn
-	b.selfId = selfId
-	b.responses = sync.Map{}
-
-	_, ok := d.bots.Load(selfId)
-	if ok {
-		d.bots.LoadOrStore(selfId, b)
-	} else {
-		d.bots.Store(selfId, b)
+	for _, s := range d.webHook {
+		b := new(Bot)
+		b.selfId = s.selfID
+		b.postHost = s.postHost
+		b.postPort = s.postPort
+		b.responses = sync.Map{}
+		b.disConnectHandle = d.disConnectHandle
+		b.client = gout.NewWithOpt()
+		d.bots.Store(s.selfID, b)
 	}
 
-	d.connectHandle(selfId, host, role)
-	b.disConnectHandle = d.disConnectHandle
-	log.Infoln(fmt.Sprintf("the bot %v is connected", selfId))
-	go func() {
-		defer func() {
-			i := recover()
-			if i != nil {
-				log.Errorln("ws链接读取出现错误")
-				log.Errorln(i)
-				d.disConnectHandle(selfId)
-			}
-		}()
-		for {
-			_, data, err := conn.ReadMessage()
-			if err != nil {
-				b.wsClose()
-			}
-
-			echo := gjson.GetBytes(data, "echo")
-			if echo.Exists() {
-				b.responses.Store(echo.String(), data)
-			} else {
-				d.eventChan <- data
-			}
-		}
-	}()
+	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.listenHost, d.listenPort), d); err != nil {
+		log.Errorln("监听webhook失败" + err.Error())
+	}
 }
 
 func (d *Driver) GetEvent() chan []byte {
@@ -128,16 +105,20 @@ func (d *Driver) GetBots() map[int64]interface{} {
 }
 
 func (d *Driver) SetConfig(config map[string]interface{}) {
-	if host, ok := config["host"]; ok {
-		d.address = host.(string)
+	if host, ok := config["listen_host"]; ok {
+		d.listenHost = host.(string)
 	}
-	if port, ok := config["port"]; ok {
-		d.port = port.(int)
+	if port, ok := config["listen_port"]; ok {
+		d.listenPort = port.(int)
 	}
 }
 
 func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
-
+	d.webHook = append(d.webHook, struct {
+		postHost string
+		postPort int
+		selfID   int64
+	}{postHost: postHost, postPort: postPort, selfID: selfID})
 }
 
 func NewDriver() *Driver {

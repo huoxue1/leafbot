@@ -28,7 +28,14 @@ type Config struct {
 	SuperUser        []int    `json:"super_user" yaml:"super_user" hjson:"super_user"`
 	CommandStart     []string `json:"command_start" yaml:"command_start" hjson:"command_start"`
 	EnablePlaywright bool     `json:"enable_playwright" yaml:"enable_playwright" hjson:"enable_playwright"`
-	Plugins          struct {
+	ListenHost       string   `json:"listen_host" yaml:"listen_host"`
+	ListenPort       int      `json:"listen_port" yaml:"listen_port"`
+	WebHook          []struct {
+		PostHost string `json:"post_host" yaml:"post_host"`
+		PostPort int    `json:"post_port" yaml:"post_port"`
+		SelfID   int64  `json:"self_id" yaml:"self_id"`
+	} `json:"web_hook" yaml:"web_hook" hjson:"web_hook"`
+	Plugins struct {
 		FlashGroupID    int    `json:"flash_group_id" yaml:"flash_group_id" hjson:"flash_group_id"`
 		AlApiToken      string `json:"al_api_token" yaml:"al_api_token" hjson:"al_api_token"`
 		EnableReplyTome bool   `json:"enable_reply_tome" yaml:"enable_reply_tome" hjson:"enable_reply_tome"`

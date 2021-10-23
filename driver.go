@@ -32,13 +32,10 @@ type Driver interface {
 	// @return map[int64]interface{}
 	//
 	GetBots() map[int64]interface{}
-	// SetAddress
-	// @Description: 设置driver的运行地址
-	// @param string2
-	//
-	SetAddress(string2 string)
 
-	SetPort(port int)
+	SetConfig(config map[string]interface{})
+
+	AddWebHook(selfID int64, postHost string, postPort int)
 }
 
 // Conn
@@ -70,8 +67,16 @@ var driver Driver
  * example
  */
 func LoadDriver(driver2 Driver) {
-	driver2.SetAddress(DefaultConfig.Host)
-	driver2.SetPort(DefaultConfig.Port)
+	driver2.SetConfig(map[string]interface{}{
+		"host": DefaultConfig.Host,
+		"port": DefaultConfig.Port,
+
+		"listen_host": DefaultConfig.ListenHost,
+		"listen_port": DefaultConfig.ListenPort,
+	})
+	for _, s := range DefaultConfig.WebHook {
+		driver2.AddWebHook(s.SelfID, s.PostHost, s.PostPort)
+	}
 	driver2.OnConnect(func(selfId int64, host string, clientRole string) {
 		defer func() {
 			err := recover()

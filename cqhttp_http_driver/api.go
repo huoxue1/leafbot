@@ -1,4 +1,4 @@
-package cqhttp_reverse_ws_driver
+package cqhttp_http_driver
 
 import (
 	"encoding/json" //nolint:gci
@@ -11,9 +11,6 @@ import (
 	message2 "github.com/huoxue1/leafBot/message"
 )
 
-// UseApi
-// @Description:
-//
 type UseApi struct {
 	Action string      `json:"action"`
 	Params interface{} `json:"params"`
@@ -68,7 +65,8 @@ func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
 */
 func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 	echo := uuid.NewV4().String()
-	if _, ok := message.(string); ok {
+	switch message.(type) {
+	case string:
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
