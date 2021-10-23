@@ -7,6 +7,8 @@ admin: 0
 host: 127.0.0.1
 # bot运行端口
 port: 8080
+# access_token
+token: ""
 # leafBot日志等级
 log_level: info
 # bot的管理员用户，类型为数组

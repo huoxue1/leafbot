@@ -14,6 +14,7 @@ type Bot struct {
 	client           *gout.Client
 	selfId           int64
 	responses        sync.Map
+	token            string
 	lock             sync.Mutex
 	disConnectHandle func(selfId int64)
 	postHost         string
@@ -41,7 +42,10 @@ func (b *Bot) GetSelfId() int64 {
 func (b *Bot) Do(i interface{}) {
 	data := i.(UseApi)
 	var resp []byte
-	err := b.client.POST(fmt.Sprintf("http://%v:%v/%v", b.postHost, b.postPort, data.Action)).SetJSON(data.Params).BindBody(&resp).Do()
+	err := b.client.POST(fmt.Sprintf("http://%v:%v/%v", b.postHost, b.postPort, data.Action)).
+		SetHeader(gout.H{"Authorization": "Bearer " + b.token}).
+		SetJSON(data.Params).
+		BindBody(&resp).Do()
 	if err != nil {
 		log.Errorln("调用api出现错误", err.Error())
 		return

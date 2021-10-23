@@ -36,6 +36,8 @@ type Driver interface {
 	SetConfig(config map[string]interface{})
 
 	AddWebHook(selfID int64, postHost string, postPort int)
+
+	SetToken(token string)
 }
 
 // Conn
@@ -74,6 +76,7 @@ func LoadDriver(driver2 Driver) {
 		"listen_host": DefaultConfig.ListenHost,
 		"listen_port": DefaultConfig.ListenPort,
 	})
+	driver2.SetToken(DefaultConfig.Token)
 	for _, s := range DefaultConfig.WebHook {
 		driver2.AddWebHook(s.SelfID, s.PostHost, s.PostPort)
 	}

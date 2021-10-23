@@ -17,6 +17,7 @@ type Driver struct {
 		postPort int
 		selfID   int64
 	}
+	token            string
 	listenHost       string
 	listenPort       int
 	bots             sync.Map
@@ -35,6 +36,10 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(200)
 }
 
+func (d *Driver) SetToken(token string) {
+	d.token = token
+}
+
 func (d *Driver) Run() {
 	for _, s := range d.webHook {
 		b := new(Bot)
@@ -44,6 +49,7 @@ func (d *Driver) Run() {
 		b.responses = sync.Map{}
 		b.disConnectHandle = d.disConnectHandle
 		b.client = gout.NewWithOpt()
+		b.token = d.token
 		d.bots.Store(s.selfID, b)
 	}
 

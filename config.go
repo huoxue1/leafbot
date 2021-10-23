@@ -23,6 +23,7 @@ type Config struct {
 	Admin            int      `json:"admin" yaml:"admin" hjson:"admin"`
 	Host             string   `json:"host" yaml:"host" hjson:"host"`
 	Port             int      `json:"port" yaml:"port" hjson:"port"`
+	Token            string   `json:"token"`
 	LogLevel         string   `json:"log_level" yaml:"log_level" hjson:"log_level"`
 	LogTruncate      bool     `json:"log_truncate" yaml:"log_truncate" hjson:"log_truncate"`
 	SuperUser        []int    `json:"super_user" yaml:"super_user" hjson:"super_user"`

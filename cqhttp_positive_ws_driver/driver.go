@@ -2,6 +2,7 @@ package cqhttp_positive_ws_driver
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"strconv"
 	"sync"
@@ -15,6 +16,7 @@ type Driver struct {
 	Name             string
 	address          string
 	port             int
+	token            string
 	bots             sync.Map
 	eventChan        chan []byte
 	connectHandle    func(selfId int64, host string, clientRole string)
@@ -23,7 +25,9 @@ type Driver struct {
 
 func (d *Driver) Run() {
 	u := url.URL{Scheme: "ws", Host: d.address + ":" + strconv.Itoa(d.port)}
-	conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	header := http.Header{}
+	header.Add("Authorization", "Bearer "+d.token)
+	conn, _, err := websocket.DefaultDialer.Dial(u.String(), header)
 	if err != nil {
 		return
 	}
@@ -138,6 +142,10 @@ func (d *Driver) SetConfig(config map[string]interface{}) {
 
 func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
 
+}
+
+func (d *Driver) SetToken(token string) {
+	d.token = token
 }
 
 func NewDriver() *Driver {

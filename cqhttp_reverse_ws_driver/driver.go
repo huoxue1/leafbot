@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -18,10 +19,15 @@ type Driver struct {
 	Name             string
 	address          string
 	port             int
+	token            string
 	bots             sync.Map
 	eventChan        chan []byte
 	connectHandle    func(selfId int64, host string, clientRole string)
 	disConnectHandle func(selfId int64)
+}
+
+func (d *Driver) SetToken(token string) {
+	d.token = token
 }
 
 // OnConnect
@@ -81,6 +87,14 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
 	role := request.Header.Get("X-Client-Role")
 	host := request.Header.Get("Host")
+	if d.token != "" {
+		get := request.Header.Get("Authorization")
+		auth := strings.Split(get, " ")
+		if auth[0] != "Bearer" || auth[1] != d.token {
+			log.Errorln("the token is not current!")
+			return
+		}
+	}
 	conn, err := upgrade.Upgrade(writer, request, nil)
 	if err != nil {
 		return
