@@ -28,6 +28,7 @@ var label string
 func init() {
 	err := initConfig(YAML)
 	if err != nil {
+		log.Errorln(err.Error())
 		log.Infoln("配置文件加载失败或者不存在")
 		log.Infoln("将生成默认配置文件")
 		LoadConfig()
