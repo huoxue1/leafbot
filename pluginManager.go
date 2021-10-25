@@ -114,7 +114,7 @@ func InitPluginManager() {
 				mess := "插件名：" + p.Name + "\n帮助列表：\n"
 				for _, help := range p.Helps {
 					for s, s2 := range help {
-						mess += s + "\t" + s2 + "\t\n\n"
+						mess += s + "\t===>" + s2 + "\t\n\n"
 					}
 				}
 				event.Send(message.Text(mess))
