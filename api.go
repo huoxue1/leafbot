@@ -17,8 +17,18 @@ type OneBotApi interface {
 	SendPrivateMsg(userId int, message interface{}) int32
 	DeleteMsg(messageId int32)
 	GetMsg(messageId int32) gjson.Result
+	SetGroupBan(groupId int, userId int, duration int)
+	SetGroupCard(groupId int, userId int, card string)
 	SendMsg(messageType string, userId int, groupId int, message interface{}) int32
-
+	SendLike(userId int, times int)
+	SetGroupKick(groupId int, userId int, rejectAddRequest bool)
+	SetGroupAnonymousBan(groupId int, flag string, duration int)
+	SetGroupWholeBan(groupId int, enable bool)
+	SetGroupAdmin(groupId int, UserId int, enable bool)
+	SetGroupAnonymous(groupId int, enable bool)
+	SetGroupName(groupId int, groupName string)
+	SetGroupLeave(groupId int, isDisMiss bool)
+	SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int)
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result
