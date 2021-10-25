@@ -101,7 +101,7 @@ func InitPluginManager() {
 		PluginName: "插件帮助",
 		Weight:     1,
 		Block:      false,
-		Allies:     []string{"插件帮助"},
+		Allies:     []string{"帮助"},
 		Rules:      nil,
 		CD:         coolDown{"default", 0},
 	}).AddHandle(func(event Event, bot Api, state *State) {
@@ -114,7 +114,7 @@ func InitPluginManager() {
 				mess := "插件名：" + p.Name + "\n帮助列表：\n"
 				for _, help := range p.Helps {
 					for s, s2 := range help {
-						mess += s + "\t" + s2 + "\t"
+						mess += s + "\t" + s2 + "\t\n\n"
 					}
 				}
 				event.Send(message.Text(mess))
