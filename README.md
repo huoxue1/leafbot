@@ -39,11 +39,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ## 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
 
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">基础使用</a>
-
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/install.md">自己构建</a>
-
-+ ### <a href = "https://github.com/3343780376/leafBot/blob/master/docs/config.md">配置文件</a>
++ ### <a href = "https://vtsqr.xyz/leafBot/dist/">项目文档</a>
 
 
 
