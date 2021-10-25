@@ -1,6 +1,6 @@
 module.exports = {
     dest:"./dist",
-    base: "/leafBot/",
+    base: "/leafBot/dist/",
     title: 'LeafBot',
     description: '一个onebot的sdk',
     themeConfig: {
