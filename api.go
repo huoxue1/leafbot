@@ -8,22 +8,17 @@ import (
 // @Description:
 //
 type Api interface {
+	CallApi(action string, params map[string]interface{}) gjson.Result
+}
+
+type OneBotApi interface {
+	Api
 	SendGroupMsg(groupId int, message interface{}) int32
 	SendPrivateMsg(userId int, message interface{}) int32
 	DeleteMsg(messageId int32)
 	GetMsg(messageId int32) gjson.Result
-	SetGroupBan(groupId int, userId int, duration int)
-	SetGroupCard(groupId int, userId int, card string)
 	SendMsg(messageType string, userId int, groupId int, message interface{}) int32
-	SendLike(userId int, times int)
-	SetGroupKick(groupId int, userId int, rejectAddRequest bool)
-	SetGroupAnonymousBan(groupId int, flag string, duration int)
-	SetGroupWholeBan(groupId int, enable bool)
-	SetGroupAdmin(groupId int, UserId int, enable bool)
-	SetGroupAnonymous(groupId int, enable bool)
-	SetGroupName(groupId int, groupName string)
-	SetGroupLeave(groupId int, isDisMiss bool)
-	SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int)
+
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result
@@ -70,16 +65,20 @@ type Api interface {
 	GetGroupFilesByFolder(groupId int, folderId string) gjson.Result
 	GetGroupFileUrl(groupId int, fileId string, busid int) gjson.Result
 	GetGroupAtAllRemain(groupId int) gjson.Result
-
-	CallApi(action string, params interface{}) interface{}
 }
 
 func (e Event) Send(message interface{}) int32 {
 	bot := GetBotById(e.SelfId)
 	if e.MessageType == "private" {
-		return bot.SendPrivateMsg(e.UserId, message)
+		return int32(bot.CallApi("send_private_msg", map[string]interface{}{
+			"user_id": e.UserId,
+			"message": message,
+		}).Int())
 	} else if e.MessageType == "group" {
-		return bot.SendGroupMsg(e.GroupId, message)
+		return int32(bot.CallApi("send_group_msg", map[string]interface{}{
+			"group_id": e.GroupId,
+			"message":  message,
+		}).Int())
 	}
 	return 0
 }

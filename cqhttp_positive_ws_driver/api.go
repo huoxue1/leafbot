@@ -1555,7 +1555,7 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	log.Infoln("the response ==> " + string(data))
 }
 
-func (b *Bot) CallApi(Action string, param interface{}) interface{} {
+func (b *Bot) CallApi(Action string, param map[string]interface{}) gjson.Result {
 	echo := uuid.NewV4().String()
 	var d = UseApi{
 		Action: Action,
@@ -1566,7 +1566,7 @@ func (b *Bot) CallApi(Action string, param interface{}) interface{} {
 	data, _ := b.GetResponse(echo)
 	content, _ := json.Marshal(d)
 	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
-	return content
+	return gjson.GetBytes(content, "data")
 }
 
 func (b *Bot) SetEssenceMsg(messageId int) {

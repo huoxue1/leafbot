@@ -224,7 +224,7 @@ func GetGroupList(ctx *gin.Context) {
 
 	bot := GetBotById(selfID)
 	var resp []interface{}
-	list := bot.GetGroupList().String()
+	list := bot.(OneBotApi).GetGroupList().String()
 	err = json.Unmarshal([]byte(list), &resp)
 	if err != nil {
 		log.Errorln(err.Error())
@@ -247,7 +247,7 @@ func GetFriendList(ctx *gin.Context) {
 	}
 	bot := GetBotById(selfID)
 	var resp []interface{}
-	list := bot.GetFriendList().String()
+	list := bot.(OneBotApi).GetFriendList().String()
 	err = json.Unmarshal([]byte(list), &resp)
 	if err != nil {
 		log.Errorln(err.Error())
@@ -277,7 +277,7 @@ func CallApi(ctx *gin.Context) {
 		messageType = data["message_type"].(string)
 	}
 	bot := GetBotById(int(selfID))
-	msgID := bot.SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
+	msgID := bot.(OneBotApi).SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }
 

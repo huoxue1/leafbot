@@ -27,7 +27,7 @@ func MustReply(event Event, api Api, state *State) bool {
 			if err != nil {
 				return false
 			}
-			state.Data["reply_msg"] = api.GetMsg(int32(id))
+			state.Data["reply_msg"] = api.(OneBotApi).GetMsg(int32(id))
 			return true
 		}
 	}
