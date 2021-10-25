@@ -51,4 +51,3 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 [nonebot/nonebot2](https://github.com/nonebot/nonebot2) <流程借鉴>
 
-<img src="https://raw.githubusercontent.com/huoxue1/leafBot/master/docs/gui.png" alt="示例">
