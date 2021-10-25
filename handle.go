@@ -66,7 +66,7 @@ type (
 		rules        []Rule
 		weight       int
 		block        bool
-		cd           coolDown
+		cd           CoolDown
 		lastUseTime  int64
 		regexMatcher string
 	}
@@ -152,10 +152,13 @@ type (
 		Block      bool
 		Allies     []string
 		Rules      []Rule
-		CD         coolDown
+		CD         CoolDown
 	}
 )
 
+// Plugin
+// @Description:
+//
 type Plugin struct {
 	Name    string
 	Helps   []map[string]string
@@ -194,7 +197,7 @@ type (
 		    types: 冷却设置的类型
 		    long: cd的长短，若types为rand则表示随机数的最大值
 	*/
-	coolDown struct {
+	CoolDown struct {
 		Types string `json:"types"`
 		Long  int    `json:"long"`
 	}
@@ -451,7 +454,7 @@ func (p *PretreatmentHandle) SetPluginName(name string) *PretreatmentHandle {
 }
 
 func (c *commandHandle) SetCD(types string, long int) *commandHandle {
-	c.cd = coolDown{Types: types, Long: long}
+	c.cd = CoolDown{Types: types, Long: long}
 	return c
 }
 

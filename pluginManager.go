@@ -88,7 +88,7 @@ func InitPluginManager() {
 		Block:      false,
 		Allies:     []string{"插件列表"},
 		Rules:      []Rule{OnlySuperUser, OnlyToMe},
-		CD:         coolDown{"default", 0},
+		CD:         CoolDown{"default", 0},
 	}).AddHandle(func(event Event, bot Api, state *State) {
 		mess := ""
 		for _, p := range plugins {
@@ -103,7 +103,7 @@ func InitPluginManager() {
 		Block:      false,
 		Allies:     []string{"帮助"},
 		Rules:      nil,
-		CD:         coolDown{"default", 0},
+		CD:         CoolDown{"default", 0},
 	}).AddHandle(func(event Event, bot Api, state *State) {
 		if len(state.Args) < 1 {
 			event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))

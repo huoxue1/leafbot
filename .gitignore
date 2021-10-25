@@ -1,4 +1,3 @@
-dist/
 ./config/config.json
 *.log
 *.exe

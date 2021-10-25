@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>配置文件 | LeafBot</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="一个onebot的sdk">
+    
+    <link rel="preload" href="/leafBot/assets/css/0.styles.4e1768a2.css" as="style"><link rel="preload" href="/leafBot/assets/js/app.3cd288c0.js" as="script"><link rel="preload" href="/leafBot/assets/js/2.94db82d2.js" as="script"><link rel="preload" href="/leafBot/assets/js/9.b6ef1c5d.js" as="script"><link rel="prefetch" href="/leafBot/assets/js/10.63a16882.js"><link rel="prefetch" href="/leafBot/assets/js/11.5bc0f838.js"><link rel="prefetch" href="/leafBot/assets/js/3.ac3d1341.js"><link rel="prefetch" href="/leafBot/assets/js/4.bcce06fb.js"><link rel="prefetch" href="/leafBot/assets/js/5.360ce046.js"><link rel="prefetch" href="/leafBot/assets/js/6.21f7db24.js"><link rel="prefetch" href="/leafBot/assets/js/7.5015e266.js"><link rel="prefetch" href="/leafBot/assets/js/8.efbff6cc.js">
+    <link rel="stylesheet" href="/leafBot/assets/css/0.styles.4e1768a2.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/leafBot/" class="home-link router-link-active"><!----> <span class="site-name">LeafBot</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/leafBot/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/leafBot/data/quick_start.html" class="nav-link">
+  Quick Start
+</a></div><div class="nav-item"><a href="/leafBot/data/driver.html" class="nav-link">
+  Driver
+</a></div><div class="nav-item"><a href="/leafBot/data/config.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Config
+</a></div><div class="nav-item"><a href="https://github.com/huoxue1/leafBot" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Languages" class="dropdown-title"><span class="title">Languages</span> <span class="arrow down"></span></button> <button type="button" aria-label="Languages" class="mobile-dropdown-title"><span class="title">Languages</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/leafBot/language/chinese.html" class="nav-link">
+  Chinese
+</a></li><li class="dropdown-item"><!----> <a href="/leafBot/language/japanese.html" class="nav-link">
+  Japanese
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/leafBot/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/leafBot/data/quick_start.html" class="nav-link">
+  Quick Start
+</a></div><div class="nav-item"><a href="/leafBot/data/driver.html" class="nav-link">
+  Driver
+</a></div><div class="nav-item"><a href="/leafBot/data/config.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Config
+</a></div><div class="nav-item"><a href="https://github.com/huoxue1/leafBot" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Languages" class="dropdown-title"><span class="title">Languages</span> <span class="arrow down"></span></button> <button type="button" aria-label="Languages" class="mobile-dropdown-title"><span class="title">Languages</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/leafBot/language/chinese.html" class="nav-link">
+  Chinese
+</a></li><li class="dropdown-item"><!----> <a href="/leafBot/language/japanese.html" class="nav-link">
+  Japanese
+</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>配置文件</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/leafBot/data/config.html#配置文件" class="sidebar-link">配置文件</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/leafBot/data/config.html#配置文件位置" class="sidebar-link">配置文件位置</a></li><li class="sidebar-sub-header"><a href="/leafBot/data/config.html#默认配置文件" class="sidebar-link">默认配置文件</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="配置文件"><a href="#配置文件" class="header-anchor">#</a> 配置文件</h2> <h3 id="配置文件位置"><a href="#配置文件位置" class="header-anchor">#</a> 配置文件位置</h3> <p>配置文件默认位置为当前目录下的
+<code>\config\config.yml</code></p> <h3 id="默认配置文件"><a href="#默认配置文件" class="header-anchor">#</a> 默认配置文件</h3> <p>当运行时不存在配置文件或者配置文件读取错误将会生成默认配置文件</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token comment"># 机器人的昵称，可配置多个</span>
+<span class="token key atrule">nick_name</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token string">&quot;小风&quot;</span>
+<span class="token comment"># bot超级管理员账户</span>
+<span class="token key atrule">admin</span><span class="token punctuation">:</span> <span class="token number">0</span>
+<span class="token comment"># bot运行地址，若和gocq在同一台机器则只需要填写127.0.0.1即可，否则填写0.0.0.0，gocq配置你的公网地址</span>
+<span class="token key atrule">host</span><span class="token punctuation">:</span> 127.0.0.1
+<span class="token comment"># bot运行端口</span>
+<span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+<span class="token comment"># access_token</span>
+<span class="token key atrule">token</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+<span class="token comment"># leafBot日志等级</span>
+<span class="token key atrule">log_level</span><span class="token punctuation">:</span> info
+<span class="token comment"># bot的管理员用户，类型为数组</span>
+<span class="token key atrule">super_user</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token number">123456</span>
+<span class="token comment">#    - 123456</span>
+
+<span class="token comment"># 配置命令的起始字符</span>
+<span class="token key atrule">command_start</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token string">&quot;&quot;</span>
+    <span class="token punctuation">-</span> /
+<span class="token comment"># 是否启用playwright。热搜插件以及网页截图插件会依赖于该配置</span>
+<span class="token key atrule">enable_playwright</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+
+<span class="token comment"># 日志是否截断,默认截断</span>
+<span class="token key atrule">log_truncate</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+
+<span class="token comment"># cqhttp_http_driver监听地址</span>
+<span class="token key atrule">listen_host</span><span class="token punctuation">:</span> 127.0.0.1
+
+<span class="token comment"># cqhttp_http_driver监听断开</span>
+<span class="token key atrule">listen_port</span><span class="token punctuation">:</span> <span class="token number">8081</span>
+
+<span class="token comment"># cqhttp_http_driver一个bot实例，即onebot端所监听的api地址以及账号</span>
+<span class="token key atrule">web_hook</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span>
+        <span class="token key atrule">post_host</span><span class="token punctuation">:</span> 127.0.0.1
+        <span class="token key atrule">post_port</span><span class="token punctuation">:</span> <span class="token number">5700</span>
+        <span class="token key atrule">self_id</span><span class="token punctuation">:</span> <span class="token number">1603214019</span>
+
+
+<span class="token comment"># 插件相关的一些配置</span>
+<span class="token key atrule">plugins</span><span class="token punctuation">:</span>
+    <span class="token key atrule">flash_group_id</span><span class="token punctuation">:</span> <span class="token number">0</span>
+    <span class="token comment"># al_api的token，微博热搜依赖于该配置 获取地址：https://admin.alapi.cn/</span>
+    <span class="token key atrule">al_api_token</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># 自动回复插件在群里是否需要at</span>
+    <span class="token key atrule">enable_reply_tome</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token comment"># 配置入群欢迎,类型为一个数组，每一个对象配置群号，后面配置欢迎消息</span>
+    <span class="token key atrule">welcome</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span>
+              <span class="token key atrule">welcome</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+              <span class="token key atrule">group_id</span><span class="token punctuation">:</span> <span class="token number">123456</span>
+<span class="token comment">#          -</span>
+<span class="token comment">#              welcome: &quot;&quot;</span>
+<span class="token comment">#              group_id: 123</span>
+    <span class="token comment"># 配置github_token</span>
+    <span class="token key atrule">github_token</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># 配置自动同意好友的答案，若配置为空字符串则同意所有请求，可设置多个</span>
+    <span class="token key atrule">auto_pass_friend_request</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/leafBot/assets/js/app.3cd288c0.js" defer></script><script src="/leafBot/assets/js/2.94db82d2.js" defer></script><script src="/leafBot/assets/js/9.b6ef1c5d.js" defer></script>
+  </body>
+</html>
