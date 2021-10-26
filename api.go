@@ -9,6 +9,9 @@ import (
 //
 type Api interface {
 	CallApi(action string, params map[string]interface{}) gjson.Result
+	SendGroupMsg(groupId int, message interface{}) int32
+	SendPrivateMsg(userId int, message interface{}) int32
+	DeleteMsg(messageId int32)
 }
 
 type OneBotApi interface {

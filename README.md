@@ -19,17 +19,15 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     <img src="https://img.shields.io/badge/OneBot-v11-blue?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAIVBMVEUAAAAAAAADAwMHBwceHh4UFBQNDQ0ZGRkoKCgvLy8iIiLWSdWYAAAAAXRSTlMAQObYZgAAAQVJREFUSMftlM0RgjAQhV+0ATYK6i1Xb+iMd0qgBEqgBEuwBOxU2QDKsjvojQPvkJ/ZL5sXkgWrFirK4MibYUdE3OR2nEpuKz1/q8CdNxNQgthZCXYVLjyoDQftaKuniHHWRnPh2GCUetR2/9HsMAXyUT4/3UHwtQT2AggSCGKeSAsFnxBIOuAggdh3AKTL7pDuCyABcMb0aQP7aM4AnAbc/wHwA5D2wDHTTe56gIIOUA/4YYV2e1sg713PXdZJAuncdZMAGkAukU9OAn40O849+0ornPwT93rphWF0mgAbauUrEOthlX8Zu7P5A6kZyKCJy75hhw1Mgr9RAUvX7A3csGqZegEdniCx30c3agAAAABJRU5ErkJggg==" alt="cqhttp">
   </a>
     <a href="#">
-    <img src="https://img.shields.io/badge/FengyeBot-v1.0-orange" alt="">
+    <img src="https://img.shields.io/badge/LeafBot-v1.1.6-orange" alt="">
     </a>
     <a href="#">
-    <img src="https://img.shields.io/badge/gocqhttp-v1.0.0--beta3-blue" alt="">
+    <img src="https://img.shields.io/badge/gocqhttp-v1.0.7--beta2-blue" alt="">
     </a>
 </p>
 
 
 ---
-## 已添加windows的gui界面，前提是基于chorme引擎
-### 特别感谢wdvxdr1123大佬的<a href="https://github.com/wdvxdr1123/ZeroBot/tree/main/message">CQ码</a>解析和消息部分
 
 ### 安装
 
@@ -37,7 +35,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
     go get github.com/huoxue1/leafBot
 ```
 
-## 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
+### 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
 
 + ### <a href = "https://vtsqr.xyz/leafBot/dist/">项目文档</a>
 
