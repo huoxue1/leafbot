@@ -1,3 +1,7 @@
+---
+sidebar: auto
+
+---
 # driver列表
 
 ## cqhttp-http-driver
