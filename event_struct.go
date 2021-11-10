@@ -81,6 +81,16 @@ type (
 		CardOld       string          `json:"card_old"` //旧名片
 		MessageIds
 	}
+
+	MiraiEvent struct {
+		Type   string `json:"type"`
+		QQ     int64  `json:"qq"`
+		Friend struct {
+			Id       int64  `json:"id"`
+			NickName string `json:"nick_name"`
+			Remark   string `json:"remark"`
+		} `json:"friend"`
+	}
 )
 
 //GetMsg

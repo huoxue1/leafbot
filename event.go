@@ -17,6 +17,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 	//nolint:gci
 )
 
@@ -129,6 +130,9 @@ func eventMain() {
 			err := json.Unmarshal(data, &event)
 			if err != nil {
 				log.Debugln("反向解析json失败" + err.Error() + "\n" + string(data))
+				if gjson.GetBytes(data, "post_type").String() == "message" && !gjson.GetBytes(data, "message").IsArray() {
+					log.Errorln("检测到onebot端采用了string上报，建议更改未array上报")
+				}
 			}
 			go viewsMessage(event)
 		}
