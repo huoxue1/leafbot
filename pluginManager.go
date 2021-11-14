@@ -18,6 +18,9 @@ var font []byte
 
 func init() {
 	go getFont()
+}
+
+func InitDefaultPlugin() {
 	InitPluginManager()
 	reloadConfigInit()
 }
