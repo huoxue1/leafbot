@@ -258,14 +258,17 @@ func viewsMessage(event Event) {
 func processNoticeHandle(event Event) {
 	defer func() {
 		err := recover()
-		log.Errorln("notice事件处理器出现错误")
-		log.Errorln(err)
+		if err != nil {
+			log.Errorln("notice事件处理器出现错误")
+			log.Errorln(err)
+		}
 	}()
+	s := new(State)
 	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 		event.NoticeType, event.GroupId, event.UserId))
 
 	for _, v := range NoticeHandles {
-		rule := checkRule(event, v.rules, &State{})
+		rule := checkRule(event, v.rules, s)
 		if !rule || !v.Enable {
 			continue
 		}
