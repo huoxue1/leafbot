@@ -460,8 +460,7 @@ func processMessageHandle() {
 
 				doHandle(handle, event, state)
 
-				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
+				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
 				if handle.block {
 					return
 				}
@@ -483,8 +482,7 @@ func processMessageHandle() {
 				state.Allies = handle.allies
 
 				doHandle(handle, event, state)
-				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.command))
+				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
 				if handle.block {
 					return
 				}
@@ -501,8 +499,7 @@ func processMessageHandle() {
 				state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
 
 				doHandle(handle, event, state)
-				log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s"+
-					"\n\t\t\t\t\tthis is a command\n\t\t\t\t\t触发了：%v", event.MessageType, event.GroupId, event.UserId, eventData, handle.regexMatcher))
+				log.Infoln(fmt.Sprintf("触发了：%v", handle.regexMatcher))
 				if handle.block {
 					return
 				}

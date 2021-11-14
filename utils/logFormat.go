@@ -75,7 +75,7 @@ func (f *LogFormat) Format(entry *log.Entry) ([]byte, error) {
 	}
 
 	if len(output) > 500 && f.LogTruncate {
-		output = output[0:500] + "..."
+		output = output[0:500] + "...\n"
 	}
 
 	return []byte(output), nil
