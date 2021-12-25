@@ -1,3 +1,5 @@
+// Package leafBot
+// @Description:
 package leafBot
 
 import (
@@ -8,17 +10,17 @@ import (
 // @Description:
 //
 type Api interface {
-	CallApi(action string, params map[string]interface{}) gjson.Result
+	CallApi(action string, params interface{}) gjson.Result
 	SendGroupMsg(groupId int, message interface{}) int32
 	SendPrivateMsg(userId int, message interface{}) int32
 	DeleteMsg(messageId int32)
 }
 
+// OneBotApi
+// @Description:
+//
 type OneBotApi interface {
 	Api
-	SendGroupMsg(groupId int, message interface{}) int32
-	SendPrivateMsg(userId int, message interface{}) int32
-	DeleteMsg(messageId int32)
 	GetMsg(messageId int32) gjson.Result
 	SetGroupBan(groupId int, userId int, duration int)
 	SetGroupCard(groupId int, userId int, card string)
@@ -61,7 +63,7 @@ type OneBotApi interface {
 	ReloadEventFilter()
 	SetEssenceMsg(messageId int)
 	DeleteEssenceMsg(messageId int)
-	GetEssenceMsgList(groupId int)
+	GetEssenceMsgList(groupId int) gjson.Result
 	CheckUrlSafely(url string) int
 	UploadGroupFile(groupId int, file string, name string, folder string)
 

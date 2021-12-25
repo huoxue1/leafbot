@@ -140,6 +140,7 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 
 func (d *Driver) Run() {
 	http.Handle("/"+d.Name+"/ws", d)
+	log.Infoln(fmt.Sprintf("the bot is listening %v:%v", d.address, d.port))
 	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.address, d.port), nil); err != nil {
 		log.Panicln(err.Error())
 	}

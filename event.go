@@ -21,10 +21,6 @@ import (
 	//nolint:gci
 )
 
-var (
-	c = make(chan Event, 10)
-)
-
 var ENABLE = false // 是否启用gui
 
 var (
@@ -51,16 +47,16 @@ var (
    @Description: 遍历所有的session发现是否需要将消息传到对应的handle里面
    @param event Event
 */
-func sessionHandle(event Event) bool {
+func sessionHandle(ctx *Context) bool {
 	DISUSE := false
 	sessions.Range(func(key, value interface{}) bool {
 		s := value.(session)
-		rule := checkRule(event, s.rules, &State{})
+		rule := checkRule(s.rules, ctx)
 		if s.rules == nil {
 			rule = true
 		}
 		if rule {
-			s.queue <- event
+			s.queue <- *ctx.Event
 			DISUSE = true
 		}
 		return true
@@ -204,11 +200,17 @@ func viewsMessage(event Event) {
 			log.Errorln(err)
 		}
 	}()
-
+	bot := GetBotById(event.SelfId)
+	state := new(State)
+	ctx := new(Context)
+	ctx.Event = &event
+	ctx.Bot = bot
+	ctx.State = state
+	data1, _ := json.Marshal(&event)
+	log.Debugln(string(data1))
 	// 执行所有预处理handle
 	for _, handle := range PretreatmentHandles {
-		bot := GetBotById(event.SelfId)
-		rule := checkRule(event, handle.rules, &State{})
+		rule := checkRule(handle.rules, ctx)
 		// 执行rule判断
 		if !rule || !handle.Enable {
 			continue
@@ -220,7 +222,7 @@ func viewsMessage(event Event) {
 			}
 		}
 		// 执行handle
-		b := handle.handle(event, bot)
+		b := handle.handle(ctx)
 		// 判断是否被block
 		if !b {
 			return
@@ -230,23 +232,22 @@ func viewsMessage(event Event) {
 	//log.Infoln(event)
 	switch event.PostType {
 	case "message":
-		c <- event
 		if ENABLE {
 			MessageChan <- event
 		}
-		processMessageHandle()
+		processMessageHandle(ctx)
 
 	case "notice":
-		processNoticeHandle(event)
+		processNoticeHandle(ctx)
 	case "request":
 		log.Infoln(fmt.Sprintf("request_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 			event.RequestType, event.GroupId, event.UserId))
-		processRequestEventHandle(event)
+		processRequestEventHandle(ctx)
 
 	case "meta_event":
 		log.Debugln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
 			event.PostType, event.MetaEventType, event.Interval))
-		processMetaEventHandle(event)
+		processMetaEventHandle(ctx)
 	}
 }
 
@@ -255,7 +256,7 @@ func viewsMessage(event Event) {
    @Description: Notice事件的handle处理
    @param event Event
 */
-func processNoticeHandle(event Event) {
+func processNoticeHandle(ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -263,19 +264,18 @@ func processNoticeHandle(event Event) {
 			log.Errorln(err)
 		}
 	}()
-	s := new(State)
 	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
-		event.NoticeType, event.GroupId, event.UserId))
+		ctx.Event.NoticeType, ctx.Event.GroupId, ctx.Event.UserId))
 
 	for _, v := range NoticeHandles {
-		rule := checkRule(event, v.rules, s)
+		rule := checkRule(v.rules, ctx)
 		if !rule || !v.Enable {
 			continue
 		}
 		if v.noticeType == "" {
-			v.noticeType = event.NoticeType
+			v.noticeType = ctx.Event.NoticeType
 		}
-		if v.noticeType == event.NoticeType {
+		if v.noticeType == ctx.Event.NoticeType {
 			go func(handle2 *noticeHandle) {
 				defer func() {
 					err := recover()
@@ -284,7 +284,7 @@ func processNoticeHandle(event Event) {
 						log.Errorln(err)
 					}
 				}()
-				handle2.handle(event, GetBotById(event.SelfId))
+				handle2.handle(ctx)
 			}(v)
 		}
 	}
@@ -299,9 +299,9 @@ func processNoticeHandle(event Event) {
  * @return bool
  * example
  */
-func checkRule(event Event, rules []Rule, state *State) bool {
+func checkRule(rules []Rule, ctx *Context) bool {
 	for _, rule := range rules {
-		check := rule(event, GetBotById(event.SelfId), state)
+		check := rule(ctx)
 		if !check {
 			return false
 		}
@@ -354,7 +354,7 @@ func checkCD(handle *commandHandle) bool {
 	return false
 }
 
-func doHandle(handle *commandHandle, event Event, state *State) {
+func doHandle(handle *commandHandle, ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -362,7 +362,7 @@ func doHandle(handle *commandHandle, event Event, state *State) {
 			log.Errorln(err)
 		}
 	}()
-	handle.handle(event, GetBotById(event.SelfId), state)
+	handle.handle(ctx)
 }
 
 func checkOnlyTome(event *Event, state *State) {
@@ -394,7 +394,7 @@ func checkOnlyTome(event *Event, state *State) {
  * @Description: 处理message的响应器
  * example
  */
-func processMessageHandle() {
+func processMessageHandle(ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -403,25 +403,22 @@ func processMessageHandle() {
 		}
 	}()
 	// 从队列中取出事件
-	event := <-c
 	// 判断是否触发命令的flag
 	a := 0
 	log.Debugln(len(CommandHandles))
-	eventData, _ := json.Marshal(event)
 	// 执行连续会话的handle，如果返回true说明该消息被连续对话捕捉
-	if sessionHandle(event) {
+	if sessionHandle(ctx) {
 		return
 	}
 
-	state := new(State)
-	state.Data = make(map[string]interface{})
-	checkOnlyTome(&event, state)
+	ctx.State.Data = make(map[string]interface{})
+	checkOnlyTome(ctx.Event, ctx.State)
 	// 遍历所有的command对象
 	for _, handle := range CommandHandles {
 		// 判断该cmd在该群是否被禁用
 		disable := true
 		for _, group := range handle.disableGroup {
-			if event.GroupId == group {
+			if ctx.Event.GroupId == group {
 				disable = false
 			}
 		}
@@ -429,7 +426,7 @@ func processMessageHandle() {
 			continue
 		}
 		// 检查rules
-		rule := checkRule(event, handle.rules, state)
+		rule := checkRule(handle.rules, ctx)
 
 		if handle.rules == nil {
 			rule = true
@@ -439,11 +436,11 @@ func processMessageHandle() {
 		if !rule || !handle.Enable {
 			continue
 		}
-		// if event.Message[0].Type != "text" {
+		// if ctx.Event.Message[0].Type != "text" {
 		//	continue
 		//}
 
-		commands := strings.Split(event.GetPlainText(), " ")
+		commands := strings.Split(ctx.Event.GetPlainText(), " ")
 		if len(commands) < 1 {
 			continue
 		}
@@ -457,11 +454,11 @@ func processMessageHandle() {
 				a = 1
 				handle.lastUseTime = time.Now().Unix()
 
-				state.Args = commands[1:]
-				state.Cmd = handle.command
-				state.Allies = handle.allies
+				ctx.State.Args = commands[1:]
+				ctx.State.Cmd = handle.command
+				ctx.State.Allies = handle.allies
 
-				doHandle(handle, event, state)
+				doHandle(handle, ctx)
 
 				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
 				if handle.block {
@@ -480,11 +477,11 @@ func processMessageHandle() {
 				a = 1
 				handle.lastUseTime = time.Now().Unix()
 
-				state.Args = commands[1:]
-				state.Cmd = handle.command
-				state.Allies = handle.allies
+				ctx.State.Args = commands[1:]
+				ctx.State.Cmd = handle.command
+				ctx.State.Allies = handle.allies
 
-				doHandle(handle, event, state)
+				doHandle(handle, ctx)
 				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
 				if handle.block {
 					return
@@ -495,13 +492,13 @@ func processMessageHandle() {
 		// 处理正则匹配
 		if handle.command == "" && handle.regexMatcher != "" {
 			compile := regexp.MustCompile(handle.regexMatcher)
-			if compile.MatchString(event.Message.CQString()) {
-				state.Args = commands[1:]
-				state.Cmd = handle.regexMatcher
-				state.Allies = handle.allies
-				state.RegexResult = compile.FindStringSubmatch(event.Message.CQString())
+			if compile.MatchString(ctx.Event.Message.CQString()) {
+				ctx.State.Args = commands[1:]
+				ctx.State.Cmd = handle.regexMatcher
+				ctx.State.Allies = handle.allies
+				ctx.State.RegexResult = compile.FindStringSubmatch(ctx.Event.Message.CQString())
 
-				doHandle(handle, event, state)
+				doHandle(handle, ctx)
 				log.Infoln(fmt.Sprintf("触发了：%v", handle.regexMatcher))
 				if handle.block {
 					return
@@ -516,21 +513,21 @@ func processMessageHandle() {
 	}
 	s := new(State)
 	s.Data = make(map[string]interface{})
-	checkOnlyTome(&event, s)
+	checkOnlyTome(ctx.Event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
-		event.MessageType, event.GroupId, event.UserId, eventData))
+		ctx.Event.MessageType, ctx.Event.GroupId, ctx.Event.UserId, ctx.RawEvent))
 	for _, handle := range MessageHandles {
-		if handle.messageType != "" && handle.messageType != event.MessageType {
+		if handle.messageType != "" && handle.messageType != ctx.Event.MessageType {
 			continue
 		}
 
 		for _, group := range handle.disableGroup {
-			if event.GroupId == group {
+			if ctx.Event.GroupId == group {
 				return
 			}
 		}
 
-		rule := checkRule(event, handle.rules, s)
+		rule := checkRule(handle.rules, ctx)
 		if !rule || !handle.Enable {
 			continue
 		}
@@ -542,7 +539,7 @@ func processMessageHandle() {
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(event, GetBotById(event.SelfId), s)
+			handle2.handle(ctx)
 		}(handle)
 	}
 }
@@ -552,7 +549,7 @@ func processMessageHandle() {
    @Description: Request类型event处理
    @param event Event
 */
-func processRequestEventHandle(event Event) {
+func processRequestEventHandle(ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -562,12 +559,12 @@ func processRequestEventHandle(event Event) {
 	}()
 	for _, handle := range RequestHandles {
 		for _, group := range handle.disableGroup {
-			if event.GroupId == group {
+			if ctx.Event.GroupId == group {
 				return
 			}
 		}
 
-		rule := checkRule(event, handle.rules, &State{})
+		rule := checkRule(handle.rules, ctx)
 		if handle.rules == nil {
 			rule = true
 		}
@@ -582,7 +579,7 @@ func processRequestEventHandle(event Event) {
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(event, GetBotById(event.SelfId))
+			handle2.handle(ctx)
 		}(handle)
 	}
 }
@@ -593,7 +590,7 @@ func processRequestEventHandle(event Event) {
  * @param event
  * example
  */
-func processMetaEventHandle(event Event) {
+func processMetaEventHandle(ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -603,12 +600,12 @@ func processMetaEventHandle(event Event) {
 	}()
 	for _, handle := range MetaHandles {
 		for _, group := range handle.disableGroup {
-			if event.GroupId == group {
+			if ctx.Event.GroupId == group {
 				return
 			}
 		}
 
-		rule := checkRule(event, handle.rules, &State{})
+		rule := checkRule(handle.rules, ctx)
 		if handle.rules == nil {
 			rule = true
 		}
@@ -623,7 +620,7 @@ func processMetaEventHandle(event Event) {
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(event, GetBotById(event.SelfId))
+			handle2.handle(ctx)
 		}(handle)
 	}
 }

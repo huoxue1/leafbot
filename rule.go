@@ -8,7 +8,7 @@ import "strconv"
 /*
 	rule类型
 */
-type Rule func(Event, Api, *State) bool
+type Rule func(ctx *Context) bool
 
 //MustReply
 /**
@@ -19,15 +19,15 @@ type Rule func(Event, Api, *State) bool
  * @return bool
  * example
  */
-func MustReply(event Event, api Api, state *State) bool {
-	for _, segment := range event.Message {
+func MustReply(ctx *Context) bool {
+	for _, segment := range ctx.Event.Message {
 		if segment.Type == "reply" {
-			state.Data["reply_id"] = segment.Data["id"]
+			ctx.State.Data["reply_id"] = segment.Data["id"]
 			id, err := strconv.Atoi(segment.Data["id"])
 			if err != nil {
 				return false
 			}
-			state.Data["reply_msg"] = api.(OneBotApi).GetMsg(int32(id))
+			ctx.State.Data["reply_msg"] = ctx.GetMsg(int32(id))
 			return true
 		}
 	}
@@ -42,8 +42,8 @@ func MustReply(event Event, api Api, state *State) bool {
  * @return bool  返回是否验证通过该rule
  * example
  */
-func OnlyToMe(event Event, _ Api, state *State) bool {
-	if b, ok := state.Data["only_tome"]; ok {
+func OnlyToMe(ctx *Context) bool {
+	if b, ok := ctx.State.Data["only_tome"]; ok {
 		return b.(bool)
 	}
 
@@ -58,12 +58,12 @@ func OnlyToMe(event Event, _ Api, state *State) bool {
  * @return bool  是否通过该rule验证
  * example
  */
-func OnlySuperUser(event Event, _ Api, _ *State) bool {
-	if event.UserId == DefaultConfig.Admin {
+func OnlySuperUser(ctx *Context) bool {
+	if ctx.Event.UserId == DefaultConfig.Admin {
 		return true
 	}
 	for _, user := range DefaultConfig.SuperUser {
-		if event.UserId == user {
+		if ctx.Event.UserId == user {
 			return true
 		}
 	}
@@ -78,6 +78,6 @@ func OnlySuperUser(event Event, _ Api, _ *State) bool {
  * @return bool
  * example
  */
-func OnlyGroupMessage(event Event, _ Api) bool {
-	return event.MessageType == "group"
+func OnlyGroupMessage(ctx *Context) bool {
+	return ctx.Event.MessageType == "group"
 }

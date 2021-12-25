@@ -67,10 +67,10 @@ func reloadConfigInit() {
 		AddAllies("重载配置").
 		AddRule(OnlySuperUser).
 		AddRule(OnlyToMe).
-		AddHandle(func(event Event, bot Api, state *State) {
+		AddHandle(func(ctx *Context) {
 			err := initConfig(YAML)
 			if err != nil {
-				event.Send(message.Text("配置文件重载失败" + err.Error()))
+				ctx.Send(message.Text("配置文件重载失败" + err.Error()))
 			}
 		})
 }
@@ -92,13 +92,13 @@ func InitPluginManager() {
 		Allies:     []string{"插件列表"},
 		Rules:      []Rule{OnlySuperUser, OnlyToMe},
 		CD:         CoolDown{"default", 0},
-	}).AddHandle(func(event Event, bot Api, state *State) {
+	}).AddHandle(func(ctx *Context) {
 		mess := ""
 		for _, p := range plugins {
 			mess += p.Name + "\n"
 		}
 		mess += "发送help加插件名即可获取插件帮助"
-		event.Send(message.Text(mess))
+		ctx.Send(message.Text(mess))
 	})
 	plugin.OnCommand("help", Option{
 		PluginName: "插件帮助",
@@ -107,48 +107,48 @@ func InitPluginManager() {
 		Allies:     []string{"帮助"},
 		Rules:      nil,
 		CD:         CoolDown{"default", 0},
-	}).AddHandle(func(event Event, bot Api, state *State) {
-		if len(state.Args) < 1 {
-			event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
+	}).AddHandle(func(ctx *Context) {
+		if len(ctx.State.Args) < 1 {
+			ctx.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
 			return
 		}
 		for _, p := range plugins {
-			if p.Name == state.Args[0] {
+			if p.Name == ctx.State.Args[0] {
 				mess := "插件名：" + p.Name + "\n帮助列表：\n"
 				for _, help := range p.Helps {
 					for s, s2 := range help {
 						mess += s + "\t===>" + s2 + "\t\n\n"
 					}
 				}
-				event.Send(message.Text(mess))
+				ctx.Send(message.Text(mess))
 				return
 			}
 		}
-		event.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
+		ctx.Send(message.Text("请发送对应的插件名获取帮助，发送插件列表即可获取所有插件名"))
 	})
 
 	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
-		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
-		if len(state.Args) < 0 {
-			event.Send(message.Text("参数不够"))
+		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
+		if len(ctx.State.Args) < 0 {
+			ctx.Send(message.Text("参数不够"))
 			return
 		}
-		BanPluginByID(state.Args[0])
-		event.Send(message.Text("禁用插件成功"))
+		BanPluginByID(ctx.State.Args[0])
+		ctx.Send(message.Text("禁用插件成功"))
 	})
 
 	plugin.OnCommand("use_handle").SetPluginName("启用插件").
-		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
-		if len(state.Args) < 0 {
-			event.Send(message.Text("参数不够"))
+		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
+		if len(ctx.State.Args) < 0 {
+			ctx.Send(message.Text("参数不够"))
 			return
 		}
-		StartPluginByID(state.Args[0])
-		event.Send(message.Text("启用插件成功"))
+		StartPluginByID(ctx.State.Args[0])
+		ctx.Send(message.Text("启用插件成功"))
 	})
 
 	plugin.OnCommand("get_handles").SetPluginName("获取事件处理列表").
-		AddAllies("事件处理列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(event Event, bot Api, state *State) {
+		AddAllies("事件处理列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
 		handleList := GetHandleList()
 		//for s, handles := range handleList {
 		//	msg += s+"\n"
@@ -164,7 +164,7 @@ func InitPluginManager() {
 
 		res := base64.StdEncoding.EncodeToString(srcByte)
 
-		event.Send(message.Image("base64://" + res))
+		ctx.Send(message.Image("base64://" + res))
 	})
 }
 

@@ -27,14 +27,14 @@ type (
 	PretreatmentHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api) bool
+		handle       func(ctx *Context) bool
 		rules        []Rule
 		weight       int
 	}
 	messageHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api, state *State)
+		handle       func(ctx *Context)
 		messageType  string
 		rules        []Rule
 		weight       int
@@ -43,7 +43,7 @@ type (
 	requestHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api)
+		handle       func(ctx *Context)
 		requestType  string
 		rules        []Rule
 		weight       int
@@ -52,7 +52,7 @@ type (
 	noticeHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api)
+		handle       func(ctx *Context)
 		noticeType   string
 		rules        []Rule
 		weight       int
@@ -60,7 +60,7 @@ type (
 	commandHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api, state *State)
+		handle       func(ctx *Context)
 		command      string
 		allies       []string
 		rules        []Rule
@@ -74,7 +74,7 @@ type (
 	metaHandle struct {
 		BaseHandle
 		disableGroup []int
-		handle       func(event Event, bot Api)
+		handle       func(ctx *Context)
 		rules        []Rule
 		weight       int
 	}
@@ -93,35 +93,35 @@ type (
 		SetPluginName(name string) *noticeHandle
 		AddRule(rule Rule) *noticeHandle
 		SetWeight(weight int) *noticeHandle
-		AddHandle(func(event Event, bot Api))
+		AddHandle(func(ctx *Context))
 	}
 
 	RequestInt interface {
 		SetPluginName(name string) *requestHandle
 		AddRule(rule Rule) *requestHandle
 		SetWeight(weight int) *requestHandle
-		AddHandle(func(event Event, bot Api))
+		AddHandle(func(ctx *Context))
 	}
 
 	MessageInt interface {
 		SetPluginName(name string) *messageHandle
 		AddRule(rule Rule) *messageHandle
 		SetWeight(weight int) *messageHandle
-		AddHandle(func(event Event, bot Api, state *State))
+		AddHandle(func(ctx *Context))
 	}
 
 	PretreatmentInt interface {
 		SetPluginName(name string) *PretreatmentHandle
 		AddRule(rule Rule) *PretreatmentHandle
 		SetWeight(weight int) *PretreatmentHandle
-		AddHandle(func(event Event, bot Api) bool)
+		AddHandle(func(ctx *Context) bool)
 	}
 
 	MetaInt interface {
 		SetPluginName(name string) *metaHandle
 		AddRule(rule Rule) *metaHandle
 		SetWeight(weight int) *metaHandle
-		AddHandle(func(event Event, bot Api))
+		AddHandle(func(ctx *Context))
 	}
 
 	ConnectInt interface {
@@ -140,7 +140,7 @@ type (
 		AddRule(rule Rule) *commandHandle
 		SetWeight(weight int) *commandHandle
 		SetBlock(IsBlock bool) *commandHandle
-		AddHandle(f func(event Event, bot Api, state *State))
+		AddHandle(f func(ctx *Context))
 		SetCD(types string, long int) *commandHandle
 	}
 )
@@ -192,11 +192,6 @@ type (
 		Data        map[string]interface{}
 	}
 
-	/**
-	     * @Description: 命令冷却的结构体
-		    types: 冷却设置的类型
-		    long: cd的长短，若types为rand则表示随机数的最大值
-	*/
 	CoolDown struct {
 		Types string `json:"types"`
 		Long  int    `json:"long"`
@@ -246,8 +241,8 @@ func (p *Plugin) OnRegex(regex string, options ...Option) *commandHandle {
 }
 
 func (p *Plugin) OnFullMatch(match string, options ...Option) *messageHandle {
-	rule := func(event Event, bot Api, state *State) bool {
-		return event.RawMessage == match
+	rule := func(ctx *Context) bool {
+		return ctx.Event.RawMessage == match
 	}
 	if len(options) > 0 {
 		return &messageHandle{
@@ -259,9 +254,9 @@ func (p *Plugin) OnFullMatch(match string, options ...Option) *messageHandle {
 }
 
 func (p *Plugin) OnFullMatchGroup(matchs []string, options ...Option) *messageHandle {
-	rule := func(event Event, bot Api, state *State) bool {
+	rule := func(ctx *Context) bool {
 		for _, match := range matchs {
-			if event.RawMessage == match {
+			if ctx.Event.RawMessage == match {
 				return true
 			}
 		}
@@ -344,11 +339,11 @@ func (p *Plugin) OnStartWith(str string, options ...Option) *messageHandle {
 			rules:  options[0].Rules,
 		}
 	}
-	c.AddRule(func(event Event, bot Api, state *State) bool {
-		if event.Message[0].Type != "text" {
+	c.AddRule(func(ctx *Context) bool {
+		if ctx.Event.Message[0].Type != "text" {
 			return false
 		}
-		if strings.HasPrefix(event.Message[0].Data["text"], str) {
+		if strings.HasPrefix(ctx.Event.Message[0].Data["text"], str) {
 			return true
 		}
 		return false
@@ -375,11 +370,11 @@ func (p *Plugin) OnEndWith(str string, options ...Option) *messageHandle {
 			rules:  options[0].Rules,
 		}
 	}
-	c.AddRule(func(event Event, bot Api, state *State) bool {
-		if event.Message[0].Type != "text" {
+	c.AddRule(func(ctx *Context) bool {
+		if ctx.Event.Message[0].Type != "text" {
 			return false
 		}
-		if strings.HasSuffix(event.Message[0].Data["text"], str) {
+		if strings.HasSuffix(ctx.Event.Message[0].Data["text"], str) {
 			return true
 		}
 		return false
@@ -395,9 +390,9 @@ func (p *Plugin) OnKeyWords(keyword string, options ...Option) *messageHandle {
 			rules:  options[0].Rules,
 		}
 	}
-	m.rules = append(m.rules, func(event Event, bot Api, state *State) bool {
-		if strings.Contains(event.Message.ExtractPlainText(), keyword) {
-			state.Data["key_word"] = keyword
+	m.rules = append(m.rules, func(ctx *Context) bool {
+		if strings.Contains(ctx.Event.Message.ExtractPlainText(), keyword) {
+			ctx.State.Data["key_word"] = keyword
 			return true
 		}
 		return false
@@ -522,7 +517,7 @@ func (m *metaHandle) SetWeight(weight int) *metaHandle {
  * @receiver m
  * @param f
  */
-func (m *metaHandle) AddHandle(f func(event Event, bot Api)) {
+func (m *metaHandle) AddHandle(f func(ctx *Context)) {
 	m.HandleType = "meta"
 	m.handle = f
 	m.Enable = true
@@ -591,7 +586,7 @@ func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
  * @receiver c
  * @param f
  */
-func (c *commandHandle) AddHandle(f func(event Event, bot Api, state *State)) {
+func (c *commandHandle) AddHandle(f func(ctx *Context)) {
 	c.HandleType = "command"
 	c.handle = f
 	c.Enable = true
@@ -636,7 +631,7 @@ func (n *noticeHandle) SetWeight(weight int) *noticeHandle {
  * @receiver n
  * @param f
  */
-func (n *noticeHandle) AddHandle(f func(event Event, bot Api)) {
+func (n *noticeHandle) AddHandle(f func(ctx *Context)) {
 	n.HandleType = "notice"
 	n.handle = f
 	n.Enable = true
@@ -681,7 +676,7 @@ func (r *requestHandle) SetWeight(weight int) *requestHandle {
  * @receiver r
  * @param f
  */
-func (r *requestHandle) AddHandle(f func(event Event, bot Api)) {
+func (r *requestHandle) AddHandle(f func(ctx *Context)) {
 	r.HandleType = "request"
 	r.handle = f
 	r.Enable = true
@@ -726,7 +721,7 @@ func (m *messageHandle) SetWeight(weight int) *messageHandle {
  * @receiver m
  * @param f
  */
-func (m *messageHandle) AddHandle(f func(event Event, bot Api, state *State)) {
+func (m *messageHandle) AddHandle(f func(ctx *Context)) {
 	m.HandleType = "message"
 	m.handle = f
 	m.Enable = true
@@ -771,7 +766,7 @@ func (p *PretreatmentHandle) SetWeight(weight int) *PretreatmentHandle {
  * @receiver p
  * @param f
  */
-func (p *PretreatmentHandle) AddHandle(f func(event Event, bot Api) bool) {
+func (p *PretreatmentHandle) AddHandle(f func(ctx *Context) bool) {
 	p.HandleType = "Pretreatment"
 	p.handle = f
 	p.Enable = true

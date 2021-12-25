@@ -7,9 +7,17 @@ import (
 )
 
 func init() {
-	leafBot.NewPlugin("测试").OnCommand("测试").AddHandle(func(event leafBot.Event, bot leafBot.Api, state *leafBot.State) {
-		event.Send(message.Text("测试"))
-		bot.(leafBot.OneBotApi).GetGroupFileSystemInfo(event.GroupId)
+	leafBot.NewPlugin("测试").OnCommand("测试", leafBot.Option{
+		PluginName: "测试",
+		Weight:     0,
+		Block:      false,
+		Allies:     nil,
+		Rules: []leafBot.Rule{func(ctx *leafBot.Context) bool {
+			return true
+		}},
+		CD: leafBot.CoolDown{},
+	}).AddHandle(func(ctx *leafBot.Context) {
+		ctx.Send(message.Text("123"))
 	})
 }
 
