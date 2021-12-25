@@ -79,8 +79,8 @@ import (
 func init() {
 	plugin := leafBot.NewPlugin("echo")
 	plugin.SetHelp(map[string]string{"echo":"echo the params"})
-	plugin.OnCommand("echo").AddHandle(func(event leafBot.Event, bot leafBot.Api, state *leafBot.State) {
-		event.Send(message.Text(state.Args[:]))
+	plugin.OnCommand("echo").AddHandle(func(ctx *leafBot.Context) {
+		ctx.Send(message.Text(state.Args[:]))
 	})
 }
 

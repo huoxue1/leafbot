@@ -6,3 +6,4 @@
 *.json
 *_test.go
 .idea
+/node_modules/
