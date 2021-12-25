@@ -4,8 +4,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Driver
-// @Description:
+//Driver
+// @Description: 驱动器接口
 //
 type Driver interface {
 	// Run
@@ -40,8 +40,8 @@ type Driver interface {
 	SetToken(token string)
 }
 
-// Conn
-// @Description: 所有bot对象都应该实现该接口
+//Conn
+// @Description:
 //
 type Conn interface {
 	// Do
@@ -62,7 +62,7 @@ type Conn interface {
 //  leafBot所注册的驱动
 var driver Driver
 
-// LoadDriver
+//LoadDriver
 /**
  * @Description: 为leafBot注册一个驱动
  * @param driver2 实现了Driver接口的驱动
@@ -93,7 +93,7 @@ func LoadDriver(driver2 Driver) {
 				SelfID:     selfId,
 				Host:       host,
 				ClientRole: clientRole,
-			}, driver2.GetBot(selfId).(Api))
+			}, driver2.GetBot(selfId).(API))
 		}
 	})
 	driver2.OnDisConnect(func(selfId int64) {

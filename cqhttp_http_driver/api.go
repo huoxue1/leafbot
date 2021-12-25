@@ -10,13 +10,7 @@ import (
 	message2 "github.com/huoxue1/leafBot/message"
 )
 
-type UseApi struct {
-	Action string      `json:"action"`
-	Params interface{} `json:"params"`
-	Echo   string      `json:"echo"`
-}
-
-// SendGroupMsg
+//SendGroupMsg
 /**
  * @Description:
  * @receiver b
@@ -24,18 +18,18 @@ type UseApi struct {
  * @param message
  * @return int32
  */
-func (b *Bot) SendGroupMsg(groupId int, message interface{}) int32 {
+func (b *Bot) SendGroupMsg(groupID int, message interface{}) int32 {
 	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
 	}
 	type param struct {
-		GroupId int         `json:"group_id"`
+		GroupID int         `json:"group_id"`
 		Message interface{} `json:"message"`
 	}
 	result := b.CallApi("send_group_msg", param{
-		GroupId: groupId,
+		GroupID: groupID,
 		Message: message,
 	})
 
@@ -716,7 +710,12 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 
 func (b *Bot) CallApi(Action string, param interface{}) gjson.Result {
 	echo := uuid.NewV4().String()
-	var d = UseApi{
+	type userAPi struct {
+		Action string      `json:"action"`
+		Params interface{} `json:"params"`
+		Echo   string      `json:"echo"`
+	}
+	var d = userAPi{
 		Action: Action,
 		Params: param,
 		Echo:   echo,

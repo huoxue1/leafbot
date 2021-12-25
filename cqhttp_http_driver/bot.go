@@ -10,6 +10,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Bot
+// @Description:
+//
 type Bot struct {
 	client           *gout.Client
 	selfId           int64
@@ -21,23 +24,21 @@ type Bot struct {
 	postPort         int
 }
 
-// GetSelfId
+//GetSelfId
 /**
- * @Description: 获取bot的账号
+ * @Description:
  * @receiver b
  * @return int64
- * example
  */
 func (b *Bot) GetSelfId() int64 {
 	return b.selfId
 }
 
-// Do
+//Do
 /**
- * @Description: 执行一个api的调用
+ * @Description:
  * @receiver b
  * @param i
- * example
  */
 func (b *Bot) Do(i interface{}) {
 	data := i.(UseApi)

@@ -6,26 +6,26 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// Api
+//API
 // @Description:
 //
-type Api interface {
+type API interface {
 	CallApi(action string, params interface{}) gjson.Result
 	SendGroupMsg(groupId int, message interface{}) int32
 	SendPrivateMsg(userId int, message interface{}) int32
 	DeleteMsg(messageId int32)
 }
 
-// OneBotApi
+//OneBotApi
 // @Description:
 //
 type OneBotApi interface {
-	Api
-	GetMsg(messageId int32) gjson.Result
-	SetGroupBan(groupId int, userId int, duration int)
-	SetGroupCard(groupId int, userId int, card string)
-	SendMsg(messageType string, userId int, groupId int, message interface{}) int32
-	SendLike(userId int, times int)
+	API
+	GetMsg(messageID int32) gjson.Result
+	SetGroupBan(groupID int, userId int, duration int)
+	SetGroupCard(groupID int, userId int, card string)
+	SendMsg(messageType string, userID int, groupId int, message interface{}) int32
+	SendLike(userID int, times int)
 	SetGroupKick(groupId int, userId int, rejectAddRequest bool)
 	SetGroupAnonymousBan(groupId int, flag string, duration int)
 	SetGroupWholeBan(groupId int, enable bool)

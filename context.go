@@ -6,16 +6,23 @@ import (
 	message2 "github.com/huoxue1/leafBot/message"
 )
 
-// Context
-// @Description:
+//Context
+// @Description: 上下文管理对象
 //
 type Context struct {
 	Event    *Event
-	Bot      Api
+	Bot      API
 	State    *State
 	RawEvent gjson.Result
 }
 
+// Send
+/**
+ * @Description: 使用上下文对象方便的回复当前会话
+ * @receiver ctx
+ * @param message
+ * @return int32
+ */
 func (ctx *Context) Send(message interface{}) int32 {
 	if ctx.Event.MessageType == "group" {
 		return ctx.Bot.SendGroupMsg(ctx.Event.GroupId, message)
@@ -24,10 +31,10 @@ func (ctx *Context) Send(message interface{}) int32 {
 	}
 }
 
-// SendGroupMsg
+//SendGroupMsg
 /**
  * @Description:
- * @receiver b
+ * @receiver ctx
  * @param groupId
  * @param message
  * @return int32
@@ -50,15 +57,14 @@ func (ctx *Context) SendGroupMsg(groupId int, message interface{}) int32 {
 	return int32(result.Get("message_id").Int())
 }
 
-// SendPrivateMsg
-/*
-   @Description:
-   @receiver b
-   @param userId int
-   @param message string
-   @param autoEscape bool
-   @return int32
-*/
+//SendPrivateMsg
+/**
+ * @Description:
+ * @receiver ctx
+ * @param userId
+ * @param message
+ * @return int32
+ */
 func (ctx *Context) SendPrivateMsg(userId int, message interface{}) int32 {
 	if _, ok := message.(string); ok {
 		{
@@ -77,23 +83,23 @@ func (ctx *Context) SendPrivateMsg(userId int, message interface{}) int32 {
 	return int32(result.Get("message_id").Int())
 }
 
-// DeleteMsg
-/*
-   @Description:
-   @receiver b
-   @param messageId int32
-*/
+//DeleteMsg
+/**
+ * @Description:
+ * @receiver ctx
+ * @param messageId
+ */
 func (ctx *Context) DeleteMsg(messageId int32) {
 	ctx.CallApi("delete_msg", map[string]int32{"message_id": messageId})
 }
 
-// GetMsg
-/*
-   @Description:
-   @receiver b
-   @param messageId int32
-   @return GetMessage
-*/
+//GetMsg
+/**
+ * @Description:
+ * @receiver ctx
+ * @param messageId
+ * @return gjson.Result
+ */
 func (ctx *Context) GetMsg(messageId int32) gjson.Result {
 	return ctx.CallApi("get_msg", map[string]int32{"message_id": messageId})
 }

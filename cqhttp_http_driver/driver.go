@@ -10,6 +10,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Driver
+// @Description:
+//
 type Driver struct {
 	Name    string
 	webHook []struct {
@@ -36,10 +39,21 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(200)
 }
 
+//SetToken
+/**
+ * @Description:
+ * @receiver d
+ * @param token
+ */
 func (d *Driver) SetToken(token string) {
 	d.token = token
 }
 
+//Run
+/**
+ * @Description:
+ * @receiver d
+ */
 func (d *Driver) Run() {
 	for _, s := range d.webHook {
 		b := new(Bot)
@@ -58,10 +72,23 @@ func (d *Driver) Run() {
 	}
 }
 
+//GetEvent
+/**
+ * @Description: 获取事件信息通道
+ * @receiver d
+ * @return chan
+ */
 func (d *Driver) GetEvent() chan []byte {
 	return d.eventChan
 }
 
+//GetBot
+/**
+ * @Description: 获取一个bot对象
+ * @receiver d
+ * @param i
+ * @return interface{}
+ */
 func (d *Driver) GetBot(i int64) interface{} {
 	load, ok := d.bots.Load(i)
 	if ok {
@@ -84,7 +111,7 @@ func (d *Driver) OnConnect(f func(selfId int64, host string, clientRole string))
 
 // OnDisConnect
 /**
- * @Description:
+ * @Description: 注册一个bot断开时的钩子
  * @receiver d
  * @param f
  * example
@@ -95,7 +122,7 @@ func (d *Driver) OnDisConnect(f func(selfId int64)) {
 
 // GetBots
 /**
- * @Description:
+ * @Description: 获取一个bot对象
  * @receiver d
  * @return map[int64]interface{}
  * example
@@ -110,6 +137,12 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return m
 }
 
+//SetConfig
+/**
+ * @Description: 设置配置信息
+ * @receiver d
+ * @param config
+ */
 func (d *Driver) SetConfig(config map[string]interface{}) {
 	if host, ok := config["listen_host"]; ok {
 		d.listenHost = host.(string)
@@ -119,6 +152,14 @@ func (d *Driver) SetConfig(config map[string]interface{}) {
 	}
 }
 
+//AddWebHook
+/**
+ * @Description: 添加一个webHook
+ * @receiver d
+ * @param selfID
+ * @param postHost
+ * @param postPort
+ */
 func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
 	d.webHook = append(d.webHook, struct {
 		postHost string
@@ -127,6 +168,11 @@ func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
 	}{postHost: postHost, postPort: postPort, selfID: selfID})
 }
 
+//NewDriver
+/**
+ * @Description: 创建一个cqhttp的http通信方式驱动
+ * @return *Driver
+ */
 func NewDriver() *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"

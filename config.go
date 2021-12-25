@@ -15,8 +15,8 @@ import (
 //go:embed config/default_config.yaml
 var defaultConfig []byte
 
-// Config
-// @Description:
+//Config
+// @Description: 配置信息
 //
 type Config struct {
 	NickName         []string `json:"nick_name" yaml:"nick_name" hjson:"nick_name"`
@@ -55,6 +55,10 @@ var (
 	hook          *utils.LogHook
 )
 
+//LoadConfig
+/**
+ * @Description: 加载配置文件
+ */
 func LoadConfig() {
 	input := ""
 	log.Infoln("请输入机器人账号")

@@ -30,14 +30,14 @@ var (
 )
 
 var (
-	ConnectHandles      ConnectChain
-	DisConnectHandles   DisConnectChain
-	MessageHandles      MessageChain
-	RequestHandles      RequestChain
-	NoticeHandles       NoticeChain
-	CommandHandles      CommandChain
-	MetaHandles         MetaChain
-	PretreatmentHandles PretreatmentChain
+	ConnectHandles      connectChain
+	DisConnectHandles   disConnectChain
+	MessageHandles      messageChain
+	RequestHandles      requestChain
+	NoticeHandles       noticeChain
+	CommandHandles      commandChain
+	MetaHandles         metaChain
+	PretreatmentHandles pretreatmentChain
 
 	sessions sync.Map
 )
@@ -631,7 +631,7 @@ func processMetaEventHandle(ctx *Context) {
    @param id int
    @return Api
 */
-func GetBotById(id int) Api {
+func GetBotById(id int) API {
 	bots := driver.GetBot(int64(id))
-	return bots.(Api)
+	return bots.(API)
 }

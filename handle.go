@@ -12,15 +12,15 @@ import (
 var plugins []*Plugin
 
 type (
-	MessageChain      []*messageHandle
-	RequestChain      []*requestHandle
-	NoticeChain       []*noticeHandle
-	CommandChain      []*commandHandle
-	MetaChain         []*metaHandle
-	PretreatmentChain []*PretreatmentHandle
+	messageChain      []*messageHandle
+	requestChain      []*requestHandle
+	noticeChain       []*noticeHandle
+	commandChain      []*commandHandle
+	metaChain         []*metaHandle
+	pretreatmentChain []*PretreatmentHandle
 
-	ConnectChain    []*connectHandle
-	DisConnectChain []*disConnectHandle
+	connectChain    []*connectHandle
+	disConnectChain []*disConnectHandle
 )
 
 type (
@@ -80,7 +80,7 @@ type (
 	}
 	connectHandle struct {
 		BaseHandle
-		handle func(connect Connect, bot Api)
+		handle func(connect Connect, bot API)
 	}
 	disConnectHandle struct {
 		BaseHandle
@@ -126,7 +126,7 @@ type (
 
 	ConnectInt interface {
 		SetPluginName(name string) *connectHandle
-		AddHandle(func(connect Connect, bot Api))
+		AddHandle(func(connect Connect, bot API))
 	}
 
 	DisConnectInt interface {
@@ -156,7 +156,7 @@ type (
 	}
 )
 
-// Plugin
+//Plugin
 // @Description:
 //
 type Plugin struct {
@@ -170,18 +170,18 @@ var (
 	lock      sync.Mutex
 )
 
-//M
-/*
-	通过id从插件列表获取插件
-	所有的插件队列都实现了该接口
-*/
+// M
+/**
+/*	通过id从插件列表获取插件
+/*	所有的插件队列都实现了该接口
+**/
 type M interface {
 	get(id string) (interface{}, bool)
 }
 
 type (
 
-	// State
+	//State
 	// @Description: sdk处理消息后将内容传递给plugin
 	//
 	State struct {
@@ -351,7 +351,7 @@ func (p *Plugin) OnStartWith(str string, options ...Option) *messageHandle {
 	return c
 }
 
-func (p *Plugin) OnTime(crons string, selfId int, handle func(bot Api)) {
+func (p *Plugin) OnTime(crons string, selfId int, handle func(bot API)) {
 	c2 := cron.New()
 	_, err := c2.AddFunc(crons, func() {
 		handle(GetBotById(selfId))
@@ -473,7 +473,7 @@ func (d *disConnectHandle) AddHandle(f func(selfId int64)) {
  * @receiver c
  * @param f
  */
-func (c *connectHandle) AddHandle(f func(connect Connect, bot Api)) {
+func (c *connectHandle) AddHandle(f func(connect Connect, bot API)) {
 	c.HandleType = "connect"
 	lock.Lock()
 	pluginNum++
@@ -781,66 +781,66 @@ func (p *PretreatmentHandle) AddHandle(f func(ctx *Context) bool) {
 	PretreatmentHandles = append(PretreatmentHandles, p)
 }
 
-func (m MessageChain) Len() int {
+func (m messageChain) Len() int {
 	return len(m)
 }
-func (m MessageChain) Less(i, j int) bool {
+func (m messageChain) Less(i, j int) bool {
 	return m[i].weight < m[j].weight
 }
-func (m MessageChain) Swap(i, j int) {
+func (m messageChain) Swap(i, j int) {
 	m[i], m[j] = m[j], m[i]
 }
 
-func (p PretreatmentChain) Len() int {
+func (p pretreatmentChain) Len() int {
 	return len(p)
 }
-func (p PretreatmentChain) Less(i, j int) bool {
+func (p pretreatmentChain) Less(i, j int) bool {
 	return p[i].weight < p[j].weight
 }
-func (p PretreatmentChain) Swap(i, j int) {
+func (p pretreatmentChain) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
-func (m MetaChain) Len() int {
+func (m metaChain) Len() int {
 	return len(m)
 }
-func (m MetaChain) Less(i, j int) bool {
+func (m metaChain) Less(i, j int) bool {
 	return m[i].weight < m[j].weight
 }
-func (m MetaChain) Swap(i, j int) {
+func (m metaChain) Swap(i, j int) {
 	m[i], m[j] = m[j], m[i]
 }
 
-func (r RequestChain) Len() int {
+func (r requestChain) Len() int {
 	return len(r)
 }
-func (r RequestChain) Less(i, j int) bool {
+func (r requestChain) Less(i, j int) bool {
 	return r[i].weight < r[j].weight
 }
-func (r RequestChain) Swap(i, j int) {
+func (r requestChain) Swap(i, j int) {
 	r[i], r[j] = r[j], r[i]
 }
 
-func (n NoticeChain) Len() int {
+func (n noticeChain) Len() int {
 	return len(n)
 }
-func (n NoticeChain) Less(i, j int) bool {
+func (n noticeChain) Less(i, j int) bool {
 	return n[i].weight < n[j].weight
 }
-func (n NoticeChain) Swap(i, j int) {
+func (n noticeChain) Swap(i, j int) {
 	n[i], n[j] = n[j], n[i]
 }
-func (c CommandChain) Len() int {
+func (c commandChain) Len() int {
 	return len(c)
 }
-func (c CommandChain) Less(i, j int) bool {
+func (c commandChain) Less(i, j int) bool {
 	return c[i].weight < c[j].weight
 }
-func (c CommandChain) Swap(i, j int) {
+func (c commandChain) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 
-func (m MessageChain) get(id string) (interface{}, bool) {
+func (m messageChain) get(id string) (interface{}, bool) {
 	for _, handle := range m {
 		if handle.ID == id {
 			return handle, true
@@ -849,7 +849,7 @@ func (m MessageChain) get(id string) (interface{}, bool) {
 	return nil, false
 }
 
-func (n NoticeChain) get(id string) (interface{}, bool) {
+func (n noticeChain) get(id string) (interface{}, bool) {
 	for _, handle := range n {
 		if handle.ID == id {
 			return handle, true
@@ -858,7 +858,7 @@ func (n NoticeChain) get(id string) (interface{}, bool) {
 	return nil, false
 }
 
-func (r RequestChain) get(id string) (interface{}, bool) {
+func (r requestChain) get(id string) (interface{}, bool) {
 	for _, handle := range r {
 		if handle.ID == id {
 			return handle, true
@@ -866,7 +866,7 @@ func (r RequestChain) get(id string) (interface{}, bool) {
 	}
 	return nil, false
 }
-func (c CommandChain) get(id string) (interface{}, bool) {
+func (c commandChain) get(id string) (interface{}, bool) {
 	for _, handle := range c {
 		if handle.ID == id {
 			return handle, true
@@ -874,7 +874,7 @@ func (c CommandChain) get(id string) (interface{}, bool) {
 	}
 	return nil, false
 }
-func (m MetaChain) get(id string) (interface{}, bool) {
+func (m metaChain) get(id string) (interface{}, bool) {
 	for _, handle := range m {
 		if handle.ID == id {
 			return handle, true
@@ -882,7 +882,7 @@ func (m MetaChain) get(id string) (interface{}, bool) {
 	}
 	return nil, false
 }
-func (p PretreatmentChain) get(id string) (interface{}, bool) {
+func (p pretreatmentChain) get(id string) (interface{}, bool) {
 	for _, handle := range p {
 		if handle.ID == id {
 			return handle, true
@@ -891,7 +891,7 @@ func (p PretreatmentChain) get(id string) (interface{}, bool) {
 	return nil, false
 }
 
-func (c ConnectChain) get(id string) (interface{}, bool) {
+func (c connectChain) get(id string) (interface{}, bool) {
 	for _, handle := range c {
 		if handle.ID == id {
 			return handle, true
@@ -899,7 +899,7 @@ func (c ConnectChain) get(id string) (interface{}, bool) {
 	}
 	return nil, false
 }
-func (d DisConnectChain) get(id string) (interface{}, bool) {
+func (d disConnectChain) get(id string) (interface{}, bool) {
 	for _, handle := range d {
 		if handle.ID == id {
 			return handle, true
