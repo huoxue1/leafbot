@@ -29,7 +29,11 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ---
 
-### 安装
++ ### <a href = "https://vtsqr.xyz/leafBot/dist/">项目文档</a>
+
++ ### [Example](https://github.com/huoxue1/leafBot/blob/master/example/main.go)
+
+## 安装
 
 ```
     go get github.com/huoxue1/leafBot
@@ -37,11 +41,15 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ### 插件仓库已移动到<a href = "https://github.com/huoxue1/leafBotPlugin">leafBotPlugin</a>，若需使用内置插件，请查看该仓库
 
-+ ### <a href = "https://vtsqr.xyz/leafBot/dist/">项目文档</a>
 
 
+## 通信方式
 
-### 特别感谢
++ **cqhttp的正向websocket通信**
++ **cqhttp的反向websocket通信**
++ **cqhttp的http通信**
+
+## 特别感谢
 
 [wdvxdr1123/ZeroBot](https://github.com/wdvxdr1123/ZeroBot) <借鉴思路>
 
