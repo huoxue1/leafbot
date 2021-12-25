@@ -7,3 +7,5 @@
 *_test.go
 .idea
 /node_modules/
+/config/config.yml
+/config/gocq_config.yml
