@@ -9,7 +9,7 @@ import (
 	"github.com/guonaihong/gout"
 	"github.com/huoxue1/gg"
 
-	"github.com/huoxue1/leafBot/message"
+	"github.com/huoxue1/leafbot/message"
 
 	log "github.com/sirupsen/logrus"
 )

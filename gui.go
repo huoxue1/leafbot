@@ -18,8 +18,8 @@ import ( //nolint:gci
 	"github.com/huoxue1/test3"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/huoxue1/leafBot/message"
-	"github.com/huoxue1/leafBot/utils"
+	"github.com/huoxue1/leafbot/message"
+	"github.com/huoxue1/leafbot/utils"
 )
 
 var upGrader = websocket.Upgrader{

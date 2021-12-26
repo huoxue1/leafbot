@@ -14,7 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 
-	"github.com/huoxue1/leafBot/utils"
+	"github.com/huoxue1/leafbot/utils"
 )
 
 //go:embed config/label.txt

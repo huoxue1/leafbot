@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
-  BINARY_PREFIX: "LeafBot_"
+  BINARY_PREFIX: "leafbot_"
   BINARY_SUFFIX: ""
   PR_PROMPT: "::warning:: Build artifact will not be uploaded due to the workflow is trigged by pull request."
   LD_FLAGS: "-w -s"

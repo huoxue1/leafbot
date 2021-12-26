@@ -1,6 +1,6 @@
 package leafbot
 
-import "github.com/huoxue1/leafBot/message"
+import "github.com/huoxue1/leafbot/message"
 
 type (
 	anonymous struct {

@@ -4,7 +4,7 @@ linters-settings:
     ignoretests: true
 
   goimports:
-    local-prefixes: github.com/huoxue1/leafBot
+    local-prefixes: github.com/huoxue1/leafbot
 
   gocritic:
     disabled-checks:
