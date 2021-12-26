@@ -2,15 +2,13 @@ package leafBot
 
 import (
 	_ "embed"
-	"encoding/json"
 	"io"
 	"os"
 	"path"
-
 	//nolint:gci
 	"time"
 
-	"github.com/hjson/hjson-go" //nolint:gci
+	//nolint:gci
 	rotates "github.com/lestrrat-go/file-rotatelogs"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -26,7 +24,7 @@ var label string
    @Description:
 */
 func init() {
-	err := initConfig(YAML)
+	err := initConfig()
 	if err != nil {
 		log.Errorln(err.Error())
 		log.Infoln("配置文件加载失败或者不存在")
@@ -41,13 +39,13 @@ func init() {
 	f := &utils.LogFormat{
 		TimeStampFormat: "2006-01-02 15:04:05",
 		LogContent:      "[%time%] [%file%] [%lvl%] : %msg% \n",
-		LogTruncate:     DefaultConfig.LogTruncate,
+		LogTruncate:     defaultConfig.LogTruncate,
 	}
 
-	levels := utils.GetLogLevel(DefaultConfig.LogLevel)
+	levels := utils.GetLogLevel(defaultConfig.LogLevel)
 	hook = utils.NewLogHook(f, levels, w)
 	log.AddHook(hook)
-	level, err := log.ParseLevel(DefaultConfig.LogLevel)
+	level, err := log.ParseLevel(defaultConfig.LogLevel)
 	if err != nil {
 		level = log.DebugLevel
 	}
@@ -69,7 +67,7 @@ const (
    @param path string
    @param fileType string
 */
-func initConfig(fileType string) error {
+func initConfig() error {
 	file, err := os.OpenFile("./config/config.yml", os.O_RDWR, 0777)
 	if err != nil {
 		return err
@@ -81,26 +79,15 @@ func initConfig(fileType string) error {
 		}
 	}(file)
 	data, _ := io.ReadAll(file)
-	switch fileType {
-	case JSON:
-		{
-			err = json.Unmarshal(data, DefaultConfig)
-		}
-	case HJSON:
-		{
-			err = hjson.Unmarshal(data, DefaultConfig)
-		}
-	case YAML:
-		{
-			err = yaml.Unmarshal(data, DefaultConfig)
-		}
-	}
+
+	err = yaml.Unmarshal(data, defaultConfig)
+
 	if err != nil {
 		log.Errorln(err)
 		return err
 	}
-	utils.SetConfig(DefaultConfig.EnablePlaywright)
-	//hook.AddLevel(utils.GetLogLevel(DefaultConfig.LogLevel)...)
+	utils.SetConfig(defaultConfig.EnablePlaywright)
+	//hook.AddLevel(utils.GetLogLevel(defaultConfig.LogLevel)...)
 	// log.Infoln("已加载配置：" + string(data))
 	//log.SetLevel(log.DebugLevel)
 	return err
@@ -112,7 +99,7 @@ func initConfig(fileType string) error {
 */
 func InitBots() {
 	go eventMain()
-	if DefaultConfig.EnablePlaywright {
+	if defaultConfig.EnablePlaywright {
 		go utils.PwInit()
 	}
 }

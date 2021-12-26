@@ -95,7 +95,7 @@ func InitWindow() {
 		log.Errorln("初始化web控制台出现错误")
 		log.Errorln(err)
 	}()
-	if DefaultConfig.LogLevel != "debug" {
+	if defaultConfig.LogLevel != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 	}
@@ -199,7 +199,7 @@ func data(ctx *gin.Context) {
 }
 
 func getAllConfig(ctx *gin.Context) {
-	ctx.JSON(200, DefaultConfig)
+	ctx.JSON(200, defaultConfig)
 }
 
 func GetConfig(ctx *gin.Context) {

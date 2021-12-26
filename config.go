@@ -13,7 +13,7 @@ import (
 )
 
 //go:embed config/default_config.yaml
-var defaultConfig []byte
+var defaultData []byte
 
 //Config
 // @Description: 配置信息
@@ -36,26 +36,24 @@ type Config struct {
 		PostPort int    `json:"post_port" yaml:"post_port"`
 		SelfID   int64  `json:"self_id" yaml:"self_id"`
 	} `json:"web_hook" yaml:"web_hook" hjson:"web_hook"`
-	Plugins struct {
-		FlashGroupID    int    `json:"flash_group_id" yaml:"flash_group_id" hjson:"flash_group_id"`
-		AlApiToken      string `json:"al_api_token" yaml:"al_api_token" hjson:"al_api_token"`
-		EnableReplyTome bool   `json:"enable_reply_tome" yaml:"enable_reply_tome" hjson:"enable_reply_tome"`
-		Welcome         []struct {
-			GroupId int    `json:"group_id" yaml:"group_id" hjson:"group_id"`
-			Message string `json:"message" yaml:"message" hjson:"message"`
-		} `json:"welcome" yaml:"welcome" hjson:"welcome"`
-		GithubToken           string   `json:"github_token" yaml:"github_token" hjson:"github_token"`
-		AutoPassFriendRequest []string `json:"auto_pass_friend_request" yaml:"auto_pass_friend_request" hjson:"auto_pass_friend_request"`
-	} `json:"plugins" yaml:"plugins" hjson:"plugins"`
 	Datas map[string]interface{} `json:"datas" yaml:"datas" hjson:"datas"`
 }
 
 var (
-	DefaultConfig = new(Config)
+	defaultConfig = new(Config)
 	hook          *utils.LogHook
 )
 
-//LoadConfig
+//GetLeafConfig
+/**
+ * @Description: 获取leafBot默认配置文件
+ * @return *Config
+ */
+func GetLeafConfig() *Config {
+	return defaultConfig
+}
+
+// LoadConfig
 /**
  * @Description: 加载配置文件
  */
@@ -85,7 +83,7 @@ func LoadConfig() {
 		log.Println("打开config.yml文件失败\n" + err.Error())
 		return
 	}
-	_, err = file.Write(defaultConfig)
+	_, err = file.Write(defaultData)
 	if err != nil {
 		log.Infoln("写入配置到文件失败")
 	}

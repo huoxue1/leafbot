@@ -3,49 +3,49 @@ env:
 before:
   hooks:
     - go mod tidy
-builds:
-
-  - id: nowin
-    main: ./example/main.go
-    env:
-      - CGO_ENABLED=0
-      - GO111MODULE=on
-    goos:
-      - linux
-#      - darwin
-    goarch:
-      - 386
-      - amd64
-#      - arm
-#      - arm64
+#builds:
+#
+#  - id: nowin
+#    main: ./example/main.go
+#    env:
+#      - CGO_ENABLED=0
+#      - GO111MODULE=on
+#    goos:
+#      - linux
+##      - darwin
+#    goarch:
+#      - 386
+#      - amd64
+##      - arm
+##      - arm64
+##    goarm:
+##      - 7
+##    ignore:
+##      - goos: darwin
+##        goarch: arm
+##      - goos: darwin
+##        goarch: 386
+#    mod_timestamp: "{{ .CommitTimestamp }}"
+#    flags:
+#      - -trimpath
+##    ldflags:
+##      - -s -w -X github.com/Mrs4s/go-cqhttp/coolq.Version=v{{.Version}}
+#  - id: win
+#    main: ./example/main.go
+#    env:
+#      - CGO_ENABLED=0
+#      - GO111MODULE=on
+#    goos:
+#      - windows
+#    goarch:
+#      - 386
+#      - amd64
+##      - arm
 #    goarm:
 #      - 7
-#    ignore:
-#      - goos: darwin
-#        goarch: arm
-#      - goos: darwin
-#        goarch: 386
-    mod_timestamp: "{{ .CommitTimestamp }}"
-    flags:
-      - -trimpath
-#    ldflags:
-#      - -s -w -X github.com/Mrs4s/go-cqhttp/coolq.Version=v{{.Version}}
-  - id: win
-    main: ./example/main.go
-    env:
-      - CGO_ENABLED=0
-      - GO111MODULE=on
-    goos:
-      - windows
-    goarch:
-      - 386
-      - amd64
-#      - arm
-    goarm:
-      - 7
-    mod_timestamp: "{{ .CommitTimestamp }}"
-    flags:
-      - -trimpath
+#    mod_timestamp: "{{ .CommitTimestamp }}"
+#    flags:
+#      - -trimpath
 #    ldflags:
 #
 
@@ -80,11 +80,11 @@ changelog:
 #      - goos: windows
 #        format: zip
 
-nfpms:
-  - license: AGPL 3.0
-    homepage: https://github.com/huoxue1/leafBot
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    formats:
-      - deb
-      - rpm
-    maintainer: HuoXue1
+#nfpms:
+#  - license: AGPL 3.0
+#    homepage: https://github.com/huoxue1/leafBot
+#    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+#    formats:
+#      - deb
+#      - rpm
+#    maintainer: HuoXue1

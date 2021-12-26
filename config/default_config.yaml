@@ -39,23 +39,3 @@ web_hook:
         post_port: 5700
         self_id: 1603214019
 
-
-# 插件相关的一些配置
-plugins:
-    flash_group_id: 0
-    # al_api的token，微博热搜依赖于该配置 获取地址：https://admin.alapi.cn/
-    al_api_token: ""
-    # 自动回复插件在群里是否需要at
-    enable_reply_tome: false
-    # 配置入群欢迎,类型为一个数组，每一个对象配置群号，后面配置欢迎消息
-    welcome:
-          -
-              welcome: ""
-              group_id: 123456
-#          -
-#              welcome: ""
-#              group_id: 123
-    # 配置github_token
-    github_token: ""
-    # 配置自动同意好友的答案，若配置为空字符串则同意所有请求，可设置多个
-    auto_pass_friend_request: []

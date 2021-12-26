@@ -3,11 +3,9 @@ module github.com/huoxue1/leafBot
 go 1.17
 
 require (
-	github.com/PuerkitoBio/goquery v1.7.0
 	github.com/gin-gonic/gin v1.7.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/guonaihong/gout v0.2.6
-	github.com/hjson/hjson-go v3.1.0+incompatible
 	github.com/huoxue1/gg v1.3.1-0.20210909022355-795dba57682a
 	github.com/huoxue1/lorca v0.1.11
 	github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d
@@ -23,7 +21,6 @@ require (
 )
 
 require (
-	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect

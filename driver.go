@@ -70,14 +70,14 @@ var driver Driver
  */
 func LoadDriver(driver2 Driver) {
 	driver2.SetConfig(map[string]interface{}{
-		"host": DefaultConfig.Host,
-		"port": DefaultConfig.Port,
+		"host": defaultConfig.Host,
+		"port": defaultConfig.Port,
 
-		"listen_host": DefaultConfig.ListenHost,
-		"listen_port": DefaultConfig.ListenPort,
+		"listen_host": defaultConfig.ListenHost,
+		"listen_port": defaultConfig.ListenPort,
 	})
-	driver2.SetToken(DefaultConfig.Token)
-	for _, s := range DefaultConfig.WebHook {
+	driver2.SetToken(defaultConfig.Token)
+	for _, s := range defaultConfig.WebHook {
 		driver2.AddWebHook(s.SelfID, s.PostHost, s.PostPort)
 	}
 	driver2.OnConnect(func(selfId int64, host string, clientRole string) {

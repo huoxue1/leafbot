@@ -9,3 +9,4 @@
 /node_modules/
 /config/config.yml
 /config/gocq_config.yml
+/logs/
