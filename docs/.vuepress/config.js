@@ -14,7 +14,7 @@ module.exports = {
             {text: "Quick Start", link: "/data/quickstart/env"},
             {text: "Driver", link: "/data/driver"},
             {text: "Config", link: "/data/config"},
-            {text: "Github", link: "https://github.com/huoxue1/leafBot"},
+            {text: "Github", link: "https://github.com/huoxue1/leafbot"},
             // 显示下拉列表
             // {
             //     text: 'Languages',
