@@ -29,7 +29,7 @@ _✨ 基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)，使用[OneBot](htt
 
 ---
 
-+ ### <a href = "https://vtsqr.xyz/leafBot/dist/">项目文档</a>
++ ### <a href = "https://vtsqr.xyz/leafbot/dist/">项目文档</a>
 
 + ### [Example](https://github.com/huoxue1/leafBot/blob/master/example/main.go)
 
