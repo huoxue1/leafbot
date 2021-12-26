@@ -10,12 +10,6 @@ import (
 	message2 "github.com/huoxue1/leafBot/message"
 )
 
-type UseApi struct {
-	Action string      `json:"action"`
-	Params interface{} `json:"params"`
-	Echo   string      `json:"echo"`
-}
-
 // SendGroupMsg
 /**
  * @Description:
@@ -716,7 +710,12 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 
 func (b *Bot) CallApi(Action string, param interface{}) gjson.Result {
 	echo := uuid.NewV4().String()
-	var d = UseApi{
+	type useApi struct {
+		Action string      `json:"action"`
+		Params interface{} `json:"params"`
+		Echo   string      `json:"echo"`
+	}
+	var d = useApi{
 		Action: Action,
 		Params: param,
 		Echo:   echo,

@@ -1,10 +1,11 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"
 	"io"
 	"os"
 	"path"
+
 	//nolint:gci
 	"time"
 

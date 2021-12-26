@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import (
 	"strconv"
@@ -160,9 +160,9 @@ type (
 // @Description:
 //
 type Plugin struct {
-	Name    string
-	Helps   []map[string]string
-	handles []BaseHandle
+	Name  string
+	Helps []map[string]string
+	// handles []BaseHandle
 }
 
 var (
@@ -575,8 +575,8 @@ func (c *commandHandle) SetWeight(weight int) *commandHandle {
  * @param IsBlock
  * @return commandHandle
  */
-func (c *commandHandle) SetBlock(IsBlock bool) *commandHandle {
-	c.block = IsBlock
+func (c *commandHandle) SetBlock(isBlock bool) *commandHandle {
+	c.block = isBlock
 	return c
 }
 

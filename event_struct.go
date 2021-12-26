@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import "github.com/huoxue1/leafBot/message"
 

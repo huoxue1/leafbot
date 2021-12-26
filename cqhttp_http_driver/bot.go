@@ -41,7 +41,12 @@ func (b *Bot) GetSelfId() int64 {
  * @param i
  */
 func (b *Bot) Do(i interface{}) {
-	data := i.(UseApi)
+	type userAPi struct {
+		Action string      `json:"action"`
+		Params interface{} `json:"params"`
+		Echo   string      `json:"echo"`
+	}
+	data := i.(userAPi)
 	var resp []byte
 	err := b.client.POST(fmt.Sprintf("http://%v:%v/%v", b.postHost, b.postPort, data.Action)).
 		SetHeader(gout.H{"Authorization": "Bearer " + b.token}).

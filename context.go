@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import (
 	"github.com/tidwall/gjson"
@@ -545,8 +545,8 @@ func (ctx *Context) GetOnlineClients(noCache bool) gjson.Result {
    @param UserId int
    @return VipInfo
 */
-func (ctx *Context) GetVipInfoTest(UserId int) gjson.Result {
-	return ctx.CallApi("_get_vip_info", map[string]interface{}{"user_id": UserId})
+func (ctx *Context) GetVipInfoTest(userId int) gjson.Result {
+	return ctx.CallApi("_get_vip_info", map[string]interface{}{"user_id": userId})
 }
 
 // SendGroupNotice
@@ -715,7 +715,7 @@ func (ctx *Context) GetGroupAtAllRemain(groupId int) gjson.Result {
 	return ctx.CallApi("get_group_at_all_remain", map[string]interface{}{"group_id": groupId})
 }
 
-// UploadGroupFile
+//UploadGroupFile
 /*
    @Description:
    @receiver b
@@ -724,26 +724,52 @@ func (ctx *Context) GetGroupAtAllRemain(groupId int) gjson.Result {
    @param name string
    @param folder string
 */
-func (ctx *Context) UploadGroupFile(groupId int, file string, name string, folder string) {
-	ctx.CallApi("upload_group_file", map[string]interface{}{"group_id": groupId, "file": file, "name": name, "folder": folder})
+func (ctx *Context) UploadGroupFile(groupID int, file string, name string, folder string) {
+	ctx.CallApi("upload_group_file", map[string]interface{}{"group_id": groupID, "file": file, "name": name, "folder": folder})
 }
 
-func (ctx *Context) CallApi(Action string, param interface{}) gjson.Result {
-	return ctx.Bot.CallApi(Action, param)
+func (ctx *Context) CallApi(action string, param interface{}) gjson.Result {
+	return ctx.Bot.CallApi(action, param)
 }
 
+//SetEssenceMsg
+/**
+ * @Description:
+ * @receiver ctx
+ * @param messageId
+ */
 func (ctx *Context) SetEssenceMsg(messageId int) {
 	ctx.CallApi("set_essence_msg", map[string]interface{}{"message_id": messageId})
 }
 
+//DeleteEssenceMsg
+/**
+ * @Description:
+ * @receiver ctx
+ * @param messageId
+ */
 func (ctx *Context) DeleteEssenceMsg(messageId int) {
 	ctx.CallApi("delete_essence_msg", map[string]interface{}{"message_id": messageId})
 }
 
+//GetEssenceMsgList
+/**
+ * @Description:
+ * @receiver ctx
+ * @param groupId
+ * @return gjson.Result
+ */
 func (ctx *Context) GetEssenceMsgList(groupId int) gjson.Result {
 	return ctx.CallApi("get_essence_msg_list", map[string]interface{}{"group_id": groupId})
 }
 
+//CheckUrlSafely
+/**
+ * @Description:
+ * @receiver ctx
+ * @param url
+ * @return int
+ */
 func (ctx *Context) CheckUrlSafely(url string) int {
 	return int(ctx.CallApi("check_url_safely", map[string]interface{}{"url": url}).Int())
 }

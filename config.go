@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"

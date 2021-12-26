@@ -1,6 +1,6 @@
-// Package leafBot
+// Package leafbot
 // @Description:
-package leafBot
+package leafbot
 
 import "strconv"
 

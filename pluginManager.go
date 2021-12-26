@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import (
 	_ "embed"
@@ -68,13 +68,17 @@ func reloadConfigInit() {
 		AddRule(OnlySuperUser).
 		AddRule(OnlyToMe).
 		AddHandle(func(ctx *Context) {
-			err := initConfig(YAML)
+			err := initConfig()
 			if err != nil {
 				ctx.Send(message.Text("配置文件重载失败" + err.Error()))
 			}
 		})
 }
 
+//InitPluginManager
+/**
+ * @Description:
+ */
 func InitPluginManager() {
 	plugin := NewPlugin("管理管理")
 	plugin.SetHelp(map[string]string{
@@ -129,20 +133,20 @@ func InitPluginManager() {
 
 	plugin.OnCommand("ban_handle").SetPluginName("禁用插件").
 		AddAllies("禁用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
-		if len(ctx.State.Args) < 0 {
-			ctx.Send(message.Text("参数不够"))
-			return
-		}
+		// if len(ctx.State.Args) < 0 {
+		//	ctx.Send(message.Text("参数不够"))
+		//	return
+		//}
 		BanPluginByID(ctx.State.Args[0])
 		ctx.Send(message.Text("禁用插件成功"))
 	})
 
 	plugin.OnCommand("use_handle").SetPluginName("启用插件").
 		AddAllies("启用插件").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
-		if len(ctx.State.Args) < 0 {
-			ctx.Send(message.Text("参数不够"))
-			return
-		}
+		// if len(ctx.State.Args) < 0 {
+		//	ctx.Send(message.Text("参数不够"))
+		//	return
+		//}
 		StartPluginByID(ctx.State.Args[0])
 		ctx.Send(message.Text("启用插件成功"))
 	})
@@ -150,7 +154,7 @@ func InitPluginManager() {
 	plugin.OnCommand("get_handles").SetPluginName("获取事件处理列表").
 		AddAllies("事件处理列表").AddRule(OnlySuperUser).SetWeight(10).SetBlock(false).AddHandle(func(ctx *Context) {
 		handleList := GetHandleList()
-		//for s, handles := range handleList {
+		// for s, handles := range handleList {
 		//	msg += s+"\n"
 		//	for _, handle := range handles {
 		//		msg += handle.Id+"\t\t\t"+handle.Name+"\t\t\t"+strconv.FormatBool(handle.Enable)+"\n"
@@ -205,17 +209,17 @@ func draw(data map[string][]BaseHandle) {
 	}
 }
 
-func GetHandleList() map[string][]BaseHandle {
-	var (
-		list     = make(map[string][]BaseHandle)
-		preList  []BaseHandle
-		cmdList  []BaseHandle
-		msgList  []BaseHandle
-		reqList  []BaseHandle
-		notList  []BaseHandle
-		metaList []BaseHandle
-	)
+var (
+	list     = make(map[string][]BaseHandle)
+	preList  []BaseHandle
+	cmdList  []BaseHandle
+	msgList  []BaseHandle
+	reqList  []BaseHandle
+	notList  []BaseHandle
+	metaList []BaseHandle
+)
 
+func GetHandleList() map[string][]BaseHandle {
 	for _, handle := range PretreatmentHandles {
 		preList = append(preList, BaseHandle{
 			ID:         handle.ID,
@@ -374,6 +378,11 @@ func BanPluginByName(name string) int {
 	return num
 }
 
+//StartPluginByID
+/**
+ * @Description:
+ * @param id
+ */
 func StartPluginByID(id string) {
 	handle, ok := CommandHandles.get(id)
 	if ok {

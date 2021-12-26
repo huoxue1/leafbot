@@ -1,4 +1,4 @@
-module github.com/huoxue1/leafBot
+module github.com/huoxue1/leafbot
 
 go 1.17
 

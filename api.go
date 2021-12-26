@@ -1,12 +1,12 @@
-// Package leafBot
+// Package leafbot
 // @Description:
-package leafBot
+package leafbot
 
 import (
 	"github.com/tidwall/gjson"
 )
 
-//API
+// API
 // @Description:
 //
 type API interface {

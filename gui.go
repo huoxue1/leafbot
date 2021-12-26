@@ -1,4 +1,4 @@
-package leafBot
+package leafbot
 
 import ( //nolint:gci
 
@@ -49,12 +49,16 @@ func GetEngine() (*gin.Engine, error) {
 	return engine, nil
 }
 
+//OpenUi
+/**
+ * @Description:
+ */
 func OpenUi() {
 	var err error
 	ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
 	go func() {
 		c := make(chan os.Signal)
-		signal.Notify(c)
+		signal.Notify(c) //nolint:govet
 		for {
 			log.Infoln(<-c)
 			err := ui.Close()
@@ -202,14 +206,24 @@ func getAllConfig(ctx *gin.Context) {
 	ctx.JSON(200, defaultConfig)
 }
 
+//GetConfig
+/**
+ * @Description:
+ * @param ctx
+ */
 func GetConfig(ctx *gin.Context) {
-	var bots []int64
+	bots := make([]int64, 1)
 	for i := range driver.GetBots() {
 		bots = append(bots, i)
 	}
 	ctx.JSON(200, bots)
 }
 
+//GetGroupList
+/**
+ * @Description:
+ * @param ctx
+ */
 func GetGroupList(ctx *gin.Context) {
 	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
 	if err != nil {
