@@ -3,7 +3,7 @@ package leafbot
 import (
 	"github.com/tidwall/gjson"
 
-	message2 "github.com/huoxue1/leafBot/message"
+	message2 "github.com/huoxue1/leafbot/message"
 )
 
 //Context

@@ -9,7 +9,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/huoxue1/leafBot/utils"
+	"github.com/huoxue1/leafbot/utils"
 )
 
 //go:embed config/default_config.yaml
