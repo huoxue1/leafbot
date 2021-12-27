@@ -75,9 +75,9 @@ func eventMain() {
 		defaultConfig.CommandStart = append(defaultConfig.CommandStart, "")
 	}
 
-	//for _, plugin := range plugins {
-	//	log.Infoln("已加载插件 ==》 " + plugin.Name)
-	//}
+	for _, plugin := range plugins {
+		log.Infoln("已加载插件 ==》 " + plugin.Name)
+	}
 
 	e := driver.GetEvent()
 
@@ -507,10 +507,8 @@ func processMessageHandle(ctx *Context) {
 			}()
 			matcher.GetHandler()(ctx)
 		}()
-		if matcher.IsBlock() {
-			return false
-		}
-		return true
+
+		return !matcher.IsBlock()
 	})
 }
 
@@ -550,10 +548,8 @@ func processRequestEventHandle(ctx *Context) {
 			}()
 			matcher.GetHandler()(ctx)
 		}()
-		if matcher.IsBlock() {
-			return false
-		}
-		return true
+
+		return !matcher.IsBlock()
 	})
 }
 

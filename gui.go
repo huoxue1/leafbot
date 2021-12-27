@@ -7,8 +7,6 @@ import ( //nolint:gci
 	"fmt"
 	"io"
 	"net/http" //nolint:gci
-	"os"
-	"os/signal"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +16,6 @@ import ( //nolint:gci
 	log "github.com/sirupsen/logrus"
 
 	"github.com/huoxue1/leafbot/message"
-	"github.com/huoxue1/leafbot/utils"
 )
 
 var upGrader = websocket.Upgrader{
@@ -48,44 +45,44 @@ func GetEngine() (*gin.Engine, error) {
 	return engine, nil
 }
 
-//OpenUi
+// OpenUi
 /**
  * @Description:
  */
-func OpenUi() {
-	var err error
-	ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
-	go func() {
-		c := make(chan os.Signal)
-		signal.Notify(c) //nolint:govet
-		for {
-			log.Infoln(<-c)
-			err := ui.Close()
-			if err != nil {
-				return
-			}
-			err = utils.PW.Stop()
-			if err != nil {
-				return
-			}
-			err = utils.Browser.Close()
-			if err != nil {
-				return
-			}
-		}
-	}()
-	defer func(ui lorca.UI) {
-		err := ui.Close()
-		if err != nil {
-			fmt.Println("关闭ui失败")
-		}
-	}(ui)
-	if err != nil {
-		log.Panic(err)
-	}
-	<-ui.Done()
-	os.Exit(3)
-}
+// func OpenUi() {
+//	var err error
+//	ui, err = lorca.New("http://127.0.0.1:3000/static/gui/static/html/default.html", "", 800, 600)
+//	go func() {
+//		c := make(chan os.Signal)
+//		signal.Notify(c) //nolint:govet
+//		for {
+//			log.Infoln(<-c)
+//			err := ui.Close()
+//			if err != nil {
+//				return
+//			}
+//			err = utils.PW.Stop()
+//			if err != nil {
+//				return
+//			}
+//			err = utils.Browser.Close()
+//			if err != nil {
+//				return
+//			}
+//		}
+//	}()
+//	defer func(ui lorca.UI) {
+//		err := ui.Close()
+//		if err != nil {
+//			fmt.Println("关闭ui失败")
+//		}
+//	}(ui)
+//	if err != nil {
+//		log.Panic(err)
+//	}
+//	<-ui.Done()
+//	os.Exit(3)
+// }
 
 // InitWindow
 /**
@@ -212,7 +209,7 @@ func getAllConfig(ctx *gin.Context) {
  * @param ctx
  */
 func GetConfig(ctx *gin.Context) {
-	bots := make([]int64, 1)
+	var bots = make([]int64, 1)
 	for i := range driver.GetBots() {
 		bots = append(bots, i)
 	}

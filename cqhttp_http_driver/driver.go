@@ -57,7 +57,7 @@ func (d *Driver) SetToken(token string) {
 func (d *Driver) Run() {
 	for _, s := range d.webHook {
 		b := new(Bot)
-		b.selfId = s.selfID
+		b.selfID = s.selfID
 		b.postHost = s.postHost
 		b.postPort = s.postPort
 		b.responses = sync.Map{}

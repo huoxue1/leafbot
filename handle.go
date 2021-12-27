@@ -73,14 +73,14 @@ type (
 		GetMather() []Matcher
 	}
 
-	basePlugin interface {
-		OnCommand(command string, options ...Option) Matcher
-		OnMessage(messageType string, options ...Option) Matcher
-		OnRequest(requestType string, options ...Option) Matcher
-		OnNotice(noticeType string, options ...Option) Matcher
-		OnMeta(options ...Option) Matcher
-		OnRegex(regexMatcher string, options ...Option) Matcher
-	}
+	// basePlugin interface {
+	//	OnCommand(command string, options ...Option) Matcher
+	//	OnMessage(messageType string, options ...Option) Matcher
+	//	OnRequest(requestType string, options ...Option) Matcher
+	//	OnNotice(noticeType string, options ...Option) Matcher
+	//	OnMeta(options ...Option) Matcher
+	//	OnRegex(regexMatcher string, options ...Option) Matcher
+	// }
 )
 
 type (

@@ -476,7 +476,7 @@ func (b *Bot) CleanCache() {
 	b.CallApi("clean_cache", nil)
 }
 
-//新增
+// 新增
 
 // DownloadFile
 /*

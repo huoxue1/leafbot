@@ -16,7 +16,7 @@ type API interface {
 	DeleteMsg(messageId int32)
 }
 
-//OneBotApi
+// OneBotApi
 // @Description:
 //
 type OneBotApi interface {

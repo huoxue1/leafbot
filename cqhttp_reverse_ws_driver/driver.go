@@ -26,6 +26,12 @@ type Driver struct {
 	disConnectHandle func(selfId int64)
 }
 
+// SetToken
+/**
+ * @Description:
+ * @receiver d
+ * @param token
+ */
 func (d *Driver) SetToken(token string) {
 	d.token = token
 }

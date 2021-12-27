@@ -10,31 +10,30 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Bot
+// Bot
 // @Description:
 //
 type Bot struct {
 	client           *gout.Client
-	selfId           int64
+	selfID           int64
 	responses        sync.Map
 	token            string
-	lock             sync.Mutex
 	disConnectHandle func(selfId int64)
 	postHost         string
 	postPort         int
 }
 
-//GetSelfId
+// GetSelfId
 /**
  * @Description:
  * @receiver b
  * @return int64
  */
 func (b *Bot) GetSelfId() int64 {
-	return b.selfId
+	return b.selfID
 }
 
-//Do
+// Do
 /**
  * @Description:
  * @receiver b

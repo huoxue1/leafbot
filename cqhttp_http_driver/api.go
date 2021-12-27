@@ -10,7 +10,7 @@ import (
 	message2 "github.com/huoxue1/leafbot/message"
 )
 
-//SendGroupMsg
+// SendGroupMsg
 /**
  * @Description:
  * @receiver b
@@ -130,9 +130,8 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
 func (b *Bot) SendMsg(messageType string, userId int, groupId int, message interface{}) int32 {
 	if messageType == "group" {
 		return b.SendGroupMsg(groupId, message)
-	} else {
-		return b.SendPrivateMsg(userId, message)
 	}
+	return b.SendPrivateMsg(userId, message)
 }
 
 // SendLike
@@ -476,7 +475,7 @@ func (b *Bot) CleanCache() {
 	b.CallApi("clean_cache", nil)
 }
 
-//新增
+// 新增
 
 // DownloadFile
 /*
@@ -525,8 +524,8 @@ func (b *Bot) GetOnlineClients(noCache bool) gjson.Result {
    @param UserId int
    @return VipInfo
 */
-func (b *Bot) GetVipInfoTest(UserId int) gjson.Result {
-	return b.CallApi("_get_vip_info", map[string]interface{}{"user_id": UserId})
+func (b *Bot) GetVipInfoTest(userId int) gjson.Result {
+	return b.CallApi("_get_vip_info", map[string]interface{}{"user_id": userId})
 }
 
 // SendGroupNotice
@@ -708,7 +707,7 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	b.CallApi("upload_group_file", map[string]interface{}{"group_id": groupId, "file": file, "name": name, "folder": folder})
 }
 
-func (b *Bot) CallApi(Action string, param interface{}) gjson.Result {
+func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 	echo := uuid.NewV4().String()
 	type userAPi struct {
 		Action string      `json:"action"`
@@ -716,7 +715,7 @@ func (b *Bot) CallApi(Action string, param interface{}) gjson.Result {
 		Echo   string      `json:"echo"`
 	}
 	var d = userAPi{
-		Action: Action,
+		Action: action,
 		Params: param,
 		Echo:   echo,
 	}
