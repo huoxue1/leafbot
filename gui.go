@@ -9,7 +9,6 @@ import ( //nolint:gci
 	"net/http" //nolint:gci
 	"os"
 	"os/signal"
-	"sort"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -114,32 +113,33 @@ func InitWindow() {
 		context.Redirect(http.StatusMovedPermanently, "/dist/dist/default.html")
 	})
 	engine.POST("/update_plugin_states", func(context *gin.Context) {
-		id := context.PostForm("id")
-		status, err := strconv.ParseBool(context.PostForm("status"))
-		if err != nil {
-			log.Errorln("改变插件状态出错" + err.Error())
-		}
-		if status {
-			StartPluginByID(id)
-		} else {
-			BanPluginByID(id)
-		}
+		// id := context.PostForm("id")
+		// status, err := strconv.ParseBool(context.PostForm("status"))
+		// if err != nil {
+		//	log.Errorln("改变插件状态出错" + err.Error())
+		// }
+		// if status {
+		//	StartPluginByID(id)
+		// } else {
+		//	BanPluginByID(id)
+		// }
+		// todo
 		context.JSON(200, nil)
 	})
 
 	engine.POST("/get_plugins", func(context *gin.Context) {
-		list := GetHandleList()
-		var pluginList []BaseHandle
-
-		for _, handles := range list {
-			pluginList = append(pluginList, handles...)
-		}
-		sort.SliceStable(pluginList, func(i, j int) bool {
-			id1, _ := strconv.Atoi(pluginList[i].ID)
-			id2, _ := strconv.Atoi(pluginList[j].ID)
-			return id1 < id2
-		})
-		context.JSON(200, pluginList)
+		//list := GetHandleList()
+		//var pluginList []BaseHandle
+		//
+		//for _, handles := range list {
+		//	pluginList = append(pluginList, handles...)
+		//}
+		//sort.SliceStable(pluginList, func(i, j int) bool {
+		//	id1, _ := strconv.Atoi(pluginList[i].ID)
+		//	id2, _ := strconv.Atoi(pluginList[j].ID)
+		//	return id1 < id2
+		//})
+		context.JSON(200, nil)
 	})
 
 	engine.GET("/get_log", func(context *gin.Context) {

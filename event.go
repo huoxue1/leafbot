@@ -30,15 +30,6 @@ var (
 )
 
 var (
-	ConnectHandles      connectChain
-	DisConnectHandles   disConnectChain
-	MessageHandles      messageChain
-	RequestHandles      requestChain
-	NoticeHandles       noticeChain
-	CommandHandles      commandChain
-	MetaHandles         metaChain
-	PretreatmentHandles pretreatmentChain
-
 	sessions sync.Map
 )
 
@@ -78,41 +69,16 @@ type (
    @Description: 事件总处理器，所有的事件都从这里开始处理
 */
 func eventMain() {
-	sort.Sort(&MessageHandles)
-	sort.Sort(&RequestHandles)
-	sort.Sort(&NoticeHandles)
-	sort.Sort(&CommandHandles)
+	sort.Sort(matcherChin)
 
 	if len(defaultConfig.CommandStart) == 0 {
 		defaultConfig.CommandStart = append(defaultConfig.CommandStart, "")
 	}
 
-	for _, plugin := range plugins {
-		log.Infoln("已加载插件 ==》 " + plugin.Name)
-	}
+	//for _, plugin := range plugins {
+	//	log.Infoln("已加载插件 ==》 " + plugin.Name)
+	//}
 
-	for _, handle := range PretreatmentHandles {
-		log.Debugln("已加载预处理器响应器：" + getFunctionName(handle.handle, '/'))
-	}
-	for _, handle := range CommandHandles {
-		if handle.command == "" && handle.regexMatcher != "" {
-			log.Debugln("已加载regex响应器：" + handle.Name)
-		} else {
-			log.Debugln("已加载command响应器：" + handle.command)
-		}
-	}
-	for _, handle := range MessageHandles {
-		log.Debugln("已加载message响应器：" + getFunctionName(handle.handle, '/'))
-	}
-	for _, handle := range RequestHandles {
-		log.Debugln("已加载request响应器：" + getFunctionName(handle.handle, '/'))
-	}
-	for _, handle := range NoticeHandles {
-		log.Debugln("已加载notice响应器：" + getFunctionName(handle.handle, '/'))
-	}
-	for _, handle := range MetaHandles {
-		log.Debugln("已加载meta响应器：" + getFunctionName(handle.handle, '/'))
-	}
 	e := driver.GetEvent()
 
 	go func() {
@@ -208,26 +174,26 @@ func viewsMessage(event Event) {
 	ctx.State = state
 	data1, _ := json.Marshal(&event)
 	log.Debugln(string(data1))
-	// 执行所有预处理handle
-	for _, handle := range PretreatmentHandles {
-		rule := checkRule(handle.rules, ctx)
-		// 执行rule判断
-		if !rule || !handle.Enable {
-			continue
-		}
-		// 判断所在群是否禁用
-		for _, group := range handle.disableGroup {
-			if event.GroupId == group {
-				return
-			}
-		}
-		// 执行handle
-		b := handle.handle(ctx)
-		// 判断是否被block
-		if !b {
-			return
-		}
-	}
+	//// 执行所有预处理handle
+	//for _, handle := range PretreatmentHandles {
+	//	rule := checkRule(handle.rules, ctx)
+	//	// 执行rule判断
+	//	if !rule || !handle.Enable {
+	//		continue
+	//	}
+	//	// 判断所在群是否禁用
+	//	for _, group := range handle.disableGroup {
+	//		if event.GroupId == group {
+	//			return
+	//		}
+	//	}
+	//	// 执行handle
+	//	b := handle.handle(ctx)
+	//	// 判断是否被block
+	//	if !b {
+	//		return
+	//	}
+	//}
 	log.Debugln("预处理执行完毕")
 	//log.Infoln(event)
 	switch event.PostType {
@@ -267,27 +233,28 @@ func processNoticeHandle(ctx *Context) {
 	log.Infoln(fmt.Sprintf("notice_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d",
 		ctx.Event.NoticeType, ctx.Event.GroupId, ctx.Event.UserId))
 
-	for _, v := range NoticeHandles {
-		rule := checkRule(v.rules, ctx)
-		if !rule || !v.Enable {
-			continue
+	matcherChin.forEach(NOTICE, func(matcher Matcher) bool {
+		rule := checkRule(matcher.GetRules(), ctx)
+		if !rule {
+			return true
 		}
-		if v.noticeType == "" {
-			v.noticeType = ctx.Event.NoticeType
-		}
-		if v.noticeType == ctx.Event.NoticeType {
-			go func(handle2 *noticeHandle) {
+		if matcher.GetType() == ctx.Event.NoticeType || matcher.GetType() == "" {
+			go func() {
 				defer func() {
 					err := recover()
 					if err != nil {
-						log.Errorln(handle2.Name + "发生不可挽回的错误")
+						log.Errorln(getFunctionName(matcher.GetHandler(), '/') + "发生了不可挽回的错误！")
 						log.Errorln(err)
 					}
 				}()
-				handle2.handle(ctx)
-			}(v)
+				matcher.GetHandler()(ctx)
+			}()
 		}
-	}
+		if matcher.IsBlock() {
+			return false
+		}
+		return true
+	})
 }
 
 // checkRule
@@ -339,30 +306,30 @@ func getFunctionName(i interface{}, seps ...rune) string {
 	return ""
 }
 
-func checkCD(handle *commandHandle) bool {
-	if handle.cd.Types == "" || handle.cd.Types == "default" {
-		if int(time.Now().Unix()-handle.lastUseTime) >= handle.cd.Long {
-			return true
-		}
-	} else if handle.cd.Types == "rand" {
-		rand.Seed(time.Now().UnixNano())
-		cd := rand.Intn(handle.cd.Long)
-		if int(time.Now().Unix()-handle.lastUseTime) >= cd {
-			return true
-		}
-	}
-	return false
-}
+//func checkCD(handle *commandHandle) bool {
+//	if handle.cd.Types == "" || handle.cd.Types == "default" {
+//		if int(time.Now().Unix()-handle.lastUseTime) >= handle.cd.Long {
+//			return true
+//		}
+//	} else if handle.cd.Types == "rand" {
+//		rand.Seed(time.Now().UnixNano())
+//		cd := rand.Intn(handle.cd.Long)
+//		if int(time.Now().Unix()-handle.lastUseTime) >= cd {
+//			return true
+//		}
+//	}
+//	return false
+//}
 
-func doHandle(handle *commandHandle, ctx *Context) {
+func doHandle(handle Matcher, ctx *Context) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Errorln(handle.Name + "发生不可挽回的错误")
+			log.Errorln(getFunctionName(handle.GetHandler(), '/') + "发生不可挽回的错误")
 			log.Errorln(err)
 		}
 	}()
-	handle.handle(ctx)
+	handle.GetHandler()(ctx)
 }
 
 func checkOnlyTome(event *Event, state *State) {
@@ -405,7 +372,6 @@ func processMessageHandle(ctx *Context) {
 	// 从队列中取出事件
 	// 判断是否触发命令的flag
 	a := 0
-	log.Debugln(len(CommandHandles))
 	// 执行连续会话的handle，如果返回true说明该消息被连续对话捕捉
 	if sessionHandle(ctx) {
 		return
@@ -414,27 +380,27 @@ func processMessageHandle(ctx *Context) {
 	ctx.State.Data = make(map[string]interface{})
 	checkOnlyTome(ctx.Event, ctx.State)
 	// 遍历所有的command对象
-	for _, handle := range CommandHandles {
+	matcherChin.forEach(COMMAND, func(matcher Matcher) bool {
 		// 判断该cmd在该群是否被禁用
 		disable := true
-		for _, group := range handle.disableGroup {
-			if ctx.Event.GroupId == group {
+		for _, group := range matcher.GetDisAbleGroup() {
+			if ctx.Event.GroupId == int(group) {
 				disable = false
 			}
 		}
 		if !disable {
-			continue
+			return true
 		}
 		// 检查rules
-		rule := checkRule(handle.rules, ctx)
+		rule := checkRule(matcher.GetRules(), ctx)
 
-		if handle.rules == nil {
+		if matcher.GetRules() == nil {
 			rule = true
 		}
 
 		// 判断rules和插件是否被禁用
-		if !rule || !handle.Enable {
-			continue
+		if !rule {
+			return true
 		}
 		// if ctx.Event.Message[0].Type != "text" {
 		//	continue
@@ -442,70 +408,71 @@ func processMessageHandle(ctx *Context) {
 
 		commands := strings.Split(ctx.Event.GetPlainText(), " ")
 		if len(commands) < 1 {
-			continue
+			return true
 		}
 
 		for _, start := range defaultConfig.CommandStart {
-			if commands[0] == start+handle.command && handle.command != "" {
+			if commands[0] == start+matcher.(CommandMatcher).GetCommand() && matcher.(CommandMatcher).GetCommand() != "" {
 				// 检查cd是否达到
-				if !checkCD(handle) {
-					continue
-				}
+				//if !checkCD(handle) {
+				//	continue
+				//}
 				a = 1
-				handle.lastUseTime = time.Now().Unix()
+				//handle.lastUseTime = time.Now().Unix()
 
 				ctx.State.Args = commands[1:]
-				ctx.State.Cmd = handle.command
-				ctx.State.Allies = handle.allies
+				ctx.State.Cmd = matcher.(CommandMatcher).GetCommand()
+				ctx.State.Allies = matcher.(CommandMatcher).GetAlias()
 
-				doHandle(handle, ctx)
+				doHandle(matcher, ctx)
 
-				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
-				if handle.block {
-					return
+				log.Infoln(fmt.Sprintf("触发了：%v", matcher.(CommandMatcher).GetCommand()))
+				if matcher.IsBlock() {
+					return false
 				}
 			}
 		}
 
 		// 处理别名匹配
-		for _, ally := range handle.allies {
+		for _, ally := range matcher.(CommandMatcher).GetAlias() {
 			if ally == commands[0] {
 				// 检查cd是否达到
-				if !checkCD(handle) {
-					continue
-				}
+				//if !checkCD(handle) {
+				//	continue
+				//}
 				a = 1
-				handle.lastUseTime = time.Now().Unix()
+				//handle.lastUseTime = time.Now().Unix()
 
 				ctx.State.Args = commands[1:]
-				ctx.State.Cmd = handle.command
-				ctx.State.Allies = handle.allies
+				ctx.State.Cmd = matcher.(CommandMatcher).GetCommand()
+				ctx.State.Allies = matcher.(CommandMatcher).GetAlias()
 
-				doHandle(handle, ctx)
-				log.Infoln(fmt.Sprintf("触发了：%v", handle.command))
-				if handle.block {
-					return
+				doHandle(matcher, ctx)
+				log.Infoln(fmt.Sprintf("触发了：%v", matcher.(CommandMatcher).GetCommand()))
+				if matcher.IsBlock() {
+					return false
 				}
 			}
 		}
 
 		// 处理正则匹配
-		if handle.command == "" && handle.regexMatcher != "" {
-			compile := regexp.MustCompile(handle.regexMatcher)
+		if matcher.(CommandMatcher).GetCommand() == "" && matcher.(CommandMatcher).GetRegexMatcher() != "" {
+			compile := regexp.MustCompile(matcher.(CommandMatcher).GetRegexMatcher())
 			if compile.MatchString(ctx.Event.Message.CQString()) {
 				ctx.State.Args = commands[1:]
-				ctx.State.Cmd = handle.regexMatcher
-				ctx.State.Allies = handle.allies
+				ctx.State.Cmd = matcher.(CommandMatcher).GetRegexMatcher()
+				ctx.State.Allies = matcher.(CommandMatcher).GetAlias()
 				ctx.State.RegexResult = compile.FindStringSubmatch(ctx.Event.Message.CQString())
 
-				doHandle(handle, ctx)
-				log.Infoln(fmt.Sprintf("触发了：%v", handle.regexMatcher))
-				if handle.block {
-					return
+				doHandle(matcher, ctx)
+				log.Infoln(fmt.Sprintf("触发了：%v", getFunctionName(matcher.GetHandler(), '/')))
+				if matcher.IsBlock() {
+					return false
 				}
 			}
 		}
-	}
+		return true
+	})
 
 	// 如果出发了command事件则不再触发message事件
 	if a == 1 {
@@ -516,32 +483,35 @@ func processMessageHandle(ctx *Context) {
 	checkOnlyTome(ctx.Event, s)
 	log.Infoln(fmt.Sprintf("message_type:%s\n\t\t\t\t\tgroup_id:%d\n\t\t\t\t\tuser_id:%d\n\t\t\t\t\tmessage:%s",
 		ctx.Event.MessageType, ctx.Event.GroupId, ctx.Event.UserId, ctx.RawEvent))
-	for _, handle := range MessageHandles {
-		if handle.messageType != "" && handle.messageType != ctx.Event.MessageType {
-			continue
-		}
 
-		for _, group := range handle.disableGroup {
-			if ctx.Event.GroupId == group {
-				return
+	matcherChin.forEach(MESSAGE, func(matcher Matcher) bool {
+		if matcher.GetType() != "" && matcher.GetType() != ctx.Event.MessageType {
+			return true
+		}
+		for _, group := range matcher.GetDisAbleGroup() {
+			if ctx.Event.GroupId == int(group) {
+				return true
 			}
 		}
-
-		rule := checkRule(handle.rules, ctx)
-		if !rule || !handle.Enable {
-			continue
+		rule := checkRule(matcher.GetRules(), ctx)
+		if !rule {
+			return true
 		}
-		go func(handle2 *messageHandle) {
+		go func() {
 			defer func() {
 				err := recover()
 				if err != nil {
-					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(getFunctionName(matcher.GetHandler(), '/') + "发生不可挽回的错误")
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(ctx)
-		}(handle)
-	}
+			matcher.GetHandler()(ctx)
+		}()
+		if matcher.IsBlock() {
+			return false
+		}
+		return true
+	})
 }
 
 // processRequestEventHandle
@@ -557,31 +527,34 @@ func processRequestEventHandle(ctx *Context) {
 			log.Errorln("request事件处理器出现不可挽回的错误")
 		}
 	}()
-	for _, handle := range RequestHandles {
-		for _, group := range handle.disableGroup {
-			if ctx.Event.GroupId == group {
-				return
+	matcherChin.forEach(REQUEST, func(matcher Matcher) bool {
+		if matcher.GetType() != "" && matcher.GetType() != ctx.Event.RequestType {
+			return true
+		}
+		for _, group := range matcher.GetDisAbleGroup() {
+			if ctx.Event.GroupId == int(group) {
+				return true
 			}
 		}
-
-		rule := checkRule(handle.rules, ctx)
-		if handle.rules == nil {
-			rule = true
+		rule := checkRule(matcher.GetRules(), ctx)
+		if !rule {
+			return true
 		}
-		if !rule || !handle.Enable {
-			continue
-		}
-		go func(handle2 *requestHandle) {
+		go func() {
 			defer func() {
 				err := recover()
 				if err != nil {
-					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(getFunctionName(matcher.GetHandler(), '/') + "发生不可挽回的错误")
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(ctx)
-		}(handle)
-	}
+			matcher.GetHandler()(ctx)
+		}()
+		if matcher.IsBlock() {
+			return false
+		}
+		return true
+	})
 }
 
 // processMetaEventHandle
@@ -598,31 +571,29 @@ func processMetaEventHandle(ctx *Context) {
 			log.Errorln(err)
 		}
 	}()
-	for _, handle := range MetaHandles {
-		for _, group := range handle.disableGroup {
-			if ctx.Event.GroupId == group {
-				return
+	matcherChin.forEach(META, func(matcher Matcher) bool {
+		for _, group := range matcher.GetDisAbleGroup() {
+			if ctx.Event.GroupId == int(group) {
+				return true
 			}
 		}
-
-		rule := checkRule(handle.rules, ctx)
-		if handle.rules == nil {
-			rule = true
+		rule := checkRule(matcher.GetRules(), ctx)
+		if !rule {
+			return true
 		}
-		if !rule || !handle.Enable {
-			continue
-		}
-		go func(handle2 *metaHandle) {
+		go func() {
 			defer func() {
 				err := recover()
 				if err != nil {
-					log.Errorln(handle2.Name + "发生不可挽回的错误")
+					log.Errorln(getFunctionName(matcher.GetHandler(), '/') + "发生不可挽回的错误")
 					log.Errorln(err)
 				}
 			}()
-			handle2.handle(ctx)
-		}(handle)
-	}
+			matcher.GetHandler()(ctx)
+		}()
+
+		return !matcher.IsBlock()
+	})
 }
 
 // GetBotById

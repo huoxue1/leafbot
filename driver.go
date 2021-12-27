@@ -88,13 +88,13 @@ func LoadDriver(driver2 Driver) {
 				log.Errorln(err)
 			}
 		}()
-		for _, handle := range ConnectHandles {
-			go handle.handle(Connect{
-				SelfID:     selfId,
-				Host:       host,
-				ClientRole: clientRole,
-			}, driver2.GetBot(selfId).(API))
-		}
+		//for _, handle := range ConnectHandles {
+		//	go handle.handle(Connect{
+		//		SelfID:     selfId,
+		//		Host:       host,
+		//		ClientRole: clientRole,
+		//	}, driver2.GetBot(selfId).(API))
+		//}
 	})
 	driver2.OnDisConnect(func(selfId int64) {
 		defer func() {
@@ -104,9 +104,9 @@ func LoadDriver(driver2 Driver) {
 				log.Errorln(err)
 			}
 		}()
-		for _, handle := range DisConnectHandles {
-			go handle.handle(selfId)
-		}
+		//for _, handle := range DisConnectHandles {
+		//	go handle.handle(selfId)
+		//}
 	})
 	driver = driver2
 }

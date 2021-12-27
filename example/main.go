@@ -8,15 +8,13 @@ import (
 
 func init() {
 	leafbot.NewPlugin("测试").OnCommand("测试", leafbot.Option{
-		PluginName: "测试",
-		Weight:     0,
-		Block:      false,
-		Allies:     nil,
+		Weight: 0,
+		Block:  false,
+		Allies: nil,
 		Rules: []leafbot.Rule{func(ctx *leafbot.Context) bool {
 			return true
 		}},
-		CD: leafbot.CoolDown{},
-	}).AddHandle(func(ctx *leafbot.Context) {
+	}).Handle(func(ctx *leafbot.Context) {
 		ctx.Send(message.Text("123"))
 	})
 }
