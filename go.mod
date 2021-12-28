@@ -11,11 +11,11 @@ require (
 	github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d
 	github.com/json-iterator/go v1.1.10
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
-	github.com/mxschmitt/playwright-go v0.1100.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.12.1
+	github.com/tidwall/sjson v1.2.4
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
@@ -24,7 +24,6 @@ require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/Mrs4s/MiraiGo v0.0.0-20211208080234-25c67a3ee1c1 // indirect
 	github.com/RomiChan/protobuf v0.0.0-20211204042931-ff4f35848737 // indirect
-	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/fumiama/go-hide-param v0.1.4 // indirect
@@ -57,7 +56,6 @@ require (
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
-	github.com/tidwall/sjson v1.2.4 // indirect
 	github.com/ugorji/go/codec v1.2.5 // indirect
 	github.com/wdvxdr1123/go-silk v0.0.0-20210316130616-d47b553def60 // indirect
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
@@ -69,7 +67,6 @@ require (
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
-	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	modernc.org/libc v1.11.70 // indirect
 	modernc.org/mathutil v1.4.1 // indirect
