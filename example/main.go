@@ -1,11 +1,21 @@
 package main
 
 import (
+	"os"
+	"os/exec"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/huoxue1/leafbot"
-	"github.com/huoxue1/leafbot/cqhttp_reverse_ws_driver"
+	"github.com/huoxue1/leafbot/cqhttp_default_driver"
 	"github.com/huoxue1/leafbot/message"
+
+	_ "github.com/Mrs4s/go-cqhttp/db/leveldb"   // leveldb
+	_ "github.com/Mrs4s/go-cqhttp/modules/mime" // mime检查模块
+
+	// _ "github.com/Mrs4s/go-cqhttp/modules/pprof" // pprof 性能分析
+
+	_ "github.com/Mrs4s/go-cqhttp/modules/silk" // si
 )
 
 func init() {
@@ -34,12 +44,23 @@ func init() {
 
 func main() {
 	// 创建一个驱动
-	driver := cqhttp_reverse_ws_driver.NewDriver()
+	driver := cqhttp_default_driver.NewDriver()
 	// 注册驱动
 	leafbot.LoadDriver(driver)
 	// 初始化Bot
 	leafbot.InitBots()
 	// 运行驱动
 	driver.Run()
-	select {}
+}
+
+func runChild() error {
+	cmd := exec.Command(os.Args[0], os.Args[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Start()
+	if err != nil {
+		panic(err)
+	}
+	return cmd.Wait()
 }
