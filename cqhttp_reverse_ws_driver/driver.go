@@ -90,7 +90,7 @@ var upgrade = websocket.Upgrader{
  * example
  */
 func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	selfId, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
+	selfID, err := strconv.ParseInt(request.Header.Get("X-Self-ID"), 10, 64)
 	role := request.Header.Get("X-Client-Role")
 	host := request.Header.Get("Host")
 	if d.token != "" {
@@ -107,18 +107,18 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	}
 	b := new(Bot)
 	b.conn = conn
-	b.selfId = selfId
+	b.selfId = selfID
 	b.responses = sync.Map{}
-	_, ok := d.bots.Load(selfId)
+	_, ok := d.bots.Load(selfID)
 	if ok {
-		d.bots.LoadOrStore(selfId, b)
+		d.bots.LoadOrStore(selfID, b)
 	} else {
-		d.bots.Store(selfId, b)
+		d.bots.Store(selfID, b)
 	}
 	b.disConnectHandle = d.disConnectHandle
-	log.Infoln(fmt.Sprintf("the bot %v is connected", selfId))
+	log.Infoln(fmt.Sprintf("the bot %v is connected", selfID))
 	// 执行链接回调
-	go d.connectHandle(selfId, host, role)
+	go d.connectHandle(selfID, host, role)
 	go func() {
 		defer func() {
 			err := recover()
@@ -144,18 +144,37 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	}()
 }
 
+// Run
+/**
+ * @Description:
+ * @receiver d
+ */
 func (d *Driver) Run() {
 	http.Handle("/"+d.Name+"/ws", d)
-	log.Infoln(fmt.Sprintf("the bot is listening %v:%v", d.address, d.port))
+	log.Infoln("Load the cqhttp_reverse_driver successful")
+	log.Infoln(fmt.Sprintf("the cqhttp_reverse_driver listening in %v:%v", d.address, d.port))
 	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.address, d.port), nil); err != nil {
 		log.Panicln(err.Error())
 	}
 }
 
+// GetEvent
+/**
+ * @Description:
+ * @receiver d
+ * @return chan
+ */
 func (d *Driver) GetEvent() chan []byte {
 	return d.eventChan
 }
 
+// GetBot
+/**
+ * @Description:
+ * @receiver d
+ * @param i
+ * @return interface{}
+ */
 func (d *Driver) GetBot(i int64) interface{} {
 	load, ok := d.bots.Load(i)
 	if ok {
@@ -165,6 +184,12 @@ func (d *Driver) GetBot(i int64) interface{} {
 	return nil
 }
 
+// SetConfig
+/**
+ * @Description:
+ * @receiver d
+ * @param config
+ */
 func (d *Driver) SetConfig(config map[string]interface{}) {
 	if host, ok := config["host"]; ok {
 		d.address = host.(string)
@@ -174,10 +199,23 @@ func (d *Driver) SetConfig(config map[string]interface{}) {
 	}
 }
 
+// AddWebHook
+/**
+ * @Description:
+ * @receiver d
+ * @param selfID
+ * @param postHost
+ * @param postPort
+ */
 func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
 
 }
 
+// NewDriver
+/**
+ * @Description:
+ * @return *Driver
+ */
 func NewDriver() *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"

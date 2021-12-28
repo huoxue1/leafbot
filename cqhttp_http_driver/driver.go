@@ -55,6 +55,7 @@ func (d *Driver) SetToken(token string) {
  * @receiver d
  */
 func (d *Driver) Run() {
+	log.Infoln("Load the cqhttp_http_driver successful")
 	for _, s := range d.webHook {
 		b := new(Bot)
 		b.selfID = s.selfID
@@ -66,7 +67,8 @@ func (d *Driver) Run() {
 		b.token = d.token
 		d.bots.Store(s.selfID, b)
 	}
-
+	log.Infoln("Load the cqhttp_http_driver successful")
+	log.Infoln(fmt.Sprintf("the cqhttp_http_driver listening in %v:%v", d.listenHost, d.listenPort))
 	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.listenHost, d.listenPort), d); err != nil {
 		log.Errorln("监听webhook失败" + err.Error())
 	}

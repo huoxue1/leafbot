@@ -23,14 +23,21 @@ type Driver struct {
 	disConnectHandle func(selfId int64)
 }
 
+// Run
+/**
+ * @Description:
+ * @receiver d
+ */
 func (d *Driver) Run() {
 	u := url.URL{Scheme: "ws", Host: d.address + ":" + strconv.Itoa(d.port)}
 	header := http.Header{}
 	header.Add("Authorization", "Bearer "+d.token)
-	conn, _, err := websocket.DefaultDialer.Dial(u.String(), header)
+	conn, _, err := websocket.DefaultDialer.Dial(u.String(), header) //nolint:bodyclose
 	if err != nil {
 		return
 	}
+	log.Infoln("Load the cqhttp_positive_driver successful")
+	log.Infoln(fmt.Sprintf("the cqhttp_positive_driver listening in %v:%v", d.address, d.port))
 	_, data, err := conn.ReadMessage()
 	if err != nil {
 		return
@@ -144,10 +151,21 @@ func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
 
 }
 
+// SetToken
+/**
+ * @Description:
+ * @receiver d
+ * @param token
+ */
 func (d *Driver) SetToken(token string) {
 	d.token = token
 }
 
+// NewDriver
+/**
+ * @Description:
+ * @return *Driver
+ */
 func NewDriver() *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"

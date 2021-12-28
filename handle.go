@@ -159,7 +159,6 @@ func (p *Plugin) OnStart(start string, options ...Option) Matcher {
 		}
 		return false
 	})
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -189,7 +188,6 @@ func (p *Plugin) OnEnd(end string, options ...Option) Matcher {
 		}
 		return false
 	})
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -211,7 +209,6 @@ func (p *Plugin) OnFullMatch(content string, options ...Option) Matcher {
 		}
 		return false
 	})
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -233,7 +230,6 @@ func (p *Plugin) OnFullMatchGroup(content string, options ...Option) Matcher {
 		}
 		return false
 	})
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -248,7 +244,6 @@ func (p *Plugin) OnConnect(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -263,7 +258,6 @@ func (p *Plugin) OnDisConnect(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -281,6 +275,7 @@ func (d *defaultMatcher) Enabled() bool {
 func NewPlugin(name string) *Plugin {
 	p := new(Plugin)
 	p.Name = name
+	plugins = append(plugins, p)
 	return p
 }
 
@@ -295,7 +290,7 @@ func NewPlugin(name string) *Plugin {
 func (p *Plugin) OnRegex(regexMatcher string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.regexMatcher = regexMatcher
-	d.PluginType = REGEX
+	d.PluginType = COMMAND
 	d.Enable = true
 	if len(options) > 0 {
 		d.allies = options[0].Allies
@@ -303,7 +298,6 @@ func (p *Plugin) OnRegex(regexMatcher string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -327,7 +321,6 @@ func (p *Plugin) OnCommand(command string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -351,7 +344,6 @@ func (p *Plugin) OnMessage(messageType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -375,7 +367,6 @@ func (p *Plugin) OnRequest(requestType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -399,7 +390,6 @@ func (p *Plugin) OnNotice(noticeType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -421,7 +411,6 @@ func (p *Plugin) OnMeta(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
-	plugins = append(plugins, p)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
