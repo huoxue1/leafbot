@@ -87,7 +87,7 @@ func initConfig() error {
 		log.Errorln(err)
 		return err
 	}
-	utils.SetConfig(defaultConfig.EnablePlaywright)
+
 	//hook.AddLevel(utils.GetLogLevel(defaultConfig.LogLevel)...)
 	// log.Infoln("已加载配置：" + string(data))
 	//log.SetLevel(log.DebugLevel)
@@ -100,7 +100,4 @@ func initConfig() error {
 */
 func InitBots() {
 	go eventMain()
-	if defaultConfig.EnablePlaywright {
-		go utils.PwInit()
-	}
 }
