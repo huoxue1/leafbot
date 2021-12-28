@@ -2,6 +2,7 @@ package leafbot
 
 import (
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -73,17 +74,29 @@ type (
 		GetMather() []Matcher
 	}
 
-	// basePlugin interface {
-	//	OnCommand(command string, options ...Option) Matcher
-	//	OnMessage(messageType string, options ...Option) Matcher
-	//	OnRequest(requestType string, options ...Option) Matcher
-	//	OnNotice(noticeType string, options ...Option) Matcher
-	//	OnMeta(options ...Option) Matcher
-	//	OnRegex(regexMatcher string, options ...Option) Matcher
-	// }
+	basePlugin interface {
+		OnCommand(command string, options ...Option) Matcher
+		OnMessage(messageType string, options ...Option) Matcher
+		OnRequest(requestType string, options ...Option) Matcher
+		OnNotice(noticeType string, options ...Option) Matcher
+		OnMeta(options ...Option) Matcher
+		OnRegex(regexMatcher string, options ...Option) Matcher
+
+		OnStart(start string, options ...Option) Matcher
+		OnEnd(end string, options ...Option) Matcher
+		OnFullMatch(content string, options ...Option) Matcher
+		OnFullMatchGroup(content string, options ...Option) Matcher
+
+		OnConnect(options ...Option) Matcher
+		OnDisConnect(options ...Option) Matcher
+	}
 )
 
 type (
+	// Option
+	/*
+	 * 用于传递参数
+	 */
 	Option struct {
 		Weight int
 		Block  bool
@@ -110,7 +123,10 @@ type (
 		block        bool
 		regexMatcher string
 	}
-
+	// Plugin
+	/*
+	 * 用于记录插件的基本信息
+	 */
 	Plugin struct {
 		Name     string
 		Help     map[string]string
@@ -118,11 +134,145 @@ type (
 	}
 )
 
+// OnStart
+/**
+ * @Description: 匹配消息开头
+ * @receiver p
+ * @param start
+ * @param options
+ * @return Matcher
+ */
+func (p *Plugin) OnStart(start string, options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.HandleType = ""
+	d.PluginType = MESSAGE
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	d.rules = append(d.rules, func(ctx *Context) bool {
+		if strings.HasPrefix(ctx.Event.Message.ExtractPlainText(), start) {
+			return true
+		}
+		return false
+	})
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+// OnEnd
+/**
+ * @Description: 匹配消息结尾
+ * @receiver p
+ * @param end
+ * @param options
+ * @return Matcher
+ */
+func (p *Plugin) OnEnd(end string, options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.HandleType = ""
+	d.PluginType = MESSAGE
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	d.rules = append(d.rules, func(ctx *Context) bool {
+		if strings.HasSuffix(ctx.Event.Message.ExtractPlainText(), end) {
+			return true
+		}
+		return false
+	})
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+func (p *Plugin) OnFullMatch(content string, options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.HandleType = ""
+	d.PluginType = MESSAGE
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	d.rules = append(d.rules, func(ctx *Context) bool {
+		if ctx.Event.Message.ExtractPlainText() == content {
+			return true
+		}
+		return false
+	})
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+func (p *Plugin) OnFullMatchGroup(content string, options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.HandleType = ""
+	d.PluginType = MESSAGE
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	d.rules = append(d.rules, func(ctx *Context) bool {
+		if ctx.Event.Message.ExtractPlainText() == content && ctx.Event.MessageType == "group" {
+			return true
+		}
+		return false
+	})
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+func (p *Plugin) OnConnect(options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.PluginType = CONNECT
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+func (p *Plugin) OnDisConnect(options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.PluginType = DISCONNECT
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
+	plugins = append(plugins, p)
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
 func (d *defaultMatcher) Enabled() bool {
 	return d.Enable
 }
 
-//NewPlugin
+// NewPlugin
 /**
  * @Description: 新建一个插件
  * @param name 插件名
@@ -134,6 +284,14 @@ func NewPlugin(name string) *Plugin {
 	return p
 }
 
+// OnRegex
+/**
+ * @Description:
+ * @receiver p
+ * @param regexMatcher
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnRegex(regexMatcher string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.regexMatcher = regexMatcher
@@ -150,6 +308,14 @@ func (p *Plugin) OnRegex(regexMatcher string, options ...Option) Matcher {
 	return d
 }
 
+// OnCommand
+/**
+ * @Description:
+ * @receiver p
+ * @param command
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnCommand(command string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.command = command
@@ -166,6 +332,14 @@ func (p *Plugin) OnCommand(command string, options ...Option) Matcher {
 	return d
 }
 
+// OnMessage
+/**
+ * @Description:
+ * @receiver p
+ * @param messageType
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnMessage(messageType string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.HandleType = messageType
@@ -182,6 +356,14 @@ func (p *Plugin) OnMessage(messageType string, options ...Option) Matcher {
 	return d
 }
 
+// OnRequest
+/**
+ * @Description:
+ * @receiver p
+ * @param requestType
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnRequest(requestType string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.HandleType = requestType
@@ -198,6 +380,14 @@ func (p *Plugin) OnRequest(requestType string, options ...Option) Matcher {
 	return d
 }
 
+// OnNotice
+/**
+ * @Description:
+ * @receiver p
+ * @param noticeType
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnNotice(noticeType string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.HandleType = noticeType
@@ -214,6 +404,13 @@ func (p *Plugin) OnNotice(noticeType string, options ...Option) Matcher {
 	return d
 }
 
+// OnMeta
+/**
+ * @Description:
+ * @receiver p
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnMeta(options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.PluginType = META
@@ -229,6 +426,12 @@ func (p *Plugin) OnMeta(options ...Option) Matcher {
 	return d
 }
 
+// GetHelp
+/**
+ * @Description:
+ * @receiver p
+ * @return map[string]string
+ */
 func (p *Plugin) GetHelp() map[string]string {
 	return p.Help
 }
