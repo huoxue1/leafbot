@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/huoxue1/leafbot"
-	"github.com/huoxue1/leafbot/cqhttp_default_driver"
+	"github.com/huoxue1/leafbot/driver/cqhttp_default_driver"
 	"github.com/huoxue1/leafbot/message"
 
 	_ "github.com/Mrs4s/go-cqhttp/db/leveldb"   // leveldb
