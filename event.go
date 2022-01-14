@@ -18,7 +18,10 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+
 	//nolint:gci
+
+	"github.com/huoxue1/leafbot/message"
 )
 
 //var ENABLE = false // 是否启用gui
@@ -99,6 +102,30 @@ func eventMain() {
 			go viewsMessage(event)
 		}
 	}()
+}
+
+// GetQuestion
+/**
+ * @Description: 向当前用户发送一个问题，并获取答案
+ * @receiver ctx
+ * @param question
+ * @return string
+ * @return error
+ */
+func (ctx *Context) GetQuestion(question string) (string, error) {
+	ctx.Send(message.Text(question))
+	event, err := ctx.GetOneEvent(func(ctx1 *Context) bool {
+		if ctx1.Event.GroupId == ctx.Event.GroupId && ctx1.Event.UserId == ctx.Event.UserId {
+			return true
+		}
+		return false
+	}, func(ctx *Context) bool {
+		if ctx.Event.MessageType != "message" {
+			return false
+		}
+		return true
+	})
+	return event.RawMessage, err
 }
 
 // GetOneEvent
