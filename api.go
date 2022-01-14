@@ -11,29 +11,29 @@ import (
 //
 type API interface {
 	CallApi(action string, params interface{}) gjson.Result
-	SendGroupMsg(groupId int, message interface{}) int32
-	SendPrivateMsg(userId int, message interface{}) int32
-	DeleteMsg(messageId int32)
+	SendGroupMsg(groupID int, message interface{}) int32
+	SendPrivateMsg(userID int, message interface{}) int32
+	DeleteMsg(messageID int32)
 }
 
-// OneBotApi
+// OneBotAPI
 // @Description:
 //
-type OneBotApi interface {
+type OneBotAPI interface {
 	API
 	GetMsg(messageID int32) gjson.Result
-	SetGroupBan(groupID int, userId int, duration int)
+	SetGroupBan(groupID int, userID int, duration int)
 	SetGroupCard(groupID int, userId int, card string)
 	SendMsg(messageType string, userID int, groupId int, message interface{}) int32
 	SendLike(userID int, times int)
-	SetGroupKick(groupId int, userId int, rejectAddRequest bool)
-	SetGroupAnonymousBan(groupId int, flag string, duration int)
-	SetGroupWholeBan(groupId int, enable bool)
-	SetGroupAdmin(groupId int, UserId int, enable bool)
-	SetGroupAnonymous(groupId int, enable bool)
-	SetGroupName(groupId int, groupName string)
-	SetGroupLeave(groupId int, isDisMiss bool)
-	SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int)
+	SetGroupKick(groupID int, userId int, rejectAddRequest bool)
+	SetGroupAnonymousBan(groupID int, flag string, duration int)
+	SetGroupWholeBan(groupID int, enable bool)
+	SetGroupAdmin(groupID int, UserId int, enable bool)
+	SetGroupAnonymous(groupID int, enable bool)
+	SetGroupName(groupID int, groupName string)
+	SetGroupLeave(groupID int, isDisMiss bool)
+	SetGroupSpecialTitle(groupID int, userId int, specialTitle string, duration int)
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result

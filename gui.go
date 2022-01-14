@@ -180,17 +180,19 @@ func data(ctx *gin.Context) {
 	}
 
 	if dataCoon == nil {
+		MessageChan := make(chan Event, 10)
 		dataCoon = conn
-		ENABLE = true
-
+		plugin := NewPlugin("gui")
+		plugin.OnMessage("").Handle(func(ctx *Context) {
+			MessageChan <- *ctx.Event
+		})
 		go func() {
 			for {
 				event := <-MessageChan
 				log.Debugln("已向前端发送信息")
 				err = dataCoon.WriteJSON(&event)
 				if err != nil {
-					fmt.Println("消息发送失败" + err.Error())
-					ENABLE = false
+					log.Errorln("消息发送失败" + err.Error())
 					break
 				}
 			}
@@ -235,7 +237,7 @@ func GetGroupList(ctx *gin.Context) {
 
 	bot := GetBotById(selfID)
 	var resp []interface{}
-	list := bot.(OneBotApi).GetGroupList().String()
+	list := bot.(OneBotAPI).GetGroupList().String()
 	err = json.Unmarshal([]byte(list), &resp)
 	if err != nil {
 		log.Errorln(err.Error())
@@ -258,7 +260,7 @@ func GetFriendList(ctx *gin.Context) {
 	}
 	bot := GetBotById(selfID)
 	var resp []interface{}
-	list := bot.(OneBotApi).GetFriendList().String()
+	list := bot.(OneBotAPI).GetFriendList().String()
 	err = json.Unmarshal([]byte(list), &resp)
 	if err != nil {
 		log.Errorln(err.Error())
@@ -288,7 +290,7 @@ func CallApi(ctx *gin.Context) {
 		messageType = data["message_type"].(string)
 	}
 	bot := GetBotById(int(selfID))
-	msgID := bot.(OneBotApi).SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
+	msgID := bot.(OneBotAPI).SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }
 

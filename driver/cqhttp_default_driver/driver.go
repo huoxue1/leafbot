@@ -41,7 +41,6 @@ func (d *Driver) GetEvent() chan []byte {
 }
 
 func (d *Driver) OnConnect(f func(selfId int64, host string, clientRole string)) {
-
 }
 
 func (d *Driver) OnDisConnect(f func(selfId int64)) {

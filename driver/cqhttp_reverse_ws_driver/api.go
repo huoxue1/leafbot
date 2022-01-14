@@ -724,6 +724,10 @@ func (b *Bot) CallApi(Action string, param interface{}) gjson.Result {
 	data, _ := b.GetResponse(echo)
 	content, _ := json.Marshal(d)
 	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
+	if gjson.GetBytes(data, "status").String() != "ok" {
+		log.Errorln("调用API出现了错误")
+		log.Panicln(gjson.GetBytes(data, "msg"), ",", gjson.GetBytes(data, "wording"))
+	}
 	return gjson.GetBytes(content, "data")
 }
 

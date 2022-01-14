@@ -672,13 +672,13 @@ func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) gjson.Result {
 
 // GetGroupFileUrl
 /*
-   @Description:
-   @receiver b
-   @param groupId int
-   @param fileId string
-   @param busid int
-   @return FileUrl
-*/
+ *  @Description:
+ *  @receiver b
+ *  @param groupId int
+ *  @param fileId string
+ *  @param busid int
+ *  @return FileUrl
+ */
 func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) gjson.Result {
 	return b.CallApi("get_group_file_url", map[string]interface{}{"group_id": groupId, "file_id": fileId, "busid": busid})
 }
@@ -707,14 +707,22 @@ func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder stri
 	b.CallApi("upload_group_file", map[string]interface{}{"group_id": groupId, "file": file, "name": name, "folder": folder})
 }
 
+// CallApi
+/**
+ * @Description:
+ * @receiver b
+ * @param action
+ * @param param
+ * @return gjson.Result
+ */
 func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 	echo := uuid.NewV4().String()
-	type userAPi struct {
+	type userAPI struct {
 		Action string      `json:"action"`
 		Params interface{} `json:"params"`
 		Echo   string      `json:"echo"`
 	}
-	var d = userAPi{
+	var d = userAPI{
 		Action: action,
 		Params: param,
 		Echo:   echo,
@@ -723,6 +731,10 @@ func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 	data, _ := b.GetResponse(echo)
 	content, _ := json.Marshal(d)
 	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
+	if gjson.GetBytes(data, "status").String() != "ok" {
+		log.Errorln("调用API出现了错误")
+		log.Panicln(gjson.GetBytes(data, "msg"), ",", gjson.GetBytes(data, "wording"))
+	}
 	return gjson.GetBytes(content, "data")
 }
 

@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/rand"
 	"reflect"
 	"regexp"
 	"runtime"
@@ -16,17 +15,18 @@ import (
 	"sync"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	//nolint:gci
 )
 
-var ENABLE = false // 是否启用gui
+//var ENABLE = false // 是否启用gui
 
 var (
-	MessageChan = make(chan Event, 10)
-	// NoticeChan  = make(chan Event, 10)
-	// Request     = make(chan Event, 10)
+// MessageChan = make(chan Event, 10)
+// NoticeChan  = make(chan Event, 10)
+// Request     = make(chan Event, 10)
 )
 
 var (
@@ -58,7 +58,7 @@ func sessionHandle(ctx *Context) bool {
 
 type (
 	session struct {
-		id    int
+		id    string
 		queue chan Event
 		rules []Rule
 	}
@@ -109,9 +109,9 @@ func eventMain() {
   @return Event  Event
   @return error  error
 */
-func (e Event) GetOneEvent(rules ...Rule) (Event, error) {
+func (ctx *Context) GetOneEvent(rules ...Rule) (Event, error) {
 	s := session{
-		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		id:    uuid.NewV4().String(),
 		queue: make(chan Event),
 		rules: rules,
 	}
@@ -133,14 +133,17 @@ func (e Event) GetOneEvent(rules ...Rule) (Event, error) {
   @return int  int 对应session在队列中的编号，后面关闭需要该编号
   @return chan  Event  事件通道
 */
-func (e Event) GetMoreEvent(rules ...Rule) (int, chan Event) {
+func (ctx *Context) GetMoreEvent(rules ...Rule) (chan Event, func()) {
 	s := session{
-		id:    int(time.Now().Unix() + rand.Int63n(10000)),
+		id:    uuid.NewV4().String(),
 		queue: make(chan Event),
 		rules: rules,
 	}
 	sessions.Store(s.id, s)
-	return s.id, s.queue
+	return s.queue, func() {
+		ctx.closeMessageChan(s.id)
+		close(s.queue)
+	}
 }
 
 // CloseMessageChan
@@ -149,7 +152,7 @@ func (e Event) GetMoreEvent(rules ...Rule) (int, chan Event) {
   @receiver b
   @param id int
 */
-func (e Event) CloseMessageChan(id int) {
+func (ctx *Context) closeMessageChan(id string) {
 	sessions.Delete(id)
 }
 
@@ -195,12 +198,11 @@ func viewsMessage(event Event) {
 	//	}
 	//}
 	log.Debugln("预处理执行完毕")
-	//log.Infoln(event)
 	switch event.PostType {
 	case "message":
-		if ENABLE {
-			MessageChan <- event
-		}
+		// if ENABLE {
+		//	MessageChan <- event
+		// }
 		processMessageHandle(ctx)
 
 	case "notice":
