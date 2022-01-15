@@ -55,7 +55,7 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 		UserId  int         `json:"user_id"`
 		Message interface{} `json:"message"`
 	}
-	result := b.CallApi("send_gprivate_msg", param{
+	result := b.CallApi("send_private_msg", param{
 		UserId:  userId,
 		Message: message,
 	})
@@ -569,7 +569,7 @@ func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
    @param cache int
 */
 func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
-	b.CallApi("set_group+portrait", map[string]interface{}{"group_id": groupId, "file": file, "cache": cache})
+	b.CallApi("set_group_portrait", map[string]interface{}{"group_id": groupId, "file": file, "cache": cache})
 }
 
 // GetMsgSpecial

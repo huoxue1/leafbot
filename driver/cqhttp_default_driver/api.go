@@ -14,7 +14,7 @@ import (
 /**
  * @Description:
  * @receiver b
- * @param groupId
+ * @param groupID
  * @param message
  * @return int32
  */
@@ -33,12 +33,12 @@ func (b *Bot) SendGroupMsg(groupID int, message interface{}) int32 {
 /*
    @Description:
    @receiver b
-   @param userId int
+   @param userID int
    @param message string
    @param autoEscape bool
    @return int32
 */
-func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
+func (b *Bot) SendPrivateMsg(userID int, message interface{}) int32 {
 	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
@@ -48,8 +48,8 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 		UserId  int         `json:"user_id"`
 		Message interface{} `json:"message"`
 	}
-	result := b.CallApi("send_gprivate_msg", param{
-		UserId:  userId,
+	result := b.CallApi("send_private_msg", param{
+		UserId:  userID,
 		Message: message,
 	})
 
@@ -60,35 +60,35 @@ func (b *Bot) SendPrivateMsg(userId int, message interface{}) int32 {
 /*
    @Description:
    @receiver b
-   @param messageId int32
+   @param messageID int32
 */
-func (b *Bot) DeleteMsg(messageId int32) {
-	b.CallApi("delete_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) DeleteMsg(messageID int32) {
+	b.CallApi("delete_msg", map[string]interface{}{"message_id": messageID})
 }
 
 // GetMsg
 /*
    @Description:
    @receiver b
-   @param messageId int32
+   @param messageID int32
    @return GetMessage
 */
-func (b *Bot) GetMsg(messageId int32) gjson.Result {
-	return b.CallApi("get_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) GetMsg(messageID int32) gjson.Result {
+	return b.CallApi("get_msg", map[string]interface{}{"message_id": messageID})
 }
 
 // SetGroupBan
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param duration int
 */
-func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
+func (b *Bot) SetGroupBan(groupID int, userID int, duration int) {
 	b.CallApi("set_group_ban", map[string]interface{}{
-		"group_id": groupId,
-		"user_id":  userId,
+		"group_id": groupID,
+		"user_id":  userID,
 		"duration": duration},
 	)
 }
@@ -97,14 +97,14 @@ func (b *Bot) SetGroupBan(groupId int, userId int, duration int) {
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param card string
 */
-func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
+func (b *Bot) SetGroupCard(groupID int, userID int, card string) {
 	b.CallApi("set_group_card", map[string]interface{}{
-		"group_id": groupId,
-		"user_id":  userId,
+		"group_id": groupID,
+		"user_id":  userID,
 		"card":     card},
 	)
 }
@@ -114,29 +114,29 @@ func (b *Bot) SetGroupCard(groupId int, userId int, card string) {
    @Description:
    @receiver b
    @param messageType string
-   @param userId int
-   @param groupId int
+   @param userID int
+   @param groupID int
    @param message string
    @param autoEscape bool
    @return int32
 */
-func (b *Bot) SendMsg(messageType string, userId int, groupId int, message interface{}) int32 {
+func (b *Bot) SendMsg(messageType string, userID int, groupID int, message interface{}) int32 {
 	if messageType == "group" {
-		return b.SendGroupMsg(groupId, message)
+		return b.SendGroupMsg(groupID, message)
 	}
-	return b.SendPrivateMsg(userId, message)
+	return b.SendPrivateMsg(userID, message)
 }
 
 // SendLike
 /*
    @Description:
    @receiver b
-   @param userId int
+   @param userID int
    @param times int
 */
-func (b *Bot) SendLike(userId int, times int) {
+func (b *Bot) SendLike(userID int, times int) {
 	b.CallApi("send_like", map[string]interface{}{
-		"user_id": userId,
+		"user_id": userID,
 		"times":   times},
 	)
 }
@@ -145,14 +145,14 @@ func (b *Bot) SendLike(userId int, times int) {
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param rejectAddRequest bool
 */
-func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
+func (b *Bot) SetGroupKick(groupID int, userID int, rejectAddRequest bool) {
 	b.CallApi("set_group_kick", map[string]interface{}{
-		"group_id":           groupId,
-		"user_id":            userId,
+		"group_id":           groupID,
+		"user_id":            userID,
 		"reject_add_request": rejectAddRequest},
 	)
 }
@@ -161,13 +161,13 @@ func (b *Bot) SetGroupKick(groupId int, userId int, rejectAddRequest bool) {
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param flag string
    @param duration int
 */
-func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
+func (b *Bot) SetGroupAnonymousBan(groupID int, flag string, duration int) {
 	b.CallApi("set_group_anonymous_ban", map[string]interface{}{
-		"group_id": groupId,
+		"group_id": groupID,
 		"flag":     flag,
 		"duration": duration},
 	)
@@ -177,69 +177,69 @@ func (b *Bot) SetGroupAnonymousBan(groupId int, flag string, duration int) {
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param enable bool
 */
-func (b *Bot) SetGroupWholeBan(groupId int, enable bool) {
-	b.CallApi("set_group_whole_ban", map[string]interface{}{"group_id": groupId, "enable": enable})
+func (b *Bot) SetGroupWholeBan(groupID int, enable bool) {
+	b.CallApi("set_group_whole_ban", map[string]interface{}{"group_id": groupID, "enable": enable})
 }
 
 // SetGroupAdmin
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param enable bool
 */
-func (b *Bot) SetGroupAdmin(groupId int, userId int, enable bool) {
-	b.CallApi("set_group_admin", map[string]interface{}{"group_id": groupId, "user_id": userId, "enable": enable})
+func (b *Bot) SetGroupAdmin(groupID int, userID int, enable bool) {
+	b.CallApi("set_group_admin", map[string]interface{}{"group_id": groupID, "user_id": userID, "enable": enable})
 }
 
 // SetGroupAnonymous
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param enable bool
 */
-func (b *Bot) SetGroupAnonymous(groupId int, enable bool) {
-	b.CallApi("set_group_anonymous", map[string]interface{}{"group_id": groupId, "enable": enable})
+func (b *Bot) SetGroupAnonymous(groupID int, enable bool) {
+	b.CallApi("set_group_anonymous", map[string]interface{}{"group_id": groupID, "enable": enable})
 }
 
 // SetGroupName
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param groupName string
 */
-func (b *Bot) SetGroupName(groupId int, groupName string) {
-	b.CallApi("set_group_name", map[string]interface{}{"group_id": groupId, "group_name": groupName})
+func (b *Bot) SetGroupName(groupID int, groupName string) {
+	b.CallApi("set_group_name", map[string]interface{}{"group_id": groupID, "group_name": groupName})
 }
 
 // SetGroupLeave
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param isDisMiss bool
 */
-func (b *Bot) SetGroupLeave(groupId int, isDisMiss bool) {
-	b.CallApi("set_group_leave", map[string]interface{}{"group_id": groupId, "is_dismiss": isDisMiss})
+func (b *Bot) SetGroupLeave(groupID int, isDisMiss bool) {
+	b.CallApi("set_group_leave", map[string]interface{}{"group_id": groupID, "is_dismiss": isDisMiss})
 }
 
 // SetGroupSpecialTitle
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param specialTitle string
    @param duration int
 */
-func (b *Bot) SetGroupSpecialTitle(groupId int, userId int, specialTitle string, duration int) {
-	b.CallApi("set_group_special_title", map[string]interface{}{"group_id": groupId, "user_id": userId, "special_title": specialTitle, "duration": duration})
+func (b *Bot) SetGroupSpecialTitle(groupID int, userID int, specialTitle string, duration int) {
+	b.CallApi("set_group_special_title", map[string]interface{}{"group_id": groupID, "user_id": userID, "special_title": specialTitle, "duration": duration})
 }
 
 // SetFriendAddRequest
@@ -285,12 +285,12 @@ func (b *Bot) GetLoginInfo() gjson.Result {
 /*
    @Description:
    @receiver b
-   @param userId int
+   @param userID int
    @param noCache bool
    @return Senders
 */
-func (b *Bot) GetStrangerInfo(userId int, noCache bool) gjson.Result {
-	return b.CallApi("get_stranger_info", map[string]interface{}{"user_id": userId, "no_cache": noCache})
+func (b *Bot) GetStrangerInfo(userID int, noCache bool) gjson.Result {
+	return b.CallApi("get_stranger_info", map[string]interface{}{"user_id": userID, "no_cache": noCache})
 }
 
 // GetFriendList
@@ -308,13 +308,13 @@ func (b *Bot) GetFriendList() gjson.Result {
 /**
  * @Description:
  * @receiver b
- * @param groupId
+ * @param groupID
  * @param noCache
  * @return gjson.Result
  * example
  */
-func (b *Bot) GetGroupInfo(groupId int, noCache bool) gjson.Result {
-	return b.CallApi("get_group_info", map[string]interface{}{"group_id": groupId, "no_cache": noCache})
+func (b *Bot) GetGroupInfo(groupID int, noCache bool) gjson.Result {
+	return b.CallApi("get_group_info", map[string]interface{}{"group_id": groupID, "no_cache": noCache})
 }
 
 // GetGroupList
@@ -331,36 +331,36 @@ func (b *Bot) GetGroupList() gjson.Result {
 /*
    @Description:
    @receiver b
-   @param groupId int
-   @param userId int
+   @param groupID int
+   @param userID int
    @param noCache bool
    @return GroupMemberInfo
 */
-func (b *Bot) GetGroupMemberInfo(groupId int, userId int, noCache bool) gjson.Result {
-	return b.CallApi("get_group_member_info", map[string]interface{}{"group_id": groupId, "user_id": userId, "no_cache": noCache})
+func (b *Bot) GetGroupMemberInfo(groupID int, userID int, noCache bool) gjson.Result {
+	return b.CallApi("get_group_member_info", map[string]interface{}{"group_id": groupID, "user_id": userID, "no_cache": noCache})
 }
 
 // GetGroupMemberList
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @return []GroupMemberInfo
 */
-func (b *Bot) GetGroupMemberList(groupId int) gjson.Result {
-	return b.CallApi("get_group_member_list", map[string]interface{}{"group_id": groupId})
+func (b *Bot) GetGroupMemberList(groupID int) gjson.Result {
+	return b.CallApi("get_group_member_list", map[string]interface{}{"group_id": groupID})
 }
 
 // GetGroupHonorInfo
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param honorType string
    @return GroupHonorInfo
 */
-func (b *Bot) GetGroupHonorInfo(groupId int, honorType string) gjson.Result {
-	return b.CallApi("get_stranger_info", map[string]interface{}{"group_id": groupId, "honor_type": honorType})
+func (b *Bot) GetGroupHonorInfo(groupID int, honorType string) gjson.Result {
+	return b.CallApi("get_stranger_info", map[string]interface{}{"group_id": groupID, "honor_type": honorType})
 }
 
 // GetCookies
@@ -491,11 +491,11 @@ func (b *Bot) DownloadFile(url string, threadCount int, headers []string) gjson.
    @Description:
    @receiver b
    @param messageSeq int64
-   @param groupId int
+   @param groupID int
    @return MessageHistory
 */
-func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupId int) gjson.Result {
-	return b.CallApi("get_group_msh_history", map[string]interface{}{"message_seq": messageSeq, "group_id": groupId})
+func (b *Bot) GetGroupMsgHistory(messageSeq int64, groupID int) gjson.Result {
+	return b.CallApi("get_group_msh_history", map[string]interface{}{"message_seq": messageSeq, "group_id": groupID})
 }
 
 // GetOnlineClients
@@ -517,19 +517,19 @@ func (b *Bot) GetOnlineClients(noCache bool) gjson.Result {
    @param UserId int
    @return VipInfo
 */
-func (b *Bot) GetVipInfoTest(userId int) gjson.Result {
-	return b.CallApi("_get_vip_info", map[string]interface{}{"user_id": userId})
+func (b *Bot) GetVipInfoTest(userID int) gjson.Result {
+	return b.CallApi("_get_vip_info", map[string]interface{}{"user_id": userID})
 }
 
 // SendGroupNotice
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param content string
 */
-func (b *Bot) SendGroupNotice(groupId int, content string) {
-	b.CallApi("send_group_notice", map[string]interface{}{"group_id": groupId, "content": content})
+func (b *Bot) SendGroupNotice(groupID int, content string) {
+	b.CallApi("send_group_notice", map[string]interface{}{"group_id": groupID, "content": content})
 }
 
 // ReloadEventFilter
@@ -545,56 +545,56 @@ func (b *Bot) ReloadEventFilter() {
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param groupName string
 */
-func (b *Bot) SetGroupNameSpecial(groupId int, groupName string) {
-	b.CallApi("set_group_name", map[string]interface{}{"group_id": groupId, "group_name": groupName})
+func (b *Bot) SetGroupNameSpecial(groupID int, groupName string) {
+	b.CallApi("set_group_name", map[string]interface{}{"group_id": groupID, "group_name": groupName})
 }
 
 // SetGroupPortrait
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param file string
    @param cache int
 */
-func (b *Bot) SetGroupPortrait(groupId int, file string, cache int) {
-	b.CallApi("set_group+portrait", map[string]interface{}{"group_id": groupId, "file": file, "cache": cache})
+func (b *Bot) SetGroupPortrait(groupID int, file string, cache int) {
+	b.CallApi("set_group_portrait", map[string]interface{}{"group_id": groupID, "file": file, "cache": cache})
 }
 
 // GetMsgSpecial
 /*
    @Description:
    @receiver b
-   @param messageId int
+   @param messageID int
    @return MsgData
 */
-func (b *Bot) GetMsgSpecial(messageId int) gjson.Result {
-	return b.CallApi("get_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) GetMsgSpecial(messageID int) gjson.Result {
+	return b.CallApi("get_msg", map[string]interface{}{"message_id": messageID})
 }
 
 // GetForwardMsg
 /*
    @Description:
    @receiver b
-   @param messageId int
+   @param messageID int
    @return []ForwardMsg
 */
-func (b *Bot) GetForwardMsg(messageId int) gjson.Result {
-	return b.CallApi("get_forward_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) GetForwardMsg(messageID int) gjson.Result {
+	return b.CallApi("get_forward_msg", map[string]interface{}{"message_id": messageID})
 }
 
 // SendGroupForwardMsg
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param messages []Node
 */
-func (b *Bot) SendGroupForwardMsg(groupId int, messages interface{}) {
-	b.CallApi("send_group_forward_msg", map[string]interface{}{"group_id": groupId, "message": messages})
+func (b *Bot) SendGroupForwardMsg(groupID int, messages interface{}) {
+	b.CallApi("send_group_forward_msg", map[string]interface{}{"group_id": groupID, "message": messages})
 }
 
 // GetWordSlices
@@ -633,71 +633,71 @@ func (b *Bot) GetGroupSystemMsg() gjson.Result {
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @return GroupFileSystemInfo
 */
-func (b *Bot) GetGroupFileSystemInfo(groupId int) gjson.Result {
-	return b.CallApi("get_group_file_system_info", map[string]interface{}{"group_id": groupId})
+func (b *Bot) GetGroupFileSystemInfo(groupID int) gjson.Result {
+	return b.CallApi("get_group_file_system_info", map[string]interface{}{"group_id": groupID})
 }
 
 // GetGroupRootFiles
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @return GroupRootFiles
 */
-func (b *Bot) GetGroupRootFiles(groupId int) gjson.Result {
-	return b.CallApi("get_group_root_files", map[string]interface{}{"group_id": groupId})
+func (b *Bot) GetGroupRootFiles(groupID int) gjson.Result {
+	return b.CallApi("get_group_root_files", map[string]interface{}{"group_id": groupID})
 }
 
 // GetGroupFilesByFolder
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param folderId string
    @return GroupFilesByFolder
 */
-func (b *Bot) GetGroupFilesByFolder(groupId int, folderId string) gjson.Result {
-	return b.CallApi("get_group_files_by_folder", map[string]interface{}{"group_id": groupId, "folder_id": folderId})
+func (b *Bot) GetGroupFilesByFolder(groupID int, folderId string) gjson.Result {
+	return b.CallApi("get_group_files_by_folder", map[string]interface{}{"group_id": groupID, "folder_id": folderId})
 }
 
 // GetGroupFileUrl
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param fileId string
    @param busid int
    @return FileUrl
 */
-func (b *Bot) GetGroupFileUrl(groupId int, fileId string, busid int) gjson.Result {
-	return b.CallApi("get_group_file_url", map[string]interface{}{"group_id": groupId, "file_id": fileId, "busid": busid})
+func (b *Bot) GetGroupFileUrl(groupID int, fileId string, busid int) gjson.Result {
+	return b.CallApi("get_group_file_url", map[string]interface{}{"group_id": groupID, "file_id": fileId, "busid": busid})
 }
 
 // GetGroupAtAllRemain
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @return GroupAtAllRemain
 */
-func (b *Bot) GetGroupAtAllRemain(groupId int) gjson.Result {
-	return b.CallApi("get_group_at_all_remain", map[string]interface{}{"group_id": groupId})
+func (b *Bot) GetGroupAtAllRemain(groupID int) gjson.Result {
+	return b.CallApi("get_group_at_all_remain", map[string]interface{}{"group_id": groupID})
 }
 
 // UploadGroupFile
 /*
    @Description:
    @receiver b
-   @param groupId int
+   @param groupID int
    @param file string
    @param name string
    @param folder string
 */
-func (b *Bot) UploadGroupFile(groupId int, file string, name string, folder string) {
-	b.CallApi("upload_group_file", map[string]interface{}{"group_id": groupId, "file": file, "name": name, "folder": folder})
+func (b *Bot) UploadGroupFile(groupID int, file string, name string, folder string) {
+	b.CallApi("upload_group_file", map[string]interface{}{"group_id": groupID, "file": file, "name": name, "folder": folder})
 }
 
 func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
@@ -718,16 +718,16 @@ func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 	return gjson.GetBytes(content, "data")
 }
 
-func (b *Bot) SetEssenceMsg(messageId int) {
-	b.CallApi("set_essence_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) SetEssenceMsg(messageID int) {
+	b.CallApi("set_essence_msg", map[string]interface{}{"message_id": messageID})
 }
 
-func (b *Bot) DeleteEssenceMsg(messageId int) {
-	b.CallApi("delete_essence_msg", map[string]interface{}{"message_id": messageId})
+func (b *Bot) DeleteEssenceMsg(messageID int) {
+	b.CallApi("delete_essence_msg", map[string]interface{}{"message_id": messageID})
 }
 
-func (b *Bot) GetEssenceMsgList(groupId int) gjson.Result {
-	return b.CallApi("get_essence_msg_list", map[string]interface{}{"group_id": groupId})
+func (b *Bot) GetEssenceMsgList(groupID int) gjson.Result {
+	return b.CallApi("get_essence_msg_list", map[string]interface{}{"group_id": groupID})
 }
 
 func (b *Bot) CheckUrlSafely(url string) int {
