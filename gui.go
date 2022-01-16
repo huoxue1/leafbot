@@ -290,7 +290,7 @@ func CallApi(ctx *gin.Context) {
 		messageType = data["message_type"].(string)
 	}
 	bot := GetBotById(selfID)
-	msgID := bot.(OneBotAPI).SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
+	msgID := bot.(OneBotAPI).SendMsg(messageType, id, id, message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }
 
