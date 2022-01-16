@@ -1,22 +1,30 @@
-name: release
-
+name: create-release
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*'
+      - 'v*' # Push events to matching v*, i.e. v1.0, v3.0.0
 
 jobs:
-  goreleaser:
+  release:
     runs-on: ubuntu-latest
     steps:
+      # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
-
+        uses: actions/checkout@v2
       - name: Generate changelog
         id: changelog
         uses: metcalfc/changelog-generator@v3.0.0
         with:
           myToken: ${{ secrets.TOKEN }}
-
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
