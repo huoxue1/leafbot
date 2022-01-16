@@ -14,17 +14,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v3.0.0
         with:
-          go-version: '1.17.2'
-
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
-        with:
-          version: latest
-          args: release --rm-dist
-        env:
-          main: ./example/main.go
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          myToken: ${{ secrets.TOKEN }}
 
