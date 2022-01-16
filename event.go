@@ -202,6 +202,9 @@ func viewsMessage(event Event) {
 	ctx.Event = &event
 	ctx.Bot = bot
 	ctx.State = state
+	ctx.SelfID = int64(event.SelfId)
+	ctx.UserID = event.UserId
+	ctx.GroupID = event.GroupId
 	data1, _ := json.Marshal(&event)
 	log.Debugln(string(data1))
 	//// 执行所有预处理handle
@@ -362,13 +365,13 @@ func doHandle(handle Matcher, ctx *Context) {
 }
 
 func checkOnlyTome(event *Event, state *State) {
-	if event.Message[0].Type == "at" && event.Message[0].Data["qq"] == strconv.Itoa(event.SelfId) {
+	if event.Message[0].Type == "at" && event.Message[0].Data["qq"] == strconv.FormatInt(event.SelfId, 10) {
 		event.Message = event.Message[1:]
 		state.Data["only_tome"] = true
 		return
 	}
 	for _, segment := range event.Message {
-		if segment.Type == "at" && segment.Data["qq"] == strconv.Itoa(event.SelfId) {
+		if segment.Type == "at" && segment.Data["qq"] == strconv.FormatInt(event.SelfId, 10) {
 			state.Data["only_tome"] = true
 			return
 		}
@@ -413,7 +416,7 @@ func processMessageHandle(ctx *Context) {
 		// 判断该cmd在该群是否被禁用
 		disable := true
 		for _, group := range matcher.GetDisAbleGroup() {
-			if ctx.Event.GroupId == int(group) {
+			if ctx.Event.GroupId == group {
 				disable = false
 			}
 		}
@@ -518,7 +521,7 @@ func processMessageHandle(ctx *Context) {
 			return true
 		}
 		for _, group := range matcher.GetDisAbleGroup() {
-			if ctx.Event.GroupId == int(group) {
+			if ctx.Event.GroupId == group {
 				return true
 			}
 		}
@@ -559,7 +562,7 @@ func processRequestEventHandle(ctx *Context) {
 			return true
 		}
 		for _, group := range matcher.GetDisAbleGroup() {
-			if ctx.Event.GroupId == int(group) {
+			if ctx.Event.GroupId == group {
 				return true
 			}
 		}
@@ -598,7 +601,7 @@ func processMetaEventHandle(ctx *Context) {
 	}()
 	matcherChin.forEach(META, func(matcher Matcher) bool {
 		for _, group := range matcher.GetDisAbleGroup() {
-			if ctx.Event.GroupId == int(group) {
+			if ctx.Event.GroupId == group {
 				return true
 			}
 		}
@@ -627,7 +630,7 @@ func processMetaEventHandle(ctx *Context) {
    @param id int
    @return Api
 */
-func GetBotById(id int) API {
-	bots := driver.GetBot(int64(id))
+func GetBotById(id int64) API {
+	bots := driver.GetBot(id)
 	return bots.(API)
 }

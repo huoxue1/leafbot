@@ -52,24 +52,29 @@ type (
 		UserId   int    `json:"user_id"`
 	}
 
+	// Event
+	/*
+	 * 事件
+	 *
+	 */
 	Event struct {
 		Anonymous     anonymous       `json:"anonymous"`
 		Font          int             `json:"font"`
-		GroupId       int             `json:"group_id"`
+		GroupId       int64           `json:"group_id"`
 		Message       message.Message `json:"message"`
 		MessageType   string          `json:"message_type"`
 		PostType      string          `json:"post_type"`
 		RawMessage    string          `json:"raw_message"`
-		SelfId        int             `json:"self_id"`
+		SelfId        int64           `json:"self_id"`
 		Sender        Senders         `json:"sender"`
 		SubType       string          `json:"sub_type"`
-		UserId        int             `json:"user_id"`
+		UserId        int64           `json:"user_id"`
 		Time          int             `json:"time"`
 		NoticeType    string          `json:"notice_type"`
 		RequestType   string          `json:"request_type"`
 		Comment       string          `json:"comment"`
 		Flag          string          `json:"flag"`
-		OperatorId    int             `json:"operator_id"`
+		OperatorID    int             `json:"operator_id"`
 		File          Files           `json:"file"`
 		Duration      int64           `json:"duration"`
 		TargetId      int64           `json:"target_id"` //运气王id
@@ -80,16 +85,9 @@ type (
 		CardNew       string          `json:"card_new"` //新名片
 		CardOld       string          `json:"card_old"` //旧名片
 		MessageIds
-	}
 
-	MiraiEvent struct {
-		Type   string `json:"type"`
-		QQ     int64  `json:"qq"`
-		Friend struct {
-			Id       int64  `json:"id"`
-			NickName string `json:"nick_name"`
-			Remark   string `json:"remark"`
-		} `json:"friend"`
+		GuildID   int64 `json:"guild_id"`
+		ChannelID int64 `json:"channel_id"`
 	}
 )
 

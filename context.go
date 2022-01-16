@@ -1,6 +1,8 @@
 package leafbot
 
 import (
+	"strconv"
+
 	"github.com/tidwall/gjson"
 
 	message2 "github.com/huoxue1/leafbot/message"
@@ -10,10 +12,15 @@ import (
 // @Description: 上下文管理对象
 //
 type Context struct {
-	Event    *Event
-	Bot      API
+	Event *Event
+	Bot   API
+
 	State    *State
 	RawEvent gjson.Result
+
+	UserID  int64
+	GroupID int64
+	SelfID  int64
 }
 
 // Send
@@ -26,9 +33,49 @@ type Context struct {
 func (ctx *Context) Send(message interface{}) int32 {
 	if ctx.Event.MessageType == "group" {
 		return ctx.Bot.SendGroupMsg(ctx.Event.GroupId, message)
-	} else {
-		return ctx.Bot.SendPrivateMsg(ctx.Event.UserId, message)
+	} else if ctx.Event.MessageType == "guild" && ctx.Event.SubType == "channel" {
+		result := ctx.SendGuildChannelMsg(ctx.Event.GuildID, ctx.Event.ChannelID, message)
+		if result.Get("message_id").Exists() {
+			return 0
+		} else {
+			return -1
+		}
 	}
+	return ctx.Bot.SendPrivateMsg(ctx.Event.UserId, message)
+}
+
+// GetAtUsers
+/**
+ * @Description: 获取消息中At的所有人的qq
+ * @receiver ctx
+ * @return users
+ */
+func (ctx *Context) GetAtUsers() (users []int64) {
+	for _, segment := range ctx.Event.Message {
+		if segment.Type == "at" {
+			qq, err := strconv.ParseInt(segment.Data["qq"], 10, 64)
+			if err != nil {
+				continue
+			}
+			users = append(users, qq)
+		}
+	}
+	return
+}
+
+// GetImages
+/**
+ * @Description: 获取消息中所有的图片
+ * @receiver ctx
+ * @return images
+ */
+func (ctx *Context) GetImages() (images []message2.MessageSegment) {
+	for _, segment := range ctx.Event.Message {
+		if segment.Type == "image" {
+			images = append(images, segment)
+		}
+	}
+	return
 }
 
 //SendGroupMsg
@@ -39,14 +86,15 @@ func (ctx *Context) Send(message interface{}) int32 {
  * @param message
  * @return int32
  */
-func (ctx *Context) SendGroupMsg(groupId int, message interface{}) int32 {
+
+func (ctx *Context) SendGroupMsg(groupId int64, message interface{}) int32 {
 	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
 	}
 	type param struct {
-		GroupId int         `json:"group_id"`
+		GroupId int64       `json:"group_id"`
 		Message interface{} `json:"message"`
 	}
 	result := ctx.CallApi("send_group_msg", param{
@@ -65,17 +113,17 @@ func (ctx *Context) SendGroupMsg(groupId int, message interface{}) int32 {
  * @param message
  * @return int32
  */
-func (ctx *Context) SendPrivateMsg(userId int, message interface{}) int32 {
+func (ctx *Context) SendPrivateMsg(userId int64, message interface{}) int32 {
 	if _, ok := message.(string); ok {
 		{
 			message = message2.ParseMessageFromString(message.(string))
 		}
 	}
 	type param struct {
-		UserId  int         `json:"user_id"`
+		UserId  int64       `json:"user_id"`
 		Message interface{} `json:"message"`
 	}
-	result := ctx.CallApi("send_gprivate_msg", param{
+	result := ctx.CallApi("send_private_msg", param{
 		UserId:  userId,
 		Message: message,
 	})
@@ -147,7 +195,7 @@ func (ctx *Context) SetGroupCard(groupId int, userId int, card string) {
    @param autoEscape bool
    @return int32
 */
-func (ctx *Context) SendMsg(messageType string, userId int, groupId int, message interface{}) int32 {
+func (ctx *Context) SendMsg(messageType string, userId int64, groupId int64, message interface{}) int32 {
 	if messageType == "group" {
 		return ctx.SendGroupMsg(groupId, message)
 	} else {
@@ -772,4 +820,28 @@ func (ctx *Context) GetEssenceMsgList(groupId int) gjson.Result {
  */
 func (ctx *Context) CheckUrlSafely(url string) int {
 	return int(ctx.CallApi("check_url_safely", map[string]interface{}{"url": url}).Int())
+}
+
+func (ctx *Context) GetGuildServiceProfile() gjson.Result {
+	return ctx.CallApi("get_guild_service_profile", nil)
+}
+
+func (ctx *Context) GetGuildList() gjson.Result {
+	return ctx.CallApi("get_guild_list", nil)
+}
+
+func (ctx *Context) GetGuildMetaByQuest(guildID int64) gjson.Result {
+	return ctx.CallApi("get_guild_meta_by_guest", map[string]interface{}{"guild_id": guildID})
+}
+
+func (ctx *Context) GetGuildChannelList(guildID int64, noCache bool) gjson.Result {
+	return ctx.CallApi("get_guild_channel_list", map[string]interface{}{"guild_id": guildID, "no_cache": noCache})
+}
+
+func (ctx *Context) GetGuildMembers(guildID int64) gjson.Result {
+	return ctx.CallApi("get_guild_members", map[string]interface{}{"guild_id": guildID})
+}
+
+func (ctx *Context) SendGuildChannelMsg(guildID, channelID int64, message interface{}) gjson.Result {
+	return ctx.CallApi("send_guild_channel_msg", map[string]interface{}{"guild_id": guildID, "channel_id": channelID, "message": message})
 }

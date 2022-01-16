@@ -11,9 +11,51 @@ import (
 //
 type API interface {
 	CallApi(action string, params interface{}) gjson.Result
-	SendGroupMsg(groupID int, message interface{}) int32
-	SendPrivateMsg(userID int, message interface{}) int32
-	DeleteMsg(messageID int32)
+	SendGroupMsg(groupID int64, message interface{}) int32
+	SendPrivateMsg(userID int64, message interface{}) int32
+}
+
+// GuildAPI
+// @Description: 频道相关api
+//
+type GuildAPI interface {
+	// GetGuildServiceProfile
+	// @Description: 获取频道系统内BOT的资料
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E7%B3%BB%E7%BB%9F%E5%86%85bot%E7%9A%84%E8%B5%84%E6%96%99
+	GetGuildServiceProfile() gjson.Result
+
+	// GetGuildList
+	// @Description: 获取频道列表
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E5%88%97%E8%A1%A8
+	//
+	GetGuildList() gjson.Result
+
+	//GetGuildMetaByQuest
+	// @Description: 通过访客获取频道元数据
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E9%80%9A%E8%BF%87%E8%AE%BF%E5%AE%A2%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E5%85%83%E6%95%B0%E6%8D%AE
+	//
+	GetGuildMetaByQuest(guildID int64) gjson.Result
+
+	//GetGuildChannelList
+	// @Description: 获取子频道列表
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E5%AD%90%E9%A2%91%E9%81%93%E5%88%97%E8%A1%A8
+	//
+	GetGuildChannelList(guildID int64, noCache bool) gjson.Result
+
+	//GetGuildMembers
+	// @Description: 获取频道成员列表
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E6%88%90%E5%91%98%E5%88%97%E8%A1%A8
+	//
+	GetGuildMembers(guildID int64) gjson.Result
+
+	//SendGuildChannelMsg
+	// @Description: 发送信息到子频道
+	// @param guildID 频道ID
+	// @param channelID 子频道ID
+	// @param message 消息
+	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E5%8F%91%E9%80%81%E4%BF%A1%E6%81%AF%E5%88%B0%E5%AD%90%E9%A2%91%E9%81%93
+	//
+	SendGuildChannelMsg(guildID, channelID int64, message interface{}) gjson.Result
 }
 
 // OneBotAPI
@@ -21,19 +63,20 @@ type API interface {
 //
 type OneBotAPI interface {
 	API
+	DeleteMsg(messageID int32)
 	GetMsg(messageID int32) gjson.Result
 	SetGroupBan(groupID int, userID int, duration int)
-	SetGroupCard(groupID int, userId int, card string)
-	SendMsg(messageType string, userID int, groupId int, message interface{}) int32
+	SetGroupCard(groupID int, userID int, card string)
+	SendMsg(messageType string, userID int64, groupId int64, message interface{}) int32
 	SendLike(userID int, times int)
-	SetGroupKick(groupID int, userId int, rejectAddRequest bool)
+	SetGroupKick(groupID int, userID int, rejectAddRequest bool)
 	SetGroupAnonymousBan(groupID int, flag string, duration int)
 	SetGroupWholeBan(groupID int, enable bool)
-	SetGroupAdmin(groupID int, UserId int, enable bool)
+	SetGroupAdmin(groupID int, UserID int, enable bool)
 	SetGroupAnonymous(groupID int, enable bool)
 	SetGroupName(groupID int, groupName string)
 	SetGroupLeave(groupID int, isDisMiss bool)
-	SetGroupSpecialTitle(groupID int, userId int, specialTitle string, duration int)
+	SetGroupSpecialTitle(groupID int, userID int, specialTitle string, duration int)
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result

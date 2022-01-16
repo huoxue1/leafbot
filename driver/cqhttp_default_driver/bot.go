@@ -26,7 +26,8 @@ func (u userAPi) Get(s string) gjson.Result {
 type Bot struct {
 	responses sync.Map
 	CQBot     *coolq.CQBot
-	call      *api.Caller
+
+	call *api.Caller
 }
 
 func (b *Bot) Do(i interface{}) {

@@ -224,7 +224,7 @@ func GetConfig(ctx *gin.Context) {
  * @param ctx
  */
 func GetGroupList(ctx *gin.Context) {
-	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
+	selfID, err := strconv.ParseInt(ctx.PostForm("self_id"), 10, 64)
 	if err != nil {
 		var data map[string]interface{}
 		err := ctx.BindJSON(&data)
@@ -232,7 +232,7 @@ func GetGroupList(ctx *gin.Context) {
 			log.Errorln(err.Error())
 			return
 		}
-		selfID = int(data["self_id"].(float64))
+		selfID = int64(int(data["self_id"].(float64)))
 	}
 
 	bot := GetBotById(selfID)
@@ -246,7 +246,7 @@ func GetGroupList(ctx *gin.Context) {
 }
 
 func GetFriendList(ctx *gin.Context) {
-	selfID, err := strconv.Atoi(ctx.PostForm("self_id"))
+	selfID, err := strconv.ParseInt(ctx.PostForm("self_id"), 10, 64)
 	if err != nil {
 		log.Errorln(err.Error())
 		var data map[string]interface{}
@@ -256,7 +256,7 @@ func GetFriendList(ctx *gin.Context) {
 			log.Errorln("绑定错误")
 			return
 		}
-		selfID = int(data["self_id"].(float64))
+		selfID = int64(int(data["self_id"].(float64)))
 	}
 	bot := GetBotById(selfID)
 	var resp []interface{}
@@ -289,7 +289,7 @@ func CallApi(ctx *gin.Context) {
 		message1 = data["message"].(string)
 		messageType = data["message_type"].(string)
 	}
-	bot := GetBotById(int(selfID))
+	bot := GetBotById(selfID)
 	msgID := bot.(OneBotAPI).SendMsg(messageType, int(id), int(id), message.ParseMessageFromString(message1))
 	ctx.JSON(200, msgID)
 }
