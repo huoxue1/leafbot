@@ -65,28 +65,28 @@ type OneBotAPI interface {
 	API
 	DeleteMsg(messageID int32)
 	GetMsg(messageID int32) gjson.Result
-	SetGroupBan(groupID int, userID int, duration int)
-	SetGroupCard(groupID int, userID int, card string)
-	SendMsg(messageType string, userID int64, groupId int64, message interface{}) int32
-	SendLike(userID int, times int)
-	SetGroupKick(groupID int, userID int, rejectAddRequest bool)
-	SetGroupAnonymousBan(groupID int, flag string, duration int)
-	SetGroupWholeBan(groupID int, enable bool)
-	SetGroupAdmin(groupID int, UserID int, enable bool)
-	SetGroupAnonymous(groupID int, enable bool)
-	SetGroupName(groupID int, groupName string)
-	SetGroupLeave(groupID int, isDisMiss bool)
-	SetGroupSpecialTitle(groupID int, userID int, specialTitle string, duration int)
+	SetGroupBan(groupID int64, userID int64, duration int64)
+	SetGroupCard(groupID int64, userID int64, card string)
+	SendMsg(messageType string, userID int64, groupID int64, message interface{}) int32
+	SendLike(userID int64, times int)
+	SetGroupKick(groupID int64, userID int64, rejectAddRequest bool)
+	SetGroupAnonymousBan(groupID int64, flag string, duration int)
+	SetGroupWholeBan(groupID int64, enable bool)
+	SetGroupAdmin(groupID int64, UserID int64, enable bool)
+	SetGroupAnonymous(groupID int64, enable bool)
+	SetGroupName(groupID int64, groupName string)
+	SetGroupLeave(groupID int64, isDisMiss bool)
+	SetGroupSpecialTitle(groupID int64, userID int64, specialTitle string, duration int)
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result
 	GetStrangerInfo(userId int, noCache bool) gjson.Result
 	GetFriendList() gjson.Result
-	GetGroupInfo(groupId int, noCache bool) gjson.Result
+	GetGroupInfo(groupID int64, noCache bool) gjson.Result
 	GetGroupList() gjson.Result
-	GetGroupMemberInfo(groupId int, UserId int, noCache bool) gjson.Result
-	GetGroupMemberList(groupId int) gjson.Result
-	GetGroupHonorInfo(groupId int, honorType string) gjson.Result
+	GetGroupMemberInfo(groupID int64, UserId int64, noCache bool) gjson.Result
+	GetGroupMemberList(groupID int64) gjson.Result
+	GetGroupHonorInfo(groupID int64, honorType string) gjson.Result
 	GetCookies(domain string) gjson.Result
 	GetCsrfToken() gjson.Result
 	GetCredentials(domain string) gjson.Result
@@ -99,30 +99,30 @@ type OneBotAPI interface {
 	CleanCache()
 
 	DownloadFile(url string, threadCount int, headers []string) gjson.Result
-	GetGroupMsgHistory(messageSeq int64, groupId int) gjson.Result
+	GetGroupMsgHistory(messageSeq int64, groupID int64) gjson.Result
 	GetOnlineClients(noCache bool) gjson.Result
-	GetVipInfoTest(UserId int) gjson.Result
-	SendGroupNotice(groupId int, content string)
+	GetVipInfoTest(UserId int64) gjson.Result
+	SendGroupNotice(groupID int64, content string)
 	ReloadEventFilter()
 	SetEssenceMsg(messageId int)
 	DeleteEssenceMsg(messageId int)
-	GetEssenceMsgList(groupId int) gjson.Result
+	GetEssenceMsgList(groupID int64) gjson.Result
 	CheckUrlSafely(url string) int
-	UploadGroupFile(groupId int, file string, name string, folder string)
+	UploadGroupFile(groupID int64, file string, name string, folder string)
 
-	SetGroupNameSpecial(groupId int, groupName string)
-	SetGroupPortrait(groupId int, file string, cache int)
+	SetGroupNameSpecial(groupID int64, groupName string)
+	SetGroupPortrait(groupID int64, file string, cache int)
 	GetMsgSpecial(messageId int) gjson.Result
 	GetForwardMsg(messageId int) gjson.Result
-	SendGroupForwardMsg(groupId int, messages interface{})
+	SendGroupForwardMsg(groupID int64, messages interface{})
 	GetWordSlices(content string) gjson.Result
 	OcrImage(image string) gjson.Result
 	GetGroupSystemMsg() gjson.Result
-	GetGroupFileSystemInfo(groupId int) gjson.Result
-	GetGroupRootFiles(groupId int) gjson.Result
-	GetGroupFilesByFolder(groupId int, folderId string) gjson.Result
-	GetGroupFileUrl(groupId int, fileId string, busid int) gjson.Result
-	GetGroupAtAllRemain(groupId int) gjson.Result
+	GetGroupFileSystemInfo(groupID int64) gjson.Result
+	GetGroupRootFiles(groupID int64) gjson.Result
+	GetGroupFilesByFolder(groupID int64, folderId string) gjson.Result
+	GetGroupFileUrl(groupID int64, fileId string, busid int) gjson.Result
+	GetGroupAtAllRemain(groupID int64) gjson.Result
 }
 
 func (e Event) Send(message interface{}) int32 {
