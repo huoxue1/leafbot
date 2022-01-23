@@ -19,6 +19,7 @@ type API interface {
 // @Description: 频道相关api
 //
 type GuildAPI interface {
+	API
 	// GetGuildServiceProfile
 	// @Description: 获取频道系统内BOT的资料
 	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E7%B3%BB%E7%BB%9F%E5%86%85bot%E7%9A%84%E8%B5%84%E6%96%99
@@ -30,25 +31,25 @@ type GuildAPI interface {
 	//
 	GetGuildList() gjson.Result
 
-	//GetGuildMetaByQuest
+	// GetGuildMetaByQuest
 	// @Description: 通过访客获取频道元数据
 	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E9%80%9A%E8%BF%87%E8%AE%BF%E5%AE%A2%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E5%85%83%E6%95%B0%E6%8D%AE
 	//
 	GetGuildMetaByQuest(guildID int64) gjson.Result
 
-	//GetGuildChannelList
+	// GetGuildChannelList
 	// @Description: 获取子频道列表
 	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E5%AD%90%E9%A2%91%E9%81%93%E5%88%97%E8%A1%A8
 	//
 	GetGuildChannelList(guildID int64, noCache bool) gjson.Result
 
-	//GetGuildMembers
+	// GetGuildMembers
 	// @Description: 获取频道成员列表
 	// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/guild.md#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E6%88%90%E5%91%98%E5%88%97%E8%A1%A8
 	//
 	GetGuildMembers(guildID int64) gjson.Result
 
-	//SendGuildChannelMsg
+	// SendGuildChannelMsg
 	// @Description: 发送信息到子频道
 	// @param guildID 频道ID
 	// @param channelID 子频道ID

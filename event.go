@@ -202,7 +202,7 @@ func viewsMessage(event Event) {
 	ctx.Event = &event
 	ctx.Bot = bot
 	ctx.State = state
-	ctx.SelfID = int64(event.SelfId)
+	ctx.SelfID = event.SelfId
 	ctx.UserID = event.UserId
 	ctx.GroupID = event.GroupId
 	data1, _ := json.Marshal(&event)
@@ -246,7 +246,27 @@ func viewsMessage(event Event) {
 		log.Debugln(fmt.Sprintf("post_type:%s\n\t\t\t\t\tmeta_event_type:%s\n\t\t\t\t\tinterval:%d",
 			event.PostType, event.MetaEventType, event.Interval))
 		processMetaEventHandle(ctx)
+	case "message_sent":
+		processSelfMessageHandle(ctx)
 	}
+
+}
+
+// processMessageHandle
+/* @Description: 处理自身消息事件
+   @param ctx *Context
+*/
+func processSelfMessageHandle(ctx *Context) {
+	matcherChin.forEach(SELF_MESSAGE, func(matcher Matcher) bool {
+		log.Infoln("开始匹配自身消息")
+		log.Warning("匹配自身消息可能死循环匹配")
+		b := checkRule(matcher.GetRules(), ctx)
+		if !b {
+			return true
+		}
+		matcher.GetHandler()(ctx)
+		return true
+	})
 }
 
 // processNoticeHandle

@@ -17,14 +17,15 @@ var (
 )
 
 const (
-	COMMAND    = "command"
-	MESSAGE    = "message"
-	REQUEST    = "request"
-	REGEX      = "regex"
-	NOTICE     = "notice"
-	META       = "meta"
-	CONNECT    = "connect"
-	DISCONNECT = "dis_connect"
+	COMMAND      = "command"
+	MESSAGE      = "message"
+	REQUEST      = "request"
+	REGEX        = "regex"
+	NOTICE       = "notice"
+	META         = "meta"
+	CONNECT      = "connect"
+	DISCONNECT   = "dis_connect"
+	SELF_MESSAGE = "message_sent"
 )
 
 //State
@@ -134,6 +135,14 @@ type (
 	}
 )
 
+func AddPlugin(pluginName string, help map[string]string, matcher Matcher) {
+	p := new(Plugin)
+	p.Name = pluginName
+	p.Help = help
+	p.Matchers = append(p.Matchers, matcher)
+	plugins = append(plugins, p)
+}
+
 // OnStart
 /**
  * @Description: 匹配消息开头
@@ -159,6 +168,20 @@ func (p *Plugin) OnStart(start string, options ...Option) Matcher {
 		}
 		return false
 	})
+	p.Matchers = append(p.Matchers, d)
+	return d
+}
+
+func (p *Plugin) OnSelfMessage(options ...Option) Matcher {
+	d := new(defaultMatcher)
+	d.PluginType = SELF_MESSAGE
+	d.Enable = true
+	if len(options) > 0 {
+		d.allies = options[0].Allies
+		d.weight = options[0].Weight
+		d.block = options[0].Block
+		d.rules = options[0].Rules
+	}
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
