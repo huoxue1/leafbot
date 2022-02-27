@@ -47,14 +47,13 @@ type Conn interface {
 	// Do
 	// @Description: 执行一个api
 	// @param interface{}
-	//
 	Do(interface{})
+
 	// GetResponse
 	// @Description: 获取一次api的执行结果
 	// @param echo 标识一次执行的唯一参数
 	// @return []byte 响应结果
 	// @return error 超时会返回一个error
-	//
 	GetResponse(echo string) ([]byte, error)
 	GetSelfId() int64
 }

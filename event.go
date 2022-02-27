@@ -249,7 +249,6 @@ func viewsMessage(event Event) {
 	case "message_sent":
 		processSelfMessageHandle(ctx)
 	}
-
 }
 
 // processMessageHandle

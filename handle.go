@@ -73,6 +73,9 @@ type (
 		GetHelp() map[string]string
 		GetName() string
 		GetMather() []Matcher
+		SetHelp(map[string]string)
+
+		getBaseRules() []Rule
 	}
 
 	basePlugin interface {
@@ -132,9 +135,25 @@ type (
 		Name     string
 		Help     map[string]string
 		Matchers []Matcher
+		rules    []Rule
 	}
 )
 
+func (p *Plugin) SetHelp(m map[string]string) {
+	p.Help = m
+}
+
+func (p *Plugin) getBaseRules() []Rule {
+	return p.rules
+}
+
+// AddPlugin
+/**
+ * @Description:
+ * @param pluginName
+ * @param help
+ * @param matcher
+ */
 func AddPlugin(pluginName string, help map[string]string, matcher Matcher) {
 	p := new(Plugin)
 	p.Name = pluginName
@@ -168,10 +187,19 @@ func (p *Plugin) OnStart(start string, options ...Option) Matcher {
 		}
 		return false
 	})
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// OnSelfMessage
+/**
+ * @Description:
+ * @receiver p
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnSelfMessage(options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.PluginType = SELF_MESSAGE
@@ -182,6 +210,8 @@ func (p *Plugin) OnSelfMessage(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -211,10 +241,20 @@ func (p *Plugin) OnEnd(end string, options ...Option) Matcher {
 		}
 		return false
 	})
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// OnFullMatch
+/**
+ * @Description:
+ * @receiver p
+ * @param content
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnFullMatch(content string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.HandleType = ""
@@ -232,10 +272,20 @@ func (p *Plugin) OnFullMatch(content string, options ...Option) Matcher {
 		}
 		return false
 	})
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// OnFullMatchGroup
+/**
+ * @Description:
+ * @receiver p
+ * @param content
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnFullMatchGroup(content string, options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.HandleType = ""
@@ -253,10 +303,19 @@ func (p *Plugin) OnFullMatchGroup(content string, options ...Option) Matcher {
 		}
 		return false
 	})
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// OnConnect
+/**
+ * @Description:
+ * @receiver p
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnConnect(options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.PluginType = CONNECT
@@ -267,10 +326,19 @@ func (p *Plugin) OnConnect(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// OnDisConnect
+/**
+ * @Description:
+ * @receiver p
+ * @param options
+ * @return Matcher
+ */
 func (p *Plugin) OnDisConnect(options ...Option) Matcher {
 	d := new(defaultMatcher)
 	d.PluginType = DISCONNECT
@@ -281,10 +349,18 @@ func (p *Plugin) OnDisConnect(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
 
+// Enabled
+/**
+ * @Description:
+ * @receiver d
+ * @return bool
+ */
 func (d *defaultMatcher) Enabled() bool {
 	return d.Enable
 }
@@ -295,9 +371,10 @@ func (d *defaultMatcher) Enabled() bool {
  * @param name 插件名
  * @return *Plugin 返回一个插件类型对象的指针
  */
-func NewPlugin(name string) *Plugin {
+func NewPlugin(name string, rules ...Rule) *Plugin {
 	p := new(Plugin)
 	p.Name = name
+	p.rules = rules
 	plugins = append(plugins, p)
 	return p
 }
@@ -344,6 +421,7 @@ func (p *Plugin) OnCommand(command string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -367,6 +445,8 @@ func (p *Plugin) OnMessage(messageType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -390,6 +470,8 @@ func (p *Plugin) OnRequest(requestType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -413,6 +495,8 @@ func (p *Plugin) OnNotice(noticeType string, options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
@@ -434,6 +518,8 @@ func (p *Plugin) OnMeta(options ...Option) Matcher {
 		d.block = options[0].Block
 		d.rules = options[0].Rules
 	}
+	d.rules = append(d.rules, p.rules...)
+
 	p.Matchers = append(p.Matchers, d)
 	return d
 }
