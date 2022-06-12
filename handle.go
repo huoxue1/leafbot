@@ -28,7 +28,7 @@ const (
 	SELF_MESSAGE = "message_sent"
 )
 
-//State
+// State
 // @Description: sdk处理消息后将内容传递给plugin
 //
 type State struct {

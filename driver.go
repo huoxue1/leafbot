@@ -4,7 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Driver
+// Driver
 // @Description: 驱动器接口
 //
 type Driver interface {
@@ -40,7 +40,7 @@ type Driver interface {
 	SetToken(token string)
 }
 
-//Conn
+// Conn
 // @Description:
 //
 type Conn interface {
@@ -61,7 +61,7 @@ type Conn interface {
 //  leafBot所注册的驱动
 var driver Driver
 
-//LoadDriver
+// LoadDriver
 /**
  * @Description: 为leafBot注册一个驱动
  * @param driver2 实现了Driver接口的驱动
@@ -87,7 +87,7 @@ func LoadDriver(driver2 Driver) {
 				log.Errorln(err)
 			}
 		}()
-		//for _, handle := range ConnectHandles {
+		// for _, handle := range ConnectHandles {
 		//	go handle.handle(Connect{
 		//		SelfID:     selfId,
 		//		Host:       host,
@@ -103,7 +103,7 @@ func LoadDriver(driver2 Driver) {
 				log.Errorln(err)
 			}
 		}()
-		//for _, handle := range DisConnectHandles {
+		// for _, handle := range DisConnectHandles {
 		//	go handle.handle(selfId)
 		//}
 	})

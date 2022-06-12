@@ -8,7 +8,7 @@ import (
 	message2 "github.com/huoxue1/leafbot/message"
 )
 
-//Context
+// Context
 // @Description: 上下文管理对象
 //
 type Context struct {
@@ -78,7 +78,7 @@ func (ctx *Context) GetImages() (images []message2.MessageSegment) {
 	return
 }
 
-//SendGroupMsg
+// SendGroupMsg
 /**
  * @Description:
  * @receiver ctx
@@ -105,7 +105,7 @@ func (ctx *Context) SendGroupMsg(groupId int64, message interface{}) int32 {
 	return int32(result.Get("message_id").Int())
 }
 
-//SendPrivateMsg
+// SendPrivateMsg
 /**
  * @Description:
  * @receiver ctx
@@ -131,7 +131,7 @@ func (ctx *Context) SendPrivateMsg(userId int64, message interface{}) int32 {
 	return int32(result.Get("message_id").Int())
 }
 
-//DeleteMsg
+// DeleteMsg
 /**
  * @Description:
  * @receiver ctx
@@ -141,7 +141,7 @@ func (ctx *Context) DeleteMsg(messageId int32) {
 	ctx.CallApi("delete_msg", map[string]int32{"message_id": messageId})
 }
 
-//GetMsg
+// GetMsg
 /**
  * @Description:
  * @receiver ctx
@@ -544,7 +544,7 @@ func (ctx *Context) CleanCache() {
 	ctx.CallApi("clean_cache", nil)
 }
 
-//新增
+// 新增
 
 // DownloadFile
 /*
@@ -763,7 +763,7 @@ func (ctx *Context) GetGroupAtAllRemain(groupID int64) gjson.Result {
 	return ctx.CallApi("get_group_at_all_remain", map[string]interface{}{"group_id": groupID})
 }
 
-//UploadGroupFile
+// UploadGroupFile
 /*
    @Description:
    @receiver b
@@ -780,7 +780,7 @@ func (ctx *Context) CallApi(action string, param interface{}) gjson.Result {
 	return ctx.Bot.CallApi(action, param)
 }
 
-//SetEssenceMsg
+// SetEssenceMsg
 /**
  * @Description:
  * @receiver ctx
@@ -790,7 +790,7 @@ func (ctx *Context) SetEssenceMsg(messageId int) {
 	ctx.CallApi("set_essence_msg", map[string]interface{}{"message_id": messageId})
 }
 
-//DeleteEssenceMsg
+// DeleteEssenceMsg
 /**
  * @Description:
  * @receiver ctx
@@ -800,7 +800,7 @@ func (ctx *Context) DeleteEssenceMsg(messageId int) {
 	ctx.CallApi("delete_essence_msg", map[string]interface{}{"message_id": messageId})
 }
 
-//GetEssenceMsgList
+// GetEssenceMsgList
 /**
  * @Description:
  * @receiver ctx
@@ -811,7 +811,7 @@ func (ctx *Context) GetEssenceMsgList(groupID int64) gjson.Result {
 	return ctx.CallApi("get_essence_msg_list", map[string]interface{}{"group_id": groupID})
 }
 
-//CheckUrlSafely
+// CheckUrlSafely
 /**
  * @Description:
  * @receiver ctx

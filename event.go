@@ -24,7 +24,7 @@ import (
 	"github.com/huoxue1/leafbot/message"
 )
 
-//var ENABLE = false // 是否启用gui
+// var ENABLE = false // 是否启用gui
 
 var (
 // MessageChan = make(chan Event, 10)
@@ -208,7 +208,7 @@ func viewsMessage(event Event) {
 	data1, _ := json.Marshal(&event)
 	log.Debugln(string(data1))
 	//// 执行所有预处理handle
-	//for _, handle := range PretreatmentHandles {
+	// for _, handle := range PretreatmentHandles {
 	//	rule := checkRule(handle.rules, ctx)
 	//	// 执行rule判断
 	//	if !rule || !handle.Enable {
@@ -357,7 +357,7 @@ func getFunctionName(i interface{}, seps ...rune) string {
 	return ""
 }
 
-//func checkCD(handle *commandHandle) bool {
+// func checkCD(handle *commandHandle) bool {
 //	if handle.cd.Types == "" || handle.cd.Types == "default" {
 //		if int(time.Now().Unix()-handle.lastUseTime) >= handle.cd.Long {
 //			return true
@@ -465,11 +465,11 @@ func processMessageHandle(ctx *Context) {
 		for _, start := range defaultConfig.CommandStart {
 			if commands[0] == start+matcher.(CommandMatcher).GetCommand() && matcher.(CommandMatcher).GetCommand() != "" {
 				// 检查cd是否达到
-				//if !checkCD(handle) {
+				// if !checkCD(handle) {
 				//	continue
 				//}
 				a = 1
-				//handle.lastUseTime = time.Now().Unix()
+				// handle.lastUseTime = time.Now().Unix()
 
 				ctx.State.Args = commands[1:]
 				ctx.State.Cmd = matcher.(CommandMatcher).GetCommand()
@@ -488,11 +488,11 @@ func processMessageHandle(ctx *Context) {
 		for _, ally := range matcher.(CommandMatcher).GetAlias() {
 			if ally == commands[0] {
 				// 检查cd是否达到
-				//if !checkCD(handle) {
+				// if !checkCD(handle) {
 				//	continue
 				//}
 				a = 1
-				//handle.lastUseTime = time.Now().Unix()
+				// handle.lastUseTime = time.Now().Unix()
 
 				ctx.State.Args = commands[1:]
 				ctx.State.Cmd = matcher.(CommandMatcher).GetCommand()

@@ -255,7 +255,7 @@ func (e Event) Send(message interface{}) int32 {
 //)
 //
 //
-//type (
+// type (
 //	ConstNoticeType struct {
 //		GroupUpload   string //群文件上传
 //		GroupAdmin    string //群管理员变动

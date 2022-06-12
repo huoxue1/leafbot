@@ -52,8 +52,6 @@ func init() {
 	}
 	log.SetLevel(level)
 	log.Infoln("\n" + label)
-
-	go InitWindow()
 }
 
 const (
@@ -88,7 +86,7 @@ func initConfig() error {
 		return err
 	}
 
-	//hook.AddLevel(utils.GetLogLevel(defaultConfig.LogLevel)...)
+	// hook.AddLevel(utils.GetLogLevel(defaultConfig.LogLevel)...)
 	// log.Infoln("已加载配置：" + string(data))
 	//log.SetLevel(log.DebugLevel)
 	return err

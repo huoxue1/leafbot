@@ -15,7 +15,7 @@ import (
 //go:embed config/default_config.yaml
 var defaultData []byte
 
-//Config
+// Config
 // @Description: 配置信息
 //
 type Config struct {
@@ -44,7 +44,7 @@ var (
 	hook          *utils.LogHook
 )
 
-//GetLeafConfig
+// GetLeafConfig
 /**
  * @Description: 获取leafBot默认配置文件
  * @return *Config

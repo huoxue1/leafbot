@@ -4,11 +4,8 @@ go 1.17
 
 require (
 	github.com/Mrs4s/go-cqhttp v1.0.0-beta8-fix2
-	github.com/gin-gonic/gin v1.7.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/guonaihong/gout v0.2.6
-	github.com/huoxue1/lorca v0.1.11
-	github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d
 	github.com/json-iterator/go v1.1.10
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/satori/go.uuid v1.2.0
@@ -28,7 +25,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/fumiama/go-hide-param v0.1.4 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.0 // indirect
-	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/gin-gonic/gin v1.7.1 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator/v10 v10.5.0 // indirect

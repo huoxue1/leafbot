@@ -77,13 +77,13 @@ type (
 		OperatorID    int             `json:"operator_id"`
 		File          Files           `json:"file"`
 		Duration      int64           `json:"duration"`
-		TargetId      int64           `json:"target_id"` //运气王id
+		TargetId      int64           `json:"target_id"` // 运气王id
 		HonorType     string          `json:"honor_type"`
 		MetaEventType string          `json:"meta_event_type"`
 		Status        Status          `json:"status"`
 		Interval      int             `json:"interval"`
-		CardNew       string          `json:"card_new"` //新名片
-		CardOld       string          `json:"card_old"` //旧名片
+		CardNew       string          `json:"card_new"` // 新名片
+		CardOld       string          `json:"card_old"` // 旧名片
 		MessageIds
 
 		GuildID   int64 `json:"guild_id"`
@@ -91,7 +91,7 @@ type (
 	}
 )
 
-//GetMsg
+// GetMsg
 /**
  * @Description:
  * @receiver e

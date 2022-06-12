@@ -89,10 +89,6 @@ github.com/guonaihong/gout v0.2.6 h1:B94Xf4QZTBh9husXH+tRKTGQXdzatyr0DktvESvW8zQ
 github.com/guonaihong/gout v0.2.6/go.mod h1:FdoeAbCloB9j6O4JHFuGl8Roxx6z3pV/VNxkR7k2pmc=
 github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
-github.com/huoxue1/lorca v0.1.11 h1:B5x4Xta8rauGCERoCHY7nWg2z1GUrksf9ycZGHwLs4Q=
-github.com/huoxue1/lorca v0.1.11/go.mod h1:eEI3aGkmMladREqFJwUhd8cLlSUgG13wvuNprVjaVaY=
-github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d h1:wCAgKH32OqyCkV6K/E6unTW2KEuBzkB9VRjWyxBkGPQ=
-github.com/huoxue1/test3 v0.0.0-20210921063422-c43e6876777d/go.mod h1:6ausQYwJPfruk1GDGhqf7J5ptnOrlakAXHwNuaMrpvo=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/jonboulle/clockwork v0.2.2 h1:UOGuzwb1PwsrDAObMuhUnj0p5ULPj8V/xJ7Kx9qUBdQ=
@@ -222,7 +218,6 @@ golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/net v0.0.0-20190620200207-3b0461eec859/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
-golang.org/x/net v0.0.0-20200222125558-5a598a2470a0/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/net v0.0.0-20201021035429-f5854403a974/go.mod h1:sp8m0HH+o8qH0wwXwYZr8TS3Oi6o0r6Gce1SSxlDquU=
 golang.org/x/net v0.0.0-20210226172049-e18ecbb05110/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=
 golang.org/x/net v0.0.0-20210505024714-0287a6fb4125/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
