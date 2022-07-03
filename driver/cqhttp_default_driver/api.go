@@ -52,5 +52,5 @@ func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 		log.Errorln("调用API出现了错误")
 		log.Panicln(gjson.GetBytes(data, "msg"), ",", gjson.GetBytes(data, "wording"))
 	}
-	return gjson.GetBytes(content, "data")
+	return gjson.GetBytes(data, "data")
 }
