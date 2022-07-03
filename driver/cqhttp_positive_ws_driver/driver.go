@@ -3,8 +3,6 @@ package cqhttp_positive_ws_driver
 import (
 	"fmt"
 	"net/http"
-	"net/url"
-	"strconv"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -15,7 +13,6 @@ import (
 type Driver struct {
 	Name             string
 	address          string
-	port             int
 	token            string
 	bots             sync.Map
 	eventChan        chan []byte
@@ -29,15 +26,14 @@ type Driver struct {
  * @receiver d
  */
 func (d *Driver) Run() {
-	u := url.URL{Scheme: "ws", Host: d.address + ":" + strconv.Itoa(d.port)}
 	header := http.Header{}
 	header.Add("Authorization", "Bearer "+d.token)
-	conn, _, err := websocket.DefaultDialer.Dial(u.String(), header) //nolint:bodyclose
+	conn, _, err := websocket.DefaultDialer.Dial(d.address, header) 
 	if err != nil {
 		return
 	}
 	log.Infoln("Load the cqhttp_positive_driver successful")
-	log.Infoln(fmt.Sprintf("the cqhttp_positive_driver listening in %v:%v", d.address, d.port))
+	log.Infoln(fmt.Sprintf("the cqhttp_positive_driver listening in %v", d.address))
 	_, data, err := conn.ReadMessage()
 	if err != nil {
 		return
@@ -138,37 +134,16 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return m
 }
 
-func (d *Driver) SetConfig(config map[string]interface{}) {
-	if host, ok := config["host"]; ok {
-		d.address = host.(string)
-	}
-	if port, ok := config["port"]; ok {
-		d.port = port.(int)
-	}
-}
-
-func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
-
-}
-
-// SetToken
-/**
- * @Description:
- * @receiver d
- * @param token
- */
-func (d *Driver) SetToken(token string) {
-	d.token = token
-}
-
 // NewDriver
 /**
  * @Description:
  * @return *Driver
  */
-func NewDriver() *Driver {
+func NewDriver(address string, token string) *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"
+	d.address = address
+	d.token = token
 	d.bots = sync.Map{}
 	d.eventChan = make(chan []byte)
 	return d

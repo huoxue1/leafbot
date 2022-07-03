@@ -18,22 +18,11 @@ import (
 type Driver struct {
 	Name             string
 	address          string
-	port             int
 	token            string
 	bots             sync.Map
 	eventChan        chan []byte
 	connectHandle    func(selfId int64, host string, clientRole string)
 	disConnectHandle func(selfId int64)
-}
-
-// SetToken
-/**
- * @Description:
- * @receiver d
- * @param token
- */
-func (d *Driver) SetToken(token string) {
-	d.token = token
 }
 
 // OnConnect
@@ -152,8 +141,8 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 func (d *Driver) Run() {
 	http.Handle("/"+d.Name+"/ws", d)
 	log.Infoln("Load the cqhttp_reverse_driver successful")
-	log.Infoln(fmt.Sprintf("the cqhttp_reverse_driver listening in %v:%v", d.address, d.port))
-	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.address, d.port), nil); err != nil {
+	log.Infoln(fmt.Sprintf("the cqhttp_reverse_driver listening in %v", d.address))
+	if err := http.ListenAndServe(d.address, nil); err != nil {
 		log.Panicln(err.Error())
 	}
 }
@@ -184,41 +173,16 @@ func (d *Driver) GetBot(i int64) interface{} {
 	return nil
 }
 
-// SetConfig
-/**
- * @Description:
- * @receiver d
- * @param config
- */
-func (d *Driver) SetConfig(config map[string]interface{}) {
-	if host, ok := config["host"]; ok {
-		d.address = host.(string)
-	}
-	if port, ok := config["port"]; ok {
-		d.port = port.(int)
-	}
-}
-
-// AddWebHook
-/**
- * @Description:
- * @receiver d
- * @param selfID
- * @param postHost
- * @param postPort
- */
-func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
-
-}
-
 // NewDriver
 /**
  * @Description:
  * @return *Driver
  */
-func NewDriver() *Driver {
+func NewDriver(address, token string) *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"
+	d.address = address
+	d.token = token
 	d.bots = sync.Map{}
 	d.eventChan = make(chan []byte)
 	return d

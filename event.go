@@ -74,8 +74,8 @@ type (
 func eventMain() {
 	sort.Sort(matcherChin)
 
-	if len(defaultConfig.CommandStart) == 0 {
-		defaultConfig.CommandStart = append(defaultConfig.CommandStart, "")
+	if len(GetConfig().CommandStart) == 0 {
+		GetConfig().CommandStart = append(GetConfig().CommandStart, "")
 	}
 
 	for _, plugin := range plugins {
@@ -395,7 +395,7 @@ func checkOnlyTome(event *Event, state *State) {
 			return
 		}
 	}
-	for _, name := range defaultConfig.NickName {
+	for _, name := range GetConfig().NickName {
 		if event.Message[0].Type == "text" && strings.HasPrefix(event.Message[0].Data["text"], name) {
 			state.Data["only_tome"] = true
 			text := strings.TrimLeft(event.Message[0].Data["text"], name)
@@ -462,7 +462,7 @@ func processMessageHandle(ctx *Context) {
 			return true
 		}
 
-		for _, start := range defaultConfig.CommandStart {
+		for _, start := range GetConfig().CommandStart {
 			if commands[0] == start+matcher.(CommandMatcher).GetCommand() && matcher.(CommandMatcher).GetCommand() != "" {
 				// 检查cd是否达到
 				// if !checkCD(handle) {

@@ -21,8 +21,7 @@ type Driver struct {
 		selfID   int64
 	}
 	token            string
-	listenHost       string
-	listenPort       int
+	listenAddress    string
 	bots             sync.Map
 	eventChan        chan []byte
 	connectHandle    func(selfId int64, host string, clientRole string)
@@ -39,7 +38,7 @@ func (d *Driver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(200)
 }
 
-//SetToken
+// SetToken
 /**
  * @Description:
  * @receiver d
@@ -49,7 +48,7 @@ func (d *Driver) SetToken(token string) {
 	d.token = token
 }
 
-//Run
+// Run
 /**
  * @Description:
  * @receiver d
@@ -68,13 +67,13 @@ func (d *Driver) Run() {
 		d.bots.Store(s.selfID, b)
 	}
 	log.Infoln("Load the cqhttp_http_driver successful")
-	log.Infoln(fmt.Sprintf("the cqhttp_http_driver listening in %v:%v", d.listenHost, d.listenPort))
-	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", d.listenHost, d.listenPort), d); err != nil {
+	log.Infoln(fmt.Sprintf("the cqhttp_http_driver listening in %v", d.listenAddress))
+	if err := http.ListenAndServe(d.listenAddress, d); err != nil {
 		log.Errorln("监听webhook失败" + err.Error())
 	}
 }
 
-//GetEvent
+// GetEvent
 /**
  * @Description: 获取事件信息通道
  * @receiver d
@@ -84,7 +83,7 @@ func (d *Driver) GetEvent() chan []byte {
 	return d.eventChan
 }
 
-//GetBot
+// GetBot
 /**
  * @Description: 获取一个bot对象
  * @receiver d
@@ -139,46 +138,21 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return m
 }
 
-//SetConfig
-/**
- * @Description: 设置配置信息
- * @receiver d
- * @param config
- */
-func (d *Driver) SetConfig(config map[string]interface{}) {
-	if host, ok := config["listen_host"]; ok {
-		d.listenHost = host.(string)
-	}
-	if port, ok := config["listen_port"]; ok {
-		d.listenPort = port.(int)
-	}
-}
-
-//AddWebHook
-/**
- * @Description: 添加一个webHook
- * @receiver d
- * @param selfID
- * @param postHost
- * @param postPort
- */
-func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
-	d.webHook = append(d.webHook, struct {
-		postHost string
-		postPort int
-		selfID   int64
-	}{postHost: postHost, postPort: postPort, selfID: selfID})
-}
-
-//NewDriver
+// NewDriver
 /**
  * @Description: 创建一个cqhttp的http通信方式驱动
  * @return *Driver
  */
-func NewDriver() *Driver {
+func NewDriver(address string, webhooks []struct {
+	postHost string
+	postPort int
+	selfID   int64
+}) *Driver {
 	d := new(Driver)
 	d.Name = "cqhttp"
 	d.bots = sync.Map{}
+	d.listenAddress = address
+	d.webHook = append(d.webHook, webhooks...)
 	d.eventChan = make(chan []byte)
 	return d
 }

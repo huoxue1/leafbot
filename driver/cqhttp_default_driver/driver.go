@@ -55,18 +55,6 @@ func (d *Driver) GetBots() map[int64]interface{} {
 	return map[int64]interface{}{d.CQBot.Client.Uin: d.bot}
 }
 
-func (d *Driver) SetConfig(config map[string]interface{}) {
-
-}
-
-func (d *Driver) AddWebHook(selfID int64, postHost string, postPort int) {
-
-}
-
-func (d *Driver) SetToken(token string) {
-
-}
-
 func NewDriver() *Driver {
 	d := new(Driver)
 	d.EventChan = make(chan []byte)

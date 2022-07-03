@@ -59,10 +59,7 @@ func OnlyToMe(ctx *Context) bool {
  * example
  */
 func OnlySuperUser(ctx *Context) bool {
-	if ctx.Event.UserId == defaultConfig.Admin {
-		return true
-	}
-	for _, user := range defaultConfig.SuperUser {
+	for _, user := range GetConfig().SuperUser {
 		if ctx.Event.UserId == user {
 			return true
 		}

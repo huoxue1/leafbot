@@ -32,12 +32,6 @@ type Driver interface {
 	// @return map[int64]interface{}
 	//
 	GetBots() map[int64]interface{}
-
-	SetConfig(config map[string]interface{})
-
-	AddWebHook(selfID int64, postHost string, postPort int)
-
-	SetToken(token string)
 }
 
 // Conn
@@ -68,17 +62,6 @@ var driver Driver
  * example
  */
 func LoadDriver(driver2 Driver) {
-	driver2.SetConfig(map[string]interface{}{
-		"host": defaultConfig.Host,
-		"port": defaultConfig.Port,
-
-		"listen_host": defaultConfig.ListenHost,
-		"listen_port": defaultConfig.ListenPort,
-	})
-	driver2.SetToken(defaultConfig.Token)
-	for _, s := range defaultConfig.WebHook {
-		driver2.AddWebHook(s.SelfID, s.PostHost, s.PostPort)
-	}
 	driver2.OnConnect(func(selfId int64, host string, clientRole string) {
 		defer func() {
 			err := recover()
