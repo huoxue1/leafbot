@@ -88,7 +88,7 @@ func initConfig() error {
 
 	// hook.AddLevel(utils.GetLogLevel(defaultConfig.LogLevel)...)
 	// log.Infoln("已加载配置：" + string(data))
-	//log.SetLevel(log.DebugLevel)
+	// log.SetLevel(log.DebugLevel)
 	return err
 }
 

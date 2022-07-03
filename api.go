@@ -81,11 +81,11 @@ type OneBotAPI interface {
 	SetFriendAddRequest(flag string, approve bool, remark string)
 	SetGroupAddRequest(flag string, subType string, approve bool, reason string)
 	GetLoginInfo() gjson.Result
-	GetStrangerInfo(userId int, noCache bool) gjson.Result
+	GetStrangerInfo(userID int, noCache bool) gjson.Result
 	GetFriendList() gjson.Result
 	GetGroupInfo(groupID int64, noCache bool) gjson.Result
 	GetGroupList() gjson.Result
-	GetGroupMemberInfo(groupID int64, UserId int64, noCache bool) gjson.Result
+	GetGroupMemberInfo(groupID int64, UserID int64, noCache bool) gjson.Result
 	GetGroupMemberList(groupID int64) gjson.Result
 	GetGroupHonorInfo(groupID int64, honorType string) gjson.Result
 	GetCookies(domain string) gjson.Result
@@ -99,30 +99,35 @@ type OneBotAPI interface {
 	SetRestart(delay int)
 	CleanCache()
 
+	GetGroupFileSystemInfo(groupID int64) gjson.Result
+	GetGroupRootFiles(groupID int64) gjson.Result
+	GetGroupFilesByFolder(groupID int64, folderID string) gjson.Result
+	GetGroupFileUrl(groupID int64, fileID string, busid int) gjson.Result
 	DownloadFile(url string, threadCount int, headers []string) gjson.Result
+	UploadGroupFile(groupID int64, file string, name string, folder string)
+	UploadPrivateFile(userID int64, file, name string)
+
 	GetGroupMsgHistory(messageSeq int64, groupID int64) gjson.Result
 	GetOnlineClients(noCache bool) gjson.Result
-	GetVipInfoTest(UserId int64) gjson.Result
+	GetVipInfoTest(UserID int64) gjson.Result
 	SendGroupNotice(groupID int64, content string)
 	ReloadEventFilter()
-	SetEssenceMsg(messageId int)
-	DeleteEssenceMsg(messageId int)
+	SetEssenceMsg(messageID int)
+	DeleteEssenceMsg(messageID int)
 	GetEssenceMsgList(groupID int64) gjson.Result
 	CheckUrlSafely(url string) int
-	UploadGroupFile(groupID int64, file string, name string, folder string)
 
 	SetGroupNameSpecial(groupID int64, groupName string)
 	SetGroupPortrait(groupID int64, file string, cache int)
-	GetMsgSpecial(messageId int) gjson.Result
-	GetForwardMsg(messageId int) gjson.Result
+	GetMsgSpecial(messageID int) gjson.Result
+	GetForwardMsg(messageID int) gjson.Result
 	SendGroupForwardMsg(groupID int64, messages interface{})
+	SendPrivateForwardMsg(userID int64, messages interface{})
+
 	GetWordSlices(content string) gjson.Result
 	OcrImage(image string) gjson.Result
 	GetGroupSystemMsg() gjson.Result
-	GetGroupFileSystemInfo(groupID int64) gjson.Result
-	GetGroupRootFiles(groupID int64) gjson.Result
-	GetGroupFilesByFolder(groupID int64, folderId string) gjson.Result
-	GetGroupFileUrl(groupID int64, fileId string, busid int) gjson.Result
+
 	GetGroupAtAllRemain(groupID int64) gjson.Result
 }
 
@@ -283,7 +288,7 @@ func (e Event) Send(message interface{}) int32 {
 //	//}
 //)
 //
-//var (
+// var (
 //	NoticeTypeApi = ConstNoticeType{
 //		GroupUpload:   "group_upload",
 //		GroupAdmin:    "group_admin",
@@ -300,7 +305,7 @@ func (e Event) Send(message interface{}) int32 {
 //
 //
 //
-//type LoginInfo struct {
+// type LoginInfo struct {
 //	UserId   int    `json:"user_id"`
 //	NickName string `json:"nick_name"`
 //}
@@ -310,12 +315,12 @@ func (e Event) Send(message interface{}) int32 {
 //
 //
 //
-//type responseJson struct {
+// type responseJson struct {
 //	Status  string `json:"status"`
 //	RetCode int    `json:"retcode"`
 //}
 //
-//type (
+// type (
 //
 //
 //	GroupMemberInfo struct {

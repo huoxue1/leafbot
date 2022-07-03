@@ -23,6 +23,21 @@ type Context struct {
 	SelfID  int64
 }
 
+func (ctx *Context) UploadPrivateFile(userID int64, file, name string) {
+	ctx.CallApi("upload_private_file", map[string]interface{}{
+		"user_id": userID,
+		"file":    file,
+		"name":    name},
+	)
+}
+
+func (ctx *Context) SendPrivateForwardMsg(userID int64, messages interface{}) {
+	ctx.CallApi("send_private_forward_msg", map[string]interface{}{
+		"user_id":  userID,
+		"messages": messages},
+	)
+}
+
 // Send
 /**
  * @Description: 使用上下文对象方便的回复当前会话

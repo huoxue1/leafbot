@@ -11,18 +11,21 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type userAPi struct {
+type userAPI struct {
 	Action string      `json:"action"`
 	Params interface{} `json:"params"`
 	Echo   string      `json:"echo"`
 }
 
-func (u userAPi) Get(s string) gjson.Result {
+func (u userAPI) Get(s string) gjson.Result {
 	data, _ := json.Marshal(u.Params)
 	parse := gjson.Parse(string(data))
 	return parse.Get(s)
 }
 
+// Bot
+// @Description: Bot对象
+//
 type Bot struct {
 	responses sync.Map
 	CQBot     *coolq.CQBot
@@ -31,7 +34,7 @@ type Bot struct {
 }
 
 func (b *Bot) Do(i interface{}) {
-	data := i.(userAPi)
+	data := i.(userAPI)
 	call := b.call.Call(data.Action, data)
 	resp, _ := json.Marshal(call)
 	b.responses.Store(data.Echo, resp)
