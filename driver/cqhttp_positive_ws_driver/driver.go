@@ -28,7 +28,7 @@ type Driver struct {
 func (d *Driver) Run() {
 	header := http.Header{}
 	header.Add("Authorization", "Bearer "+d.token)
-	conn, _, err := websocket.DefaultDialer.Dial(d.address, header) 
+	conn, _, err := websocket.DefaultDialer.Dial(d.address, header)
 	if err != nil {
 		return
 	}

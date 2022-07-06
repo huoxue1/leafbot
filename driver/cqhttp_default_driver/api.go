@@ -50,7 +50,7 @@ func (b *Bot) CallApi(action string, param interface{}) gjson.Result {
 	log.Infoln(string(content) + "\n\t\t\t\t\t" + string(data))
 	if gjson.GetBytes(data, "status").String() != "ok" {
 		log.Errorln("调用API出现了错误")
-		log.Panicln(gjson.GetBytes(data, "msg"), ",", gjson.GetBytes(data, "wording"))
+		log.Errorln(gjson.GetBytes(data, "msg"), ",", gjson.GetBytes(data, "wording"))
 	}
 	return gjson.GetBytes(data, "data")
 }
