@@ -3,12 +3,17 @@ package cqhttp_default_driver
 import (
 	"github.com/Mrs4s/go-cqhttp/cmd/gocq"
 	"github.com/Mrs4s/go-cqhttp/coolq"
+	"github.com/Mrs4s/go-cqhttp/global/terminal"
 	"github.com/Mrs4s/go-cqhttp/modules/api"
 	"github.com/Mrs4s/go-cqhttp/modules/servers"
+	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
+	"os"
 
 	"github.com/huoxue1/leafbot/message"
+
+	_ "github.com/Mrs4s/go-cqhttp/modules/silk" // silk编码模块
 )
 
 type Driver struct {
@@ -18,6 +23,8 @@ type Driver struct {
 }
 
 func (d *Driver) Run() {
+	os.Args = append(os.Args, " --faststart")
+	log.Info(os.Args)
 	servers.RegisterCustom("leafBot", func(bot *coolq.CQBot) {
 		b := new(Bot)
 		b.CQBot = bot
@@ -33,7 +40,13 @@ func (d *Driver) Run() {
 			d.EventChan <- []byte(data)
 		})
 	})
-	gocq.Main()
+	terminal.SetTitle()
+	gocq.InitBase()
+	gocq.PrepareData()
+	gocq.LoginInteract()
+	_ = terminal.DisableQuickEdit()
+	_ = terminal.EnableVT100()
+	gocq.WaitSignal()
 }
 
 func (d *Driver) GetEvent() chan []byte {

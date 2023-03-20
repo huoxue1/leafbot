@@ -3,6 +3,7 @@ package cqhttp_default_driver
 import (
 	"encoding/json"
 	"errors"
+	"github.com/Mrs4s/go-cqhttp/pkg/onebot"
 	"sync"
 	"time"
 
@@ -25,7 +26,6 @@ func (u userAPI) Get(s string) gjson.Result {
 
 // Bot
 // @Description: Bot对象
-//
 type Bot struct {
 	responses sync.Map
 	CQBot     *coolq.CQBot
@@ -35,7 +35,7 @@ type Bot struct {
 
 func (b *Bot) Do(i interface{}) {
 	data := i.(userAPI)
-	call := b.call.Call(data.Action, data)
+	call := b.call.Call(data.Action, onebot.V11, data)
 	resp, _ := json.Marshal(call)
 	b.responses.Store(data.Echo, resp)
 }

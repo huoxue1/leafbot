@@ -1,17 +1,16 @@
 package main
 
 import (
+	"github.com/huoxue1/leafbot/driver/cqhttp_default_driver"
 	"os"
 	"os/exec"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/huoxue1/leafbot"
-	"github.com/huoxue1/leafbot/driver/cqhttp_reverse_ws_driver"
 	"github.com/huoxue1/leafbot/message"
 
-	_ "github.com/Mrs4s/go-cqhttp/db/leveldb"   // leveldb
-	_ "github.com/Mrs4s/go-cqhttp/modules/mime" // mime检查模块
+	_ "github.com/Mrs4s/go-cqhttp/db/leveldb" // leveldb
 
 	// _ "github.com/Mrs4s/go-cqhttp/modules/pprof" // pprof 性能分析
 
@@ -44,7 +43,7 @@ func init() {
 
 func main() {
 	// 创建一个驱动
-	driver := cqhttp_reverse_ws_driver.NewDriver("127.0.0.1:8080", "")
+	driver := cqhttp_default_driver.NewDriver()
 	// 注册驱动
 	leafbot.LoadDriver(driver)
 	// 初始化Bot
